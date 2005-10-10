@@ -1,0 +1,266 @@
+Release Notes for Version 0.11.0 Alpha
+--------------------------------
+-Now supports JFC 1.0 Pre 2
+-Fixed bugs:1165987,1165979,1165967
+-There where significant changes to the JFC Api in this release. See www.jfree.org forums
+ for specific information. Chances are very good that your chart processors WILL BREAK because of these
+ changes. This is not because of Cewolf, but because the JFC APIs changed.
+
+Release Notes for Version 0.10.3
+--------------------------------
+-Added optional config parameter for FileStorage: "FileStorage.deleteOnExit" 
+	to get the saved files deleted at normal shutdown.
+-Improved overlaidchart can contain any number of sub-charts
+-Added ChartImageRenderListener event callback interface can be implemented by ChartPostProcessor
+	to get called back after the image rendered. 
+	Useful to acquire JFreeChart's ChartRenderingInfo object.
+-Fixed [ 1158392 ] Configuration object causes NPE when servlet reloads
+-Fixed chart-renderer factory problem; that if multiple charts of the same type appeared
+	on the same page they shared the same renderer, therefore if a post-processor customized
+	that renderer all charts were affected.
+-Fixed that tooltips would not appear in firefox; when the jsp page in a subdir
+	need to use /etc/overlib.js style path in config for this.	
+
+Release Notes for Version 0.10.2
+--------------------------------
+Fixed cewolf.jar in the wrong folder.
+Fixed NPE in Renderer
+
+Release Notes for Version 0.10.1
+--------------------------------
+Fixed bar chart orientation and few other bugs.
+
+Release Notes for Version 0.10
+--------------------------------
+-bundled with JFreeChart 0.9.21
+-added option to allow use of JFreeChart link and tooltip generators
+
+Release Notes for Version 0.10a6
+--------------------------------
+-bundled with JFreeChart 0.9.18
+-new storage option that provides better support for long duration sessions. See bug 100248 for details.
+
+Realease Notes for Version 0.10a1
+--------------------------------
+- added support for meter, stacked area and bubble charts
+- bundled with JFreeChart 0.9.11
+
+Realease Notes for Version 0.9.5
+--------------------------------
+- fixed incompatibility to Servlet API 2.2
+- fixed pluginspace attribute in non SVG images
+
+Realease Notes for Version 0.9.4
+--------------------------------
+- fixed ConfigurationException when providing no param for CewolfServlet
+
+Realease Notes for Version 0.9.3
+--------------------------------
+- pluggable storage concept for chart images
+- fixed large memory consumptions
+- fixed another caching bug
+
+Realease Notes for Version 0.9.2
+--------------------------------
+- improved SVG support
+
+Realease Notes for Version 0.9.1
+--------------------------------
+- changed <combined-chart> to <combinedchart> to support JSP 1.1
+- changed <overlaid-chart> to <overlaidchart> to support JSP 1.1
+- added var attribute to <imgurl> to expose URL as page attribute
+- fixed wrong mimetype in testpage.jsp for SVG
+
+Realease Notes for Version 0.9
+--------------------------------
+- bundled with JFreeChart 0.9.8
+- added support for overlay charts (fist steps)
+- added support for combined charts (fist steps)
+- added usecache attribute to <producer> to disable data caching
+- producer id is now passed to produceDataset() as parameter by default. See Javadoc of DatasetProducer
+- image URLs are always encoded with session ID parameter even if cookies are enabled
+- image URLs paramaters correctly escape ampersands
+- semantic of renderer attribute of <img> and <imgurl> changed (see taglib doc)
+- logging is now handled by Apache's commons.logging
+- API change to DatasetProducer to let the producer decide about 
+  data caching
+- added a configuration paramter overliburl to define the overlib.js destination relative to webapp URL
+- removed expires attributes from taglibrary as they are not used anymore
+- fixed configuration bugs
+- fixed caching bugs by changing caching to be session based
+- fixed memory leaks
+- fixed synchronization issue when using more than one timeseries chart on a page
+- fixed incompatibilities between tag attribute types and setter methods
+
+Realease Notes for Version 0.8.9
+--------------------------------
+- fixed the "null is not a valid chart id" bug
+- fixed browser detection bug (729378)
+- Socket write detection bug (729384,729501,730490)
+- fixed synchronization issues
+- removed console output(717861)
+
+Realease Notes for Version 0.8.8
+--------------------------------
+- fixed bug: missing closing bracket in <img> tags
+
+Realease Notes for Version 0.8.7
+--------------------------------
+- bundled with JFreeCharts 0.9.4
+
+Realease Notes for Version 0.8.6
+--------------------------------
+- fixed a bug which caused a ConfigurationException if the Cewolf servlet
+  was not loaded on startup
+
+Realease Notes for Version 0.8.5
+--------------------------------
+- fixed the server side image problem which occured on some machines
+
+Realease Notes for Version 0.8.4
+--------------------------------
+- now runs on resin-2.1.5
+
+Realease Notes for Version 0.8.3
+--------------------------------
+- added some header information in HTTP header to improve performance
+- added a debug paramter to servlet to turn on and of debugging
+
+Realease Notes for Version 0.8.2
+--------------------------------
+- useful image caching with cleanup mechanisms to avoid running out of memory
+- bugfix in image key computing
+- faster caching and key generation
+- init parameters for cewolf servlet to manipulate caching (see example etc/web.xml)
+
+Realease Notes for Version 0.8.1
+--------------------------------
+- Removed dashes from tag names to make them work in a JSP 1.1 container
+  gradient-paint -> gradientpaint
+  texture-paint -> texturepaint
+  color-paint -> colorpaint
+- Improved compatibility. Tested on
+  - Tomcat 3.3.1
+  - Tomcat 4.0
+  - Tomcat 4.1.10
+  - JRun 4.0.SP1 beta
+- some bug fixes in tag handlers
+
+Realease Notes for Version 0.8
+------------------------------
+- ChartPostProcessor process method signature now has a third parameter with the
+  current dataset of the rendered chart to enhance capabilities of processing
+- <chart> tag does not render a image anymore. <chart> is only used to define
+  a chart instance initially inside a JSP. The rendering of the chart image is
+  performed by the <img> tag which is passed the chart id as an attribute.
+- image maps and tooltips implemented (tested on IE 5.5 and Mozilla 1.1)
+- added tag <imgurl> which can be used as the src attribute of an HTML img tag
+- obsolete <panel> tag has been removed all attributes can be set directly to
+  the <chart> tag now
+- server side caching of images to gain performance blast when requesting the same
+  chart again
+- many redesigns
+- polished example webapp
+- fixed a bug which prevented reloading of a page
+- fixed a bug which let the tag produce same keys for different charts whan tags
+  are pooled
+
+Known issues:
+- tooltips for pie3d charts are not positioned correctly 
+
+Realease Notes for Version 0.7.1
+--------------------------------
+- fixed a typo in TLD (boder instead of border in two tags)
+- removed "antialias" attribute in TLD for tag legend as it is not implemented
+  yet
+
+Realease Notes for Version 0.7
+------------------------------
+- unlimited customization of generated charts possible through additional
+  ChartPostprocessor objects. See <chartpostprocessor> documentation!
+- changed signature of DatasetProducer. Params are now passed as Map instead
+  HashMap
+- new <legend> tag to render the chart's legend separately
+- added "legend" and "legendanchor" attribute to panel and chart tag to swith
+  on/off and manipulate legend display
+- new tag <legend> allows the separate rendering of the chart's legend somewhere
+  in the JSP
+- <chart> and <legend> tag now support all HTML 4.0 img tag attributes
+- rendering servlet now renders an exception into the delivered image if one is
+  raised when trying to render the chart
+- removed obsolete example page producerparams.jsp (view testpage.jsp instead)
+- the example.war binary is now distributed separately
+- example web.xml no has an url-mapping to work in more J2EE containers
+- better usage of JSP callbacks by overriding the release() method in tags
+- enhanced test page for JSP 1.1 and JSP 1.2 containers
+- enhanced image loading performance
+- redesigned, optimized and simplified some issues
+- some javadocs
+
+Realease Notes for Version 0.6.2
+--------------------------------
+- fixed a bug in testpage.jsp and testpage-1.1.jsp which closed the panel tag twice
+
+Realease Notes for Version 0.6.1
+--------------------------------
+- fixed a bug in the tag library descriptor which defined the background 
+  attribute of tag chart as a float
+
+Realease Notes for Version 0.6
+------------------------------
+- added tags <color-paint>, <gradient-paint> and <texture-paint>
+  for background paints of chart panel
+- some refactorings in tag lib implementation
+- testpage enhanced
+
+Realease Notes for Version 0.5.1
+--------------------------------
+- fixed a bug which prevented the reuse of the chart tag instance 
+  by the container
+
+Realease Notes for Version 0.5
+------------------------------
+- the data tag now embeds a producer tag, future releases will have other
+  possibilities to provide data (e.g. SQL)
+- added support for Pie3DChart
+- added <panel> tag to be embedded in <chart> tag
+- embedded <panel> tag attributes override coressponing parent tags
+  attributes
+- <chart> tag now extends <panel> tag
+- changed value type of <param> tag to java.io.Serilizable
+- added antialias support
+- added tag library documentation
+- added some javadocs
+- added some example JSPs
+
+Realease Notes for Version 0.4
+------------------------------
+- replaced TagExtraInfo with TagLibraryValidator
+- moved .tld file to WEB-INF in sample WAR due to problems in some Tomcat 
+  environments
+- DatasetProducer now takes a HashMap containing additional parameters for
+  dataset production
+- Added tutorial to docs
+- some additional JavaDocs
+
+Realease Notes for Version 0.3
+------------------------------
+- included TagExtraInfo to check charttype at JSP compile time
+- added documentation
+- some redesigns
+
+Realease Notes for Version 0.2
+------------------------------
+- updated to JFreeChart 0.9.2
+- all 20 chart types from JFreeChart's ChartFactory are supported
+- some redesigns
+- some javadocs
+
+
+Realease Notes for Version 0.1.1
+--------------------------------
+This is the first alpha-release of Cewolf.
+It is useable already but there are not many possibilities to change the view of 
+the current charts.
+The documentation is very less.
+Not all types of charts are supported.

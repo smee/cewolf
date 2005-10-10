@@ -20,5 +20,5 @@
 	<classpathentry kind="var" path="M2_REPO/batik/batik-svggen/1.6/batik-svggen-1.6.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jfree/jfreechart/1.0.0-rc1/jfreechart-1.0.0-rc1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/gnujaxp/gnujaxp/0.0/gnujaxp-0.0.jar"/>
-	<classpathentry kind="output" path="target/classes"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

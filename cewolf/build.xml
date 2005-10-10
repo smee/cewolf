@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+
+<project name="cewolf" basedir="." default="build">
+
+    <target name="init">
+        <!-- project info -->
+        <property name="project" value="cewolf"/>
+        <property name="project.written" value="Cewolf"/>
+        <property name="version.number" value="0.11.0"/>
+        <!-- distibution -->
+        <property name="dist.name" value="${project}-${version.number}"/>
+        <property name="file.dist" value="${dist.name}.zip"/>
+        <!-- directories -->
+        <property name="dir.build" value="build"/>
+        <property name="dir.build.classes" value="build/classes"/>
+        <property name="dir.src" value="src"/>
+        <property name="dir.lib" value="lib"/>
+        <property name="dir.etc" value="etc"/>
+        <property name="dir.web" value="example"/>
+        <property name="dir.doc" value="docs"/>
+        <property name="dir.apidoc" value="${dir.doc}/apidoc"/>
+        <property name="dir.test" value="test"/>
+        <property name="dir.dist" value="${dir.build}/${dist.name}"/>
+        <property name="dir.faq" value="${dir.doc}/faq"/>
+        <!-- files -->
+        <property name="file.jar" value="${dir.build}/${project}.jar"/>
+        <property name="file.war" value="${dir.build}/${project}.war"/>
+        <property name="file.build" value="build.xml"/>
+        <property name="file.license" value="license.txt"/>
+        <property name="file.deploy" value="deploy.html"/>
+        <!-- testing -->
+        <property name="test.suite" value="de.laures.cewolf.CewolfTestSuite"/>
+        <property name="dir.test.src" value="${dir.test}/src"/>
+        <property name="dir.test.data" value="${dir.test}/data"/>
+        <property name="dir.test.lib" value="${dir.test}/lib"/>
+        <property name="dir.test.build" value="${dir.test}/build"/>
+        <property name="dir.test.build.classes" value="${dir.test.build}/classes"/>
+        <!-- deployment -->
+        <property name="dir.deploy" value="../TestDeploy"/>
+        <property name="dir.webapp-TC4.1" value="${dir.deploy}/Apache Tomcat 4.1.10/webapps/${project}"/>
+        <property name="dir.webapp-TC4.1.work" value="${dir.deploy}/Apache Tomcat 4.1.10/work/standalone/localhost/${project}"/>
+	<!-- external progs -->
+    </target>
+    
+    <target name="compile" depends="init">
+        <mkdir dir="${dir.build}"/>
+        <mkdir dir="${dir.build.classes}"/>
+        <javac srcdir="${dir.src}" destdir="${dir.build.classes}" debug="true" deprecation="true" target="1.3">
+            <classpath>
+                <fileset dir="${dir.lib}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="jar" depends="init,compile">
+        <jar jarfile="${file.jar}" compress="true" basedir="${dir.build}/classes">
+            <exclude name="**/example/*"/>
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+            </manifest>
+            <metainf dir="${dir.etc}">
+                <include name="**/*.tld"/>
+            </metainf>
+        </jar>
+    </target>
+
+    <target name="war" depends="init,jar">
+        <mkdir dir="${dir.web}"/>
+        <war warfile="${file.war}" webxml="${dir.etc}/web.xml" update="true" basedir="${dir.web}">
+            <exclude name=".nbattrs"/>
+            <exclude name="*.war"/>
+            <classes dir="${dir.build.classes}">
+                <include name="**/example/*.class"/>
+            </classes>
+            <webinf dir="${dir.etc}">
+                <include name="*.tld"/>
+            </webinf>
+            <lib dir="${dir.lib}">
+                <include name="jfreechart*" />
+                <include name="jcommon*" />
+                <include name="batik*" />
+                <include name="commons-*" />
+            </lib>
+            <lib dir="${dir.build}">
+                <include name="*.jar"/>
+            </lib>
+        </war>
+    </target>
+
+    <target name="dist" depends="clean, war" description="Prepare the zip file for upload">
+        <mkdir dir="${dir.dist}"/>
+        <mkdir dir="${dir.dist}/lib"/>
+        <mkdir dir="${dir.dist}/web"/>
+        <mkdir dir="${dir.dist}/src"/>
+        <mkdir dir="${dir.dist}/etc"/>
+        <copy todir="${dir.dist}/lib" file="${file.jar}"/>
+        <copy todir="${dir.dist}/lib">
+            <fileset dir="${dir.lib}">
+                <include name="*jfreechart*" />
+                <include name="*jcommon*" />
+                <include name="*batik*" />
+                <include name="commons*" />
+            </fileset>
+        </copy>
+        <copy todir="${dir.dist}/src">
+            <fileset dir="${dir.src}">
+                <include name="**/*.java" />
+                <include name="**/package.html" />
+            </fileset>
+        </copy>
+        <copy todir="${dir.dist}/docs">
+            <fileset dir="${dir.doc}">
+                  <exclude name="**/.xvpics/**"/>
+                  <exclude name="**/*.psd"/>
+                  <exclude name="**/*.sxw"/>
+            </fileset>
+        </copy>
+        <copy todir="${dir.dist}/etc">
+            <fileset dir="${dir.etc}">
+                <include name="**/*.tld" />
+                <include name="**/*.mf" />
+                <include name="web.xml" />
+            </fileset>
+        </copy>
+        <copy todir="${dir.dist}/example">
+            <fileset dir="${dir.web}" includes="**/*" excludes="**/*nbattr*" />
+        </copy>
+        <copy todir="${dir.dist}" file="${file.build}"/>
+
+        <copy todir="${dir.dist}">
+            <fileset dir="." includes="*.txt" />
+        </copy>
+        <zip zipfile="${file.dist}">
+            <zipfileset dir="${dir.dist}" prefix="${dist.name}"/>
+        </zip>          
+    </target>
+
+    <target name="build" depends="init" description="Build everything.">
+        <echo message="Build done."/>
+    </target>
+
+
+    <target name="javadoc" depends="init" description="Javadoc for my API.">
+        <mkdir dir="${dir.apidoc}"/>
+        <javadoc 
+            packagenames="de.laures.cewolf.*" 
+            destdir="${dir.apidoc}"
+            windowtitle="${project.written} Javadoc Documentation"
+            doctitle="${project.written} Javadoc Documentation"
+            bottom ="&lt;a href='http://sourceforge.net' target='new' height='30'&gt;&lt;img src='http://sourceforge.net/sflogo.php?group_id=57282&amp;type=5' height=30 border=0 alt='SourceForge Logo'&gt;&lt;/a&gt;">
+            <sourcepath>
+                <!-- pathelement location="${dir.src}"/ -->
+                <dirset dir="${dir.src}">
+                    <exclude name="**/example"/>
+                    <exclude name="**/dp"/>
+                </dirset>
+            </sourcepath>
+            <classpath>
+                <fileset dir="${dir.lib}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+            <link 
+                offline="true" 
+                href="http://www.object-refinery.com/jcommon/javadoc/" 
+                packagelistloc="${dir.etc}/jcommon-package-list"/>
+        </javadoc>
+    </target>
+
+    <target name="clean" depends="init" description="Clean all build products.">
+        <delete dir="${dir.build}"/>
+        <delete dir="${dir.apidoc}"/>
+        <!-- delete dir="${dir.webapp-TC4.1.work}"/ -->
+        <delete dir="${dir.test.build}"/>
+        <delete dir="${dir.test.build.classes}"/>
+        <delete file="${file.deploy}"/>
+        <delete file="${file.jar}"/>
+        <delete file="${file.dist}"/>
+    </target>
+
+    <target name="test" depends="init,compile">
+        <mkdir dir="${dir.test.build}"/>
+        <mkdir dir="${dir.test.build.classes}"/>
+        <javac srcdir="${dir.test.src}" destdir="${dir.test.build.classes}" debug="true" deprecation="true">
+            <classpath>
+                <pathelement location="${dir.build.classes}"/>
+                <fileset dir="${dir.lib}">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset dir="${dir.test.lib}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+        <java classname="${test.suite}" fork="true" failonerror="true">
+            <classpath>
+                <pathelement location="${dir.build.classes}"/>
+                <fileset dir="${dir.lib}">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset dir="${dir.test.lib}">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <pathelement location="${dir.test.build.classes}"/>
+            </classpath>
+        </java>
+    </target>
+
+</project>

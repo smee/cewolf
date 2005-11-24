@@ -110,6 +110,16 @@ public abstract class CewolfChartFactory implements ChartConstants, AxisConstant
   private static final int getLayoutConstant(String layout) {
     return LayoutTypes.typeList.indexOf(layout.toLowerCase());
   }
+  
+  static {
+    // histogram chart type
+    registerFactory(new CewolfChartFactory("histogram") {
+	    public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+	        check(data, IntervalXYDataset.class, this.chartType);
+	        return ChartFactory.createHistogram(title, xAxisLabel, yAxisLabel, (IntervalXYDataset) data, PlotOrientation.VERTICAL, true, false, false);
+	     }
+    });
+  }
 
   public static JFreeChart getChartInstance(String chartType, String title, String xAxisLabel, String yAxisLabel, Dataset data) throws ChartValidationException {
       // first check the dynamically registered chart types

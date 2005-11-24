@@ -40,4 +40,13 @@ public class ChartRenderingException extends CewolfException {
     public ChartRenderingException(String msg) {
         super(msg);
     }
+    
+    /**
+     * Constructor with cause exception
+     * @param msg Message
+     * @param cause cause
+     */
+    public ChartRenderingException(String msg, Exception cause) {
+        super(msg, cause);
+    }
 }

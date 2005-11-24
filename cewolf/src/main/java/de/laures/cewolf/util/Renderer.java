@@ -106,6 +106,8 @@ public class Renderer implements WebConstants {
 			final String mimeType = cd.getMimeType();
 			if (MIME_PNG.equals(mimeType)) {
 				handlePNG(baos, (JFreeChart)chart, cd.getWidth(), cd.getHeight(), info);
+			} else if (MIME_JPEG.equals(mimeType)) {
+			    handleJPEG(baos, (JFreeChart)chart, cd.getWidth(), cd.getHeight(), info);
 			} else if (MIME_SVG.equals(mimeType)) {
 				handleSVG(baos, (JFreeChart)chart, cd.getWidth(), cd.getHeight());
 			} else {
@@ -115,7 +117,7 @@ public class Renderer implements WebConstants {
 			return new RenderedImage(baos.toByteArray(), mimeType, info);
 		} catch (IOException ioe) {
 			log.error(ioe);
-			throw new ChartRenderingException(ioe.getMessage());
+			throw new ChartRenderingException(ioe.getMessage(),ioe);
 		}
 	}
 
@@ -139,6 +141,27 @@ public class Renderer implements WebConstants {
 		throws IOException {
 		ChartUtilities.writeChartAsPNG(baos, chart, width, height, info);
 	}
+	
+	/**
+	 * Handles rendering a chart as a JPEG. Currently this method is synchronized
+	 * because of concurrency issues with JFreeChart.
+	 *
+	 * @param  baos
+	 * @param  chart
+	 * @param  width
+	 * @param  height
+	 * @param  info
+	 * @throws IOException
+	 */
+	private static synchronized void handleJPEG(
+		ByteArrayOutputStream baos,
+		JFreeChart chart,
+		int width,
+		int height,
+		ChartRenderingInfo info)
+		throws IOException {
+		ChartUtilities.writeChartAsJPEG(baos, chart, width, height, info);
+	}			
 
 	/**
 	 * Handles rendering a chart as a SVG. Currently this method is synchronized
@@ -207,7 +230,7 @@ public class Renderer implements WebConstants {
 	 */
 	private static RenderedImage renderLegend(ChartImage cd, Object c) throws CewolfException {
 		try {
-      JFreeChart chart = (JFreeChart) c;
+		    JFreeChart chart = (JFreeChart) c;
 			final int width = cd.getWidth();
 			final int height = cd.getHeight();
 			LegendTitle legend = getLegend(chart);
@@ -227,7 +250,7 @@ public class Renderer implements WebConstants {
 			Graphics2D g = bimage.createGraphics();
 			g.setColor(Color.white);
 			g.fillRect(0, 0, width, height);
-      legend.arrange(g,new RectangleConstraint(width,height));
+			legend.arrange(g,new RectangleConstraint(width,height));
  			legend.draw(g, new Rectangle(width, height));
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
@@ -248,7 +271,7 @@ public class Renderer implements WebConstants {
 				new ChartRenderingInfo(new StandardEntityCollection()));
 		} catch (IOException ioex) {
 			log.error(ioex);
-			throw new ChartRenderingException(ioex.getMessage());
+			throw new ChartRenderingException(ioex.getMessage(), ioex);
 		}
 	}
 

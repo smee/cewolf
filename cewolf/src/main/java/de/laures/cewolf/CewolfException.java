@@ -32,7 +32,6 @@ public class CewolfException extends Exception {
     public CewolfException() {
     }
 
-
     /**
      * Constructs an instance of <code>CewolfException</code> with the specified detail message.
      * @param msg the detail message.
@@ -40,4 +39,14 @@ public class CewolfException extends Exception {
     public CewolfException(String msg) {
         super(msg);
     }
+    
+    /**
+     * Constructs exception with causing exception
+     * @param msg message
+     * @param cause cause exception
+     */
+    public CewolfException(String msg, Exception cause) {
+        super(msg, cause);
+    }
+    
 }

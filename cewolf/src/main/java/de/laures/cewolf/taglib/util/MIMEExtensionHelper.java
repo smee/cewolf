@@ -35,6 +35,9 @@ public class MIMEExtensionHelper {
 		} else if (WebConstants.MIME_PNG.equalsIgnoreCase(mimeType)) {
 			return ".png";
 		}
+		if (WebConstants.MIME_JPEG.equalsIgnoreCase(mimeType)) {
+		    return ".jpg";
+		}
 		return null;
 	}
 

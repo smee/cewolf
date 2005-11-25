@@ -6,7 +6,22 @@
   <packaging>jar</packaging>
   <version>0.12.0</version>
   <name>Cewolf</name>
-<url></url>
+  <url>http://cewolf.sourceforge.net</url>
+
+
+  <description>
+	Cewolf is a tag library for JfreeChart.
+    JFreeChart is a class library, written in Java, for generating charts.
+    Utilising the Java2D APIs, it currently supports bar charts, pie charts,
+    line charts, XY-plots and time series plots.
+  </description>
+
+    <scm>
+    <url>http://cvs.sourceforge.net/viewcvs.py/cewolf/</url>
+     <connection>
+      scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/cewolf/cewolf
+    </connection> 
+</scm>
 
 <build>
 <plugins>

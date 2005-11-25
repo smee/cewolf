@@ -4,7 +4,7 @@
   <groupId>cewolf</groupId>
   <artifactId>cewolf</artifactId>
   <packaging>jar</packaging>
-  <version>0.12.0</version>
+  <version>0.13.0</version>
   <name>Cewolf</name>
   <url>http://cewolf.sourceforge.net</url>
 

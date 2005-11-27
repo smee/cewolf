@@ -68,6 +68,16 @@ public class HTMLImgTag extends AbstractHTMLBaseTag implements Serializable{
     /** Holds value of property vSpace. */
     protected int vSpace = UNDEFINED_INT;
     
+    /**
+     * Add or not JSESSIONID
+     */
+    protected boolean forceSessionId = true;
+
+    /**
+     * Remove image from Storage after rendering
+     */
+    protected boolean removeAfterRender = false;
+
     /*
      public void writeTag(Writer writer) throws IOException {
         writer.write("<img ");
@@ -107,6 +117,8 @@ public class HTMLImgTag extends AbstractHTMLBaseTag implements Serializable{
         border = 0;
         hSpace = UNDEFINED_INT;
         vSpace = UNDEFINED_INT;
+        forceSessionId = true;
+        removeAfterRender = false;
         super.reset();
     }
     
@@ -199,4 +211,32 @@ public class HTMLImgTag extends AbstractHTMLBaseTag implements Serializable{
         return false;
     }
     
+
+    /**
+     * @return Returns the forceSessionId.
+     */
+    public boolean isForceSessionId() {
+    	return forceSessionId;
+    }
+
+    /**
+     * @param forceSessionId The forceSessionId to set.
+     */
+    public void setForceSessionId(boolean forceSessionId) {
+    	this.forceSessionId = forceSessionId;
+    }
+
+	/**
+	 * @return Returns the removeAfterRender.
+	 */
+	public boolean isRemoveAfterRender() {
+		return removeAfterRender;
+	}
+
+	/**
+	 * @param removeAfterRender The removeAfterRender to set.
+	 */
+	public void setRemoveAfterRender(boolean removeAfterRender) {
+		this.removeAfterRender = removeAfterRender;
+	}
 }

@@ -55,6 +55,11 @@ public interface WebConstants {
      */
     String HEIGHT_PARAM = "height";
     
+      /**
+     * Remove image from Storage after rendering
+     */
+    String REMOVE_AFTER_RENDERING = "removeAfterRendering";
+
     /**
      * MIME name of a PNG image.
      */

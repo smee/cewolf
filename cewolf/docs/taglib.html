@@ -1,0 +1,461 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Cewolf Tag Library</title><link rel="stylesheet" type="text/css" href="cewolf.css" title="Style"></head><body><h1>Cewolf Tag Library (0.13.0)</h1><p></p>This tag library is designed to describe charts of all kinds.<p></p><h2><a name="plot"></a>
+		&lt;plot&gt;
+	</h2>
+The plot tag is nested inside a complex chart to define a nested or layerd plot instance.
+data
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="plot.type"><b>type</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+The type  of the plot. One of xyarea, xyline, xyshapesandlines ,
+scatter, xyverticalbar, step, candlestick, highlow, signal,
+verticlebar, area, line, shapesandlines
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="plot.xaxislabel"><b>xaxislabel</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Title of the plot's x-axis. This attributes is
+only used for horizontally combined charts.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="plot.yaxislabel"><b>yaxislabel</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Title of the plot's y-axis. This attributes is
+only used for vertically combined charts.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><h2><a name="img"></a>
+		&lt;img&gt;
+	</h2>
+		optional childs: 
+		<a href="#map">
+			&lt;map&gt;<br></a>
+This tag is a specialized HTML img tag. It renders the chart
+which has been specified by a &lt;chart&gt; tag in the same page.
+map
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="img.renderer"><b>renderer</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Path to rendering servlet. Any path that starts with a '/' is assumed to refer to a resource relative to web application root. Otherwise, the path is assumed to refer to resource relative to the current page directory.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.chartid"><b>chartid</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+The id of the chart to render.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.width"><b>width</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Width of the rendered chart image in pixel.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.height"><b>height</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Height of the rendered chart image in pixel.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.mime"><b>mime</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+The MIME type of the image. Currently image/png (default),image/svg and image/jpeg are supported.
+<br></td></tr><tr><td>default=image/png<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.alt"><b>alt</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.hspace"><b>hspace</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.vspace"><b>vspace</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.align"><b>align</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.border"><b>border</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.ismap"><b>ismap</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.longdesc"><b>longdesc</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.usemap"><b>usemap</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.class"><b>class</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.dir"><b>dir</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.lang"><b>lang</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.onclick"><b>onclick</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.ondbclick"><b>ondbclick</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.onkeydown"><b>onkeydown</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.onkeypress"><b>onkeypress</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.onkeyup"><b>onkeyup</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.onmousedown"><b>onmousedown</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.onmousemove"><b>onmousemove</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.onmouseout"><b>onmouseout</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.onmouseover"><b>onmouseover</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.onmouseup"><b>onmouseup</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.style"><b>style</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.htmltitle"><b>htmltitle</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; title attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.removeAfterRender"><b>removeAfterRender</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Remove image after rendering (defaults to false). WARNING. This may cause problems if your users expect to save the images or paste them into other applications such as WORD. 
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.forceSessionId"><b>forceSessionId</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Forces jsessionid to be added to image url. (Defaults to True)
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.timeout"><b>timeout</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Sets the timeout value used in the LongTermSessionStorage obj. Value is in seconds. Default is 5 Minutes.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><h2><a name="imgurl"></a>
+		&lt;imgurl&gt;
+	</h2>
+This tag can be used as the src attribute of a HTML img tag. E.g.:
+&lt;img src='&lt;imgurl chartid="foobar" renderer="cewolf" width="100" height="100"/&gt;'&gt;
+If the var attribute is used the URL is exposed as a page attribute of type String.
+img
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="imgurl.var"><b>var</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Name of the page scope attribute to hold the URL. If not specified the URL is printed to the page outstream.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="imgurl.renderer"><b>renderer</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Path to rendering servlet. Any path that starts with a '/' is assumed to refer to a resource relative to web application root. Otherwise, the path is assumed to refer to resource relative to the current page directory.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="imgurl.chartid"><b>chartid</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+The id of the chart to render.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="imgurl.width"><b>width</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Width of the rendered chart image in pixel.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="imgurl.height"><b>height</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Height of the rendered chart image in pixel.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="imgurl.mime"><b>mime</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+The MIME type of the image. Currently image/png (default),image/svg and image/jpeg are supported.
+<br></td></tr><tr><td>default=image/png<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><h2><a name="chart"></a>
+		&lt;chart&gt;
+	</h2>
+		optional childs: 
+		<a href="#chartpostprocessor">
+			&lt;chartpostprocessor&gt;<br></a>
+Root tag of a chart description.
+
+data
+chartpostprocessor
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="chart.id"><b>id</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+ID under which the chart description bean will be stored in the
+page to be found by the img tag. Beware of using an
+ID which is not yet used for other beans in the page to avoid
+compile errors.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="chart.type"><b>type</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Type of the chart. One of area, areaxy, horizontalbar, horizontalbar3d,
+line, pie, scatter, stackedhorizontalbar, stackedverticalbar,
+stackedverticalbar3d, timeseries, verticalbar, verticalbar3d, xy,
+candlestick, highlow, gantt, wind, signal, verticalxybar, pie3d
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="chart.title"><b>title</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Title of the chart which is displayed on the chart panel
+above the plot pane.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="chart.xaxislabel"><b>xaxislabel</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Title of the chart's x-axis. This attributes is
+ignored if the type attribute of the parent chart tag is one
+of pie3d or pie.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="chart.yaxislabel"><b>yaxislabel</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Title of the chart's y-axis. This attributes is
+ignored if the type attribute of the parent chart tag is one
+of pie3d or pie.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="chart.background"><b>background</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Background image of the chart panel. The value of this
+attribute is the filename of a graphics file relative to the web
+application's root directory (e.g. /WEB-INF/img/bg.jpg).
+The image must be loadable by the default java.awt.Toolkit of the
+servlet container's JVM.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="chart.backgroundimagealpha"><b>backgroundimagealpha</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Chart's backgound alpha blending value as a float. Value ranges
+from 0.0 to 1.0.
+0.0
+/chart[backgroundimagealpha]
+<br></td></tr><tr><td>type=java.lang.Float<br>default=0.0<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="chart.antialias"><b>antialias</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Antialiased rendering of the chart.
+true
+/chart[backgroundimagealpha]
+<br></td></tr><tr><td>default=true<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="chart.showlegend"><b>showlegend</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Boolean value to switch on or off the legend display inside of this panel.
+true
+<br></td></tr><tr><td>default=true<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="chart.legendanchor"><b>legendanchor</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Sets the anchor of the legend inside of the panel. Possible values
+are 'north', 'south', 'west', 'east'.
+Ignored if showlegned is 'false'.
+'south'
+<br></td></tr><tr><td>default='south'<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><h2><a name="overlaidchart"></a>
+		&lt;overlaidchart&gt;
+	</h2>
+		optional childs: 
+		<a href="#chartpostprocessor">
+			&lt;chartpostprocessor&gt;<br></a>
+Root tag of a overlaid-chart description.
+
+data
+chartpostprocessor
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="overlaidchart.id"><b>id</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+ID under which the chart description bean will be stored in the
+page to be found by the img tag. Beware of using an
+ID which is not yet used for other beans in the page to avoid
+compile errors.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="overlaidchart.type"><b>type</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Type of the chart. In this version only overlaidxy is supported.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="overlaidchart.title"><b>title</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Title of the chart which is displayed on the chart panel
+above the plot pane.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="overlaidchart.xaxistype"><b>xaxistype</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Type of the domain axis. Possible values: date, number
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="overlaidchart.xaxislabel"><b>xaxislabel</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Title of the chart's x-axis. This attributes is
+ignored if the type attribute of the parent chart tag is one
+of pie3d or pie.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="overlaidchart.yaxistype"><b>yaxistype</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Type of the range axis. Possible values: date, number
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="overlaidchart.yaxislabel"><b>yaxislabel</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Title of the chart's y-axis. This attributes is
+ignored if the type attribute of the parent chart tag is one
+of pie3d or pie.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="overlaidchart.background"><b>background</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Background image of the chart panel. The value of this
+attribute is the filename of a graphics file relative to the web
+application's root directory (e.g. /WEB-INF/img/bg.jpg).
+The image must be loadable by the default java.awt.Toolkit of the
+servlet container's JVM.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="overlaidchart.backgroundimagealpha"><b>backgroundimagealpha</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Chart's backgound alpha blending value as a float. Value ranges
+from 0.0 to 1.0.
+0.0
+/chart[backgroundimagealpha]
+<br></td></tr><tr><td>type=java.lang.Float<br>default=0.0<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="overlaidchart.antialias"><b>antialias</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Antialiased rendering of the chart.
+true
+/chart[backgroundimagealpha]
+<br></td></tr><tr><td>default=true<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="overlaidchart.showlegend"><b>showlegend</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Boolean value to switch on or off the legend display inside of this panel.
+true
+<br></td></tr><tr><td>default=true<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="overlaidchart.legendanchor"><b>legendanchor</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Sets the anchor of the legend inside of the panel. Possible values
+are 'north', 'south', 'west', 'east'.
+Ignored if showlegned is 'false'.
+'south'
+<br></td></tr><tr><td>default='south'<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><h2><a name="combinedchart"></a>
+		&lt;combinedchart&gt;
+	</h2>
+		optional childs: 
+		<a href="#chartpostprocessor">
+			&lt;chartpostprocessor&gt;<br></a>
+Root tag of a combined-chart description.
+
+plot
+chartpostprocessor
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="combinedchart.id"><b>id</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+ID under which the chart description bean will be stored in the
+page to be found by the img tag. Beware of using an
+ID which is not yet used for other beans in the page to avoid
+compile errors.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="combinedchart.type"><b>type</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Type of the chart. One of combinedxy
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="combinedchart.layout"><b>layout</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Layout of the chart. Either vertical or horizontal
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="combinedchart.title"><b>title</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Title of the chart which is displayed on the chart panel
+above the plot pane.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="combinedchart.xaxislabel"><b>xaxislabel</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Title of the chart's x-axis. This attributes is
+ignored if the type attribute of the parent chart tag is one
+of pie3d or pie.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="combinedchart.yaxislabel"><b>yaxislabel</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Title of the chart's y-axis. This attributes is
+ignored if the type attribute of the parent chart tag is one
+of pie3d or pie.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="combinedchart.background"><b>background</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Background image of the chart panel. The value of this
+attribute is the filename of a graphics file relative to the web
+application's root directory (e.g. /WEB-INF/img/bg.jpg).
+The image must be loadable by the default java.awt.Toolkit of the
+servlet container's JVM.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="combinedchart.backgroundimagealpha"><b>backgroundimagealpha</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Chart's backgound alpha blending value as a float. Value ranges
+from 0.0 to 1.0.
+0.0
+/chart[backgroundimagealpha]
+<br></td></tr><tr><td>type=java.lang.Float<br>default=0.0<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="combinedchart.antialias"><b>antialias</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Antialiased rendering of the chart.
+true
+/chart[backgroundimagealpha]
+<br></td></tr><tr><td>default=true<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="combinedchart.showlegend"><b>showlegend</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Boolean value to switch on or off the legend display inside of this panel.
+true
+<br></td></tr><tr><td>default=true<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="combinedchart.legendanchor"><b>legendanchor</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Sets the anchor of the legend inside of the panel. Possible values
+are 'north', 'south', 'west', 'east'.
+Ignored if showlegned is 'false'.
+'south'
+<br></td></tr><tr><td>default='south'<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><h2><a name="legend"></a>
+		&lt;legend&gt;
+	</h2>
+This tag is used to render the legend of a chart in a separate image.
+It assumes that somewhere else in the JSP a chart tag defines a chart
+with the same ID as this legend tag.
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="legend.renderer"><b>renderer</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Path to rendering servlet relative to web apps root URL
+(e.g. servlet/cewolf).
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.id"><b>id</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+ID under which the chart description bean will be stored in the
+session to be found by the rendering servlet. Beware of using an
+ID which is not yet used for other beans in the session to avoid
+overriding.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.width"><b>width</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.height"><b>height</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.mime"><b>mime</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+The MIME type of the image. Currently image/png (default) and image/svg are supported.
+image/png
+<br></td></tr><tr><td>default=image/png<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.alt"><b>alt</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.hspace"><b>hspace</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.vspace"><b>vspace</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.align"><b>align</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.border"><b>border</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.ismap"><b>ismap</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.longdesc"><b>longdesc</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.usemap"><b>usemap</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.class"><b>class</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.dir"><b>dir</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.lang"><b>lang</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.onclick"><b>onclick</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.ondbclick"><b>ondbclick</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.onkeydown"><b>onkeydown</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.onkeypress"><b>onkeypress</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.onkeyup"><b>onkeyup</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.onmousedown"><b>onmousedown</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.onmousemove"><b>onmousemove</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.onmouseout"><b>onmouseout</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.onmouseover"><b>onmouseover</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.onmouseup"><b>onmouseup</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.style"><b>style</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="legend.htmltitle"><b>htmltitle</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Corresponds to appropriate HMTL &lt;img&gt; title attribute.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.removeAfterRender"><b>removeAfterRender</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Remove image after rendering (defaults to false). WARNING. This may cause problems if your users expect to save the images or paste them into other applications such as WORD. 
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.forceSessionId"><b>forceSessionId</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Forces jsessionid to be added to image url. (Defaults to True)
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="img.timeout"><b>timeout</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Sets the timeout value used in the LongTermSessionStorage obj. Value is in seconds. Default is 5 Minutes.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><h2><a name="data"></a>
+		&lt;data&gt;
+	</h2>
+		optional childs: 
+		<a href="#producer">
+			&lt;producer&gt;<br></a>
+A data tag provides all information needed to retrieve the data which are
+needed by the chart. Current version only supports data provided by a
+DatasetProducer. In future versions there will be tags to provide data
+from a datasource (e.g. via SQL).
+producer
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr></tbody></table><h2><a name="producer"></a>
+		&lt;producer&gt;
+	</h2>
+		optional childs: 
+		<a href="#param">
+			&lt;param&gt;<br></a>
+A data tag provides all information needed to retrieve the data which are
+needed by the chart. Current version only supports data provided by a
+DatasetProducer. In future versions there will be tags to provide data
+from a datasource (e.g. via SQL).
+param
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="producer.id"><b>id</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+ID under which an object of type DatasetProducer can be found in
+pageContext. This object is used to retrieve the dataset of the chart.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="producer.usecache"><b>usecache</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Determines if formally produced data should be reused if possible.
+true
+<br></td></tr><tr><td>default=true<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><h2><a name="chartpostprocessor"></a>
+		&lt;chartpostprocessor&gt;
+	</h2>
+		optional childs: 
+		<a href="#param">
+			&lt;param&gt;<br></a>
+A chart postprocessor tag references an object of type ChartProstProcessor
+which must be defined in pageContext under the provided ID. This object
+is called back after chart generation to post process the chart in any
+manner.
+param
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="chartpostprocessor.id"><b>id</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+ID under which an object of type ChartPostProcessor can be found in
+pageContext. This object is used to postprocess the rendered chart.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><h2><a name="param"></a>
+		&lt;param&gt;
+	</h2>
+Name/value-pair to paramterize a surrounding tag whose handler must
+implement the Parameterized interface.
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="param.name"><b>name</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Name of the param
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="param.value"><b>value</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Value of the param. Must be serializable.
+<br></td></tr><tr><td>type=java.io.Serializable<br>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><h2><a name="gradientpaint"></a>
+		&lt;gradientpaint&gt;
+	</h2>
+The gradientpaint tag provides a way to fill a shape with a linear
+color gradient pattern. If Point P1 with Color C1 and Point P2 with
+Color C2 are specified in user space, the Color on the P1, P2
+connecting line is proportionally changed from C1 to C2. Any point
+P not on the extended P1, P2 connecting line has the color of the
+point P' that is the perpendicular projection of P on the extended P1,
+P2 connecting line. Points on the extended line outside of the P1,
+P2 segment can be colored in one of two ways.
+&lt;ul&gt;
+&lt;li&gt;If the gradient is cyclic then the points on the extended
+P1, P2 connecting line cycle back and forth between the colors C1
+and C2.
+&lt;li&gt;If the gradient is acyclic then points on the P1 side of
+the segment have the constant Color C1 while points on the P2 side
+have the constant Color C2.
+The two colors are defined in a nested point tag of this tag.
+point
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="gradientpaint.cyclic"><b>cyclic</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Does the gradient cycle repeatedly between the two colors C1 and C2.
+false
+<br></td></tr><tr><td>default=false<br>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><h2><a name="point"></a>
+		&lt;point&gt;
+	</h2>
+Defines a point with x and y coordinates and a color.
+colorpaint
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="point.x"><b>x</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+The x coordinate of the point.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="point.y"><b>y</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+The y coordinate of the point.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="point.color"><b>color</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><h2><a name="colorpaint"></a>
+		&lt;colorpaint&gt;
+	</h2>
+Fills the area defined by the parent tag with a color.
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="colorpaint.color"><b>color</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+The color to be used to fill the parent tag's area.
+The color definition is compatible with the
+HTML one. E.g. black is '#000000' and red is '#FF0000'. However it
+is possible to append two hex numbers for the alpha channel. Thus
+'#FF000080' is red with alpha blending of 50%.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><h2><a name="texturepaint"></a>
+		&lt;texturepaint&gt;
+	</h2>
+The texturepaint tag provides a way to fill the area of the parent tag
+with a texture that is specified as an image. The texture is anchored to
+the upper left corner of the parent tags area.
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="texturepaint.image"><b>image</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+Image fo the texture. The value of this
+attribute is the filename of a graphics file relative to the web
+application's root directory (e.g. /WEB-INF/img/bg.jpg).
+The image must be loadable by the default java.awt.Toolkit of the
+servlet container's JVM.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="texturepaint.width"><b>width</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+The width of the texture.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="texturepaint.height"><b>height</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+The height of the texture.
+<br></td></tr><tr><td>required=true<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><h2><a name="map"></a>
+		&lt;map&gt;
+	</h2>
+This tag defines an image and tooltip map for the parent img tag.
+img
+<p></p><table cellpadding="3" cellspacing="0" border="1" width="85%"><tbody><tr><th colspan="2">Attributes</th></tr><tr><td valign="top" width="15%"><a name="map.linkgeneratorid"><b>linkgeneratorid</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+The ID of the class which implements the appropriate de.laures.cewolf.LinkGenerator.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr><tr><td valign="top" width="15%"><a name="map.tooltipgeneratorid"><b>tooltipgeneratorid</b><br></a></td><td><table border="0"><tbody><tr><td width="100%">
+The ID of the class which implements the appropriate com.jrefinery.chart.tooltips.ToolTipGenerator.
+<br></td></tr><tr><td>required=false<br>rtexprvalue=true<br></td></tr></tbody></table></td></tr></tbody></table><p></p><a height="30" target="new" href="http://sourceforge.net"><img alt="SourceForge Logo" border="0" height="30" src="http://sourceforge.net/sflogo.php?group_id=57282&type=5"></a></body></html>

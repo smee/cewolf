@@ -9,6 +9,7 @@
             <include>RELEASE*</include>
             <include>LICENSE*</include>
             <include>NOTICE*</include>
+            <include>*.txt</include>
             <include>pom.xml</include>
             <include>.*</include>
           </includes>

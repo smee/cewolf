@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Cewolf Tutorial(4): Define the chart in your JSP</title>
+  <meta name="author" content="Guido Laures">
+  <link href="../cewolf.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>Tutorial: Step 4</h1>
+<h2>Define the chart in your JSP</h2>
+<pre>&lt;%@page contentType="text/html"%&gt;<br>&lt;%@taglib uri='/WEB-INF/cewolf.tld' prefix='cewolf' %&gt;<br>&lt;HTML&gt;<br>&lt;BODY&gt;<br>&lt;H1&gt;Page View Statistics&lt;/H1&gt;<br>&lt;HR&gt;<br>&lt;jsp:useBean id="pageViews" class="de.laures.cewolf.example.PageViewCountData"/&gt;<br>&lt;cewolf:chart <br>    id="line" <br>    title="Page View Statistics" <br>    type="line" <br>    xaxislabel="Page" <br>    yaxislabel="Views"&gt;<br>    &lt;cewolf:data&gt;<br>        &lt;cewolf:producer id="pageViews"/&gt;<br>    &lt;/cewolf:data&gt;<br>&lt;/cewolf:chart&gt;<br>&lt;p&gt;<br>&lt;cewolf:img chartid="line" renderer="cewolf" width="400" height="300"/&gt;<br>&lt;P&gt;<br>&lt;/BODY&gt;<br>&lt;/HTML&gt;<br></pre>
+<p> As you can see there are different tags of the cewolf taglib
+involved. The first &lt;cewolf:chart&gt; tag defines a chart with all
+its parameters. The concrete rendering is handled by the
+&lt;cewolf:img&gt; tag which adds the correct &lt;img&gt; tag in the
+rendered HTML page. The connection between both cewolf tags inside the
+JSP is specified by using the same <tt>id</tt> attributes. </p>
+<p> When calling this JSP from a client browser you should see the page
+view statistic chart. If you got a broken image have a look at your
+container's log files. </p>
+<p> <a href="step5.html">Step 5: Create ImageMap and Tooltip
+Information&gt;&gt;</a> </p>
+<a height="30" target="new" href="http://sourceforge.net"><img
+ alt="SourceForge Logo" border="0" height="30"
+ src="http://sourceforge.net/sflogo.php?group_id=57282&amp;type=5"></a>
+</body>
+</html>

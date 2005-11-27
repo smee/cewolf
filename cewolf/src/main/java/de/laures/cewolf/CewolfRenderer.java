@@ -57,6 +57,7 @@ public class CewolfRenderer extends HttpServlet implements WebConstants
   private static final String STATE        = "state";
   private boolean             debugged     = false;
   private int                 requestCount = 0;
+  private Byte 					lock = Byte.valueOf("0");
   private Configuration       config       = null;
 
   public void init( ServletConfig servletCfg ) throws ServletException
@@ -86,7 +87,7 @@ public class CewolfRenderer extends HttpServlet implements WebConstants
    *           configured DatasetProcuder
    */
   
-  public synchronized void printParameters(HttpServletRequest request)
+  public void printParameters(HttpServletRequest request)
   {
     Enumeration enumeration = request.getParameterNames();
     while (enumeration.hasMoreElements())
@@ -110,9 +111,17 @@ public class CewolfRenderer extends HttpServlet implements WebConstants
       requestState(response);
       return;
     }
-    requestCount++;
+    synchronized (lock) {
+    	requestCount++;
+	}
+    
     int width = 400;
     int height = 400;
+    boolean removeAfterRendering = false;
+    if ( request.getParameter(REMOVE_AFTER_RENDERING) != null )
+    {
+    	removeAfterRendering = true;
+    }
     if ( request.getParameter(WIDTH_PARAM) != null )
     {
       width = Integer.parseInt(request.getParameter(WIDTH_PARAM));
@@ -156,6 +165,17 @@ public class CewolfRenderer extends HttpServlet implements WebConstants
     catch (Throwable t)
     {
       logAndRenderException(t, response, width, height);
+    }
+    finally
+    {
+    	if (removeAfterRendering)
+    	{
+    		try {
+				storage.removeChartImage(imgKey , request);
+			} catch (CewolfException e) {
+				log("Removal of image failed", e);
+			}
+    	}
     }
   }
 

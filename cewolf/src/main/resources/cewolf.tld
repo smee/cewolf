@@ -287,6 +287,22 @@
            Corresponds to appropriate HMTL &lt;img&gt; title attribute.
         </description>
     </attribute>
+     <attribute>
+        <name>forceSessionId</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Add JSession id.
+        </description>
+    </attribute>
+    <attribute>
+        <name>removeAfterRender</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Remove image after rendering (defaults to false).
+        </description>
+    </attribute>
 </tag>
 <tag>
     <name>imgurl</name>
@@ -719,6 +735,22 @@
        It assumes that somewhere else in the JSP a chart tag defines a chart
        with the same ID as this legend tag.
     </description>
+     <attribute>
+        <name>forceSessionId</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Add JSession id.
+        </description>
+    </attribute>    
+    <attribute>
+        <name>removeAfterRender</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Remove image after rendering (defaults to false).
+        </description>
+    </attribute>
     <attribute>
         <name>renderer</name>
         <required>true</required>

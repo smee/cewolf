@@ -24,6 +24,7 @@ package de.laures.cewolf;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 
 /**
@@ -72,4 +73,15 @@ public interface Storage{
 	 * @throws CewolfException
 	 */
 	public void init(ServletContext servletContext) throws CewolfException;
+
+
+	/**
+	 * Removes the image from the storage
+	 * @param imgId Image id
+	 * @param request Servlet request
+	 * @return Image id
+	 * @throws CewolfException
+	 */
+	public String removeChartImage(String imgId, HttpServletRequest request)
+			throws CewolfException;
 }

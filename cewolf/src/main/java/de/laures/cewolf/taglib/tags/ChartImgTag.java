@@ -66,7 +66,7 @@ public class ChartImgTag extends HTMLImgTag implements CewolfRootTag, Mapped, Ta
   private String               mimeType          = DEFAULT_MIME_TYPE;
   private int                  timeout           = DEFAULT_TIMEOUT;
   protected String             sessionKey        = null;
-
+  
   private ChartImageDefinition chartImageDefinition;
 
   public int doStartTag() throws JspException
@@ -165,18 +165,27 @@ public class ChartImgTag extends HTMLImgTag implements CewolfRootTag, Mapped, Ta
    * @param mimeType the mime-type (for example png) of it
    * @return The full url 
    */
-  public static String buildImgURL(String renderer, PageContext pageContext, String sessionKey, int width, int height, String mimeType) {
+  public static String buildImgURL(
+		  String renderer, PageContext pageContext, String sessionKey, int width, int height, String mimeType,
+		  boolean forceSessionId, boolean removeAfterRender) {
 	renderer = fixAbsolutURL(renderer, pageContext);
 	final HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
 	StringBuffer url = new StringBuffer(response.encodeURL(renderer));
 	if ( url.toString().indexOf(SESSIONID_KEY) == -1 )
 	{
-	  final String sessionId = pageContext.getSession().getId();
-	  url.append(";" + SESSIONID_KEY + "=" + sessionId);
+		if (forceSessionId)
+		{
+			  final String sessionId = pageContext.getSession().getId();
+			  url.append(";" + SESSIONID_KEY + "=" + sessionId);			
+		}
 	}
 	url.append("?" + IMG_PARAM + "=" + sessionKey);
 	url.append(AMPERSAND + WIDTH_PARAM + "=" + width);
 	url.append(AMPERSAND + HEIGHT_PARAM + "=" + height);
+	if (removeAfterRender)
+	{
+		url.append(AMPERSAND + REMOVE_AFTER_RENDERING + "=true");		
+	}
 	url.append(AMPERSAND + "iehack=" + MIMEExtensionHelper.getExtensionForMimeType(mimeType));
 	return url.toString();  	
   }
@@ -188,7 +197,7 @@ public class ChartImgTag extends HTMLImgTag implements CewolfRootTag, Mapped, Ta
    */
   protected String getImgURL()
   {
-  	return buildImgURL(renderer, pageContext, sessionKey, width, height, mimeType);
+  	return buildImgURL(renderer, pageContext, sessionKey, width, height, mimeType, forceSessionId, removeAfterRender);
   }
 
   public Object getRenderingInfo() throws CewolfException

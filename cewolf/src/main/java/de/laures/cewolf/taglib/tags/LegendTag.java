@@ -85,7 +85,7 @@ public class LegendTag extends HTMLImgTag implements CewolfRootTag, TaglibConsta
 	* encoded into the image URL even if cookies are enabled on the client side.
 	*/
 	protected String getImgURL() {
-		return ChartImgTag.buildImgURL(renderer, pageContext, sessionKey, width, height, mimeType);
+		return ChartImgTag.buildImgURL(renderer, pageContext, sessionKey, width, height, mimeType, forceSessionId,removeAfterRender);
 	}
 
     protected void reset() {

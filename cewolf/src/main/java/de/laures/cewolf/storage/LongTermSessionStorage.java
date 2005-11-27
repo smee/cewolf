@@ -100,4 +100,23 @@ public class LongTermSessionStorage implements Storage
   public void init( ServletContext servletContext ) throws CewolfException {
   }
 
+  /**
+   * @see de.laures.cewolf.Storage#removeChartImage(java.lang.String, javax.servlet.jsp.PageContext)
+   */
+  public String removeChartImage(String cid, HttpServletRequest request) throws CewolfException {
+	  HttpSession session = request.getSession();
+	  // No session exit
+	  if (session == null)
+	  {
+		  return cid;
+	  }
+	  SessionStorageGroup ssg = (SessionStorageGroup) session.getAttribute("CewolfCharts");
+	  if ( ssg == null )
+	  {
+		  // No group exit
+		  return cid;
+	  }
+	  ssg.remove(cid);
+	  return cid;  
+  }
 }

@@ -157,4 +157,19 @@ public class FileStorage implements Storage {
 		return basePath + "_chart" + id;
 	}
 
+	/**
+	 * @see de.laures.cewolf.Storage#removeChartImage(java.lang.String, javax.servlet.jsp.PageContext)
+	 */
+	public String removeChartImage(String imgKey, HttpServletRequest pageContext) throws CewolfException {
+		File file = new File(getFileName(imgKey));
+		if (file.exists())
+		{
+			if (!file.delete())
+			{
+				throw new CewolfException("Could not delete file " + file.getAbsolutePath());
+			}
+		}
+		return imgKey;
+	}
+
 }

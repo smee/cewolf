@@ -90,6 +90,32 @@ public abstract class AbstractSessionStorage implements Storage
     return sessionKey;
   }
   
+	/**
+	 */
+	public String removeChartImage(String imgKey, HttpServletRequest request)
+			throws CewolfException {
+		final HttpSession session = request.getSession();
+		if (session == null)
+		{
+			return imgKey;
+		}
+		return removeChartImage(imgKey, session);		
+	}
+
+	/**
+	 * @param cid
+	 * @param session
+	 * @return
+	 * @throws CewolfException
+	 */
+	protected String removeChartImage(String cid, HttpSession session)
+			throws CewolfException {
+		synchronized (session) {
+			session.removeAttribute(cid);
+		}
+		return cid;
+	}
+
   protected abstract Object getCacheObject( ChartImage cid ) throws CewolfException;
 
   /**

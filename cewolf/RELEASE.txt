@@ -1,3 +1,19 @@
+Release Notes for Version 0.13.0
+--------------------------------
+-Jpeg image support added.
+-Added new tag parameters to img and legend:
+	-removeAfterRender will remove images from storage immediately. Defaults to False. NOTE: This 
+	may cause problems if your users expect to copy or save the images from the browser as some
+	browsers will put the url in the paste buffer and attempt to reload when pasted somewhere such 
+	as MS Word.
+	-forceSessionId will add jsessionid parameter to the image url. Defaults to True. This matches
+	existing functionality but now allows the option to disable this for certain use cases.
+	
+
+Release Notes for Version 0.12.0
+--------------------------------
+-Supports JFC 1.0.0-RC1
+
 Release Notes for Version 0.11.0 Alpha
 --------------------------------
 -Now supports JFC 1.0 Pre 2

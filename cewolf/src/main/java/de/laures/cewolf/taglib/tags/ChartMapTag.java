@@ -171,25 +171,29 @@ public class ChartMapTag extends CewolfTag {
 		String link = null;
 		if (useJFreeChartLinkGenerator) {
 			link = ce.getURLText();
-		} else if (linkGenerator instanceof CategoryItemLinkGenerator) {
-			if (ce instanceof CategoryItemEntity) {
-				CategoryItemEntity catEnt = (CategoryItemEntity) ce;
-				link = ((CategoryItemLinkGenerator) linkGenerator).generateLink(dataset, catEnt.getSeries(), catEnt.getCategory());
-			}
-		} else if (linkGenerator instanceof XYItemLinkGenerator) {
-		    if (ce instanceof XYItemEntity) {
-				XYItemEntity xyEnt = (XYItemEntity) ce;
-				link = ((XYItemLinkGenerator) linkGenerator).generateLink(dataset, xyEnt.getSeriesIndex(), xyEnt.getItem());
-		    } else {
-		        // Note; there is a simple ChartEntity also passed since Jfreechart 1.0rc1, that is ignored
-		        LOG.debug("Link entity skipped, not XYItemEntity.class:" + ce);
-		    }
-		} else if (linkGenerator instanceof PieSectionLinkGenerator) {
-		    if (ce instanceof PieSectionEntity) {
-				PieSectionEntity pieEnt = (PieSectionEntity) ce;
-				link = ((PieSectionLinkGenerator) linkGenerator).generateLink(dataset, pieEnt.getSectionKey());
-		    }
-		}
+		} else if (linkGenerator instanceof CategoryItemLinkGenerator || linkGenerator instanceof XYItemLinkGenerator || linkGenerator instanceof PieSectionLinkGenerator) {
+    		if (linkGenerator instanceof CategoryItemLinkGenerator) {
+    			if (ce instanceof CategoryItemEntity) {
+    				CategoryItemEntity catEnt = (CategoryItemEntity) ce;
+    				link = ((CategoryItemLinkGenerator) linkGenerator).generateLink(dataset, catEnt.getSeries(), catEnt.getCategory());
+    			}
+    		}
+    		if (linkGenerator instanceof XYItemLinkGenerator) {
+  		    if (ce instanceof XYItemEntity) {
+    				XYItemEntity xyEnt = (XYItemEntity) ce;
+    				link = ((XYItemLinkGenerator) linkGenerator).generateLink(dataset, xyEnt.getSeriesIndex(), xyEnt.getItem());
+  		    } else {
+  		        // Note; there is a simple ChartEntity also passed since Jfreechart 1.0rc1, that is ignored
+  		        LOG.debug("Link entity skipped, not XYItemEntity.class:" + ce);
+  		    }
+    		}
+    		if (linkGenerator instanceof PieSectionLinkGenerator) {
+  		    if (ce instanceof PieSectionEntity) {
+    				PieSectionEntity pieEnt = (PieSectionEntity) ce;
+    				link = ((PieSectionLinkGenerator) linkGenerator).generateLink(dataset, pieEnt.getSectionKey());
+  		    }
+    		}
+  	}
 		return link;
 	}
 
@@ -197,23 +201,29 @@ public class ChartMapTag extends CewolfTag {
 		String tooltip = null;
 		if (useJFreeChartTooltipGenerator) {
 			tooltip = ce.getToolTipText();
-		} else if (toolTipGenerator instanceof CategoryToolTipGenerator) {
+		} else if (toolTipGenerator instanceof CategoryToolTipGenerator || toolTipGenerator instanceof XYToolTipGenerator || toolTipGenerator instanceof PieToolTipGenerator) {
+		  if (toolTipGenerator instanceof CategoryToolTipGenerator) {
 		    if (ce instanceof CategoryItemEntity) {
 				CategoryItemEntity catEnt = (CategoryItemEntity) ce;
 				tooltip = ((CategoryToolTipGenerator) toolTipGenerator).generateToolTip((CategoryDataset) dataset, catEnt.getSeries(), catEnt.getCategoryIndex());
 		    }
-		} else if (toolTipGenerator instanceof XYToolTipGenerator) {
+		  }
+		    
+		  if (toolTipGenerator instanceof XYToolTipGenerator) {
 		    if (ce instanceof XYItemEntity) {
 				XYItemEntity xyEnt = (XYItemEntity) ce;
 				tooltip = ((XYToolTipGenerator) toolTipGenerator).generateToolTip((XYDataset) dataset, xyEnt.getSeriesIndex(), xyEnt.getItem());
 		    }
-		} else if (toolTipGenerator instanceof PieToolTipGenerator) {
+		  }
+
+		  if (toolTipGenerator instanceof PieToolTipGenerator) {
 		    if (ce instanceof PieSectionEntity) {
 				PieSectionEntity pieEnt = (PieSectionEntity) ce;
 				PieDataset ds = (PieDataset) dataset;
 				final int index = pieEnt.getSectionIndex();
 				tooltip = ((PieToolTipGenerator) toolTipGenerator).generateToolTip(ds, ds.getKey(index), index);
 		    }
+		  }
 		} else {
 			// throw because category is unknown
 		    throw new JspException(

@@ -107,15 +107,15 @@
   <scope>provided</scope>
     </dependency>
 <dependency>
-      <groupId>jfree</groupId>
+      <groupId>jfreechart</groupId>
       <artifactId>jfreechart</artifactId>
-      <version>1.0.0-rc1</version>
+      <version>1.0.0</version>
   <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>jfree</groupId>
       <artifactId>jcommon</artifactId>
-      <version>1.0.0-rc1</version>
+      <version>1.0.0</version>
   <scope>compile</scope>
     </dependency>
   <dependency>

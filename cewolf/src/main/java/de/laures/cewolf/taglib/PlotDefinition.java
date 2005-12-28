@@ -38,7 +38,6 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.Dataset;
 import org.jfree.data.xy.IntervalXYDataset;
 import org.jfree.data.xy.OHLCDataset;
-import org.jfree.data.xy.SignalsDataset;
 import org.jfree.data.xy.XYDataset;
 
 import de.laures.cewolf.ChartValidationException;
@@ -91,9 +90,9 @@ public class PlotDefinition implements DataAware, Serializable, TaglibConstants,
 						check(data, OHLCDataset.class, rendererIndex);
 						plot = new XYPlot((OHLCDataset) data, null, null, (XYItemRenderer) rend);
 						break;
-					case SIGNAL :
-						check(data, SignalsDataset.class, rendererIndex);
-						plot = new XYPlot((SignalsDataset) data, null, null, (XYItemRenderer) rend);
+					//case SIGNAL :
+					//	check(data, SignalsDataset.class, rendererIndex);
+					//	plot = new XYPlot((SignalsDataset) data, null, null, (XYItemRenderer) rend);
 					default :
 						throw new AttributeValidationException(chartType + ".type", type);
 				}

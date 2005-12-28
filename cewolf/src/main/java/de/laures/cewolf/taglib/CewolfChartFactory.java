@@ -48,7 +48,6 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.data.general.ValueDataset;
 import org.jfree.data.xy.IntervalXYDataset;
 import org.jfree.data.xy.OHLCDataset;
-import org.jfree.data.xy.SignalsDataset;
 import org.jfree.data.xy.WindDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYZDataset;
@@ -184,9 +183,9 @@ public abstract class CewolfChartFactory implements ChartConstants, AxisConstant
       case WIND :
         check(data, WindDataset.class, chartType);
         return ChartFactory.createWindPlot(title, xAxisLabel, yAxisLabel, (WindDataset) data, true, false, false);
-      case SIGNAL :
-        check(data, SignalsDataset.class, chartType);
-        return ChartFactory.createSignalChart(title, xAxisLabel, yAxisLabel, (SignalsDataset) data, true);
+      //case SIGNAL :
+      //  check(data, SignalsDataset.class, chartType);
+      //  return ChartFactory.createSignalChart(title, xAxisLabel, yAxisLabel, (SignalsDataset) data, true);
       case VERRTICAL_XY_BAR :
         check(data, IntervalXYDataset.class, chartType);
         return ChartFactory.createXYBarChart(title, xAxisLabel, true,yAxisLabel, (IntervalXYDataset) data, PlotOrientation.VERTICAL, true, false, false);

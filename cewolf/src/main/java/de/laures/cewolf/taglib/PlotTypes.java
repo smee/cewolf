@@ -31,7 +31,6 @@ import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.renderer.xy.CandlestickRenderer;
 import org.jfree.chart.renderer.xy.HighLowRenderer;
-import org.jfree.chart.renderer.xy.SignalRenderer;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYAreaRenderer;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
@@ -87,7 +86,7 @@ public class PlotTypes {
 			case 5: return new XYStepRenderer();
 			case 6: return new CandlestickRenderer();
 			case 7: return new HighLowRenderer();
-			case 8: return new SignalRenderer();
+			//case 8: return new SignalRenderer();
 			case 9: return new BarRenderer();
 			case 10: return new AreaRenderer();
 			case 11: return new LineAndShapeRenderer(true,false);

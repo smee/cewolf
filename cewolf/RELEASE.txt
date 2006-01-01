@@ -8,6 +8,10 @@ Release Notes for Version 0.13.0
 	as MS Word.
 	-forceSessionId will add jsessionid parameter to the image url. Defaults to True. This matches
 	existing functionality but now allows the option to disable this for certain use cases.
+-Supports JFC 1.0.0 Final
+	JFC no longer supports the signals chart type. This has been commented out in cewolf for now
+	because there is talk on the forum that it may come back.
+-At release time, site is not fully updated. This will come in the near future as I move the site fully to Maven2.
 	
 
 Release Notes for Version 0.12.0

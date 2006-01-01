@@ -28,9 +28,6 @@
 	   <directory>repository</directory>
 	</fileSet>
 	<fileSet>
-	   <directory>docs</directory>
-	</fileSet>
-	<fileSet>
 	   <directory>target/javadoc</directory>
 	</fileSet>
 	<fileSet>

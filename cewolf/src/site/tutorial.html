@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title></title>
+<meta name="author" content="Guido Laures">
+<link href="cewolf.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1><a name="Tutorial">Tutorial</a></h1>
+<p>
+Let us assume the following scenario in which Cewolf might be a solution.<br>
+You have a running web application and you want a web page which shows statistics
+about your page visits. You want to have a line chart which looks like the
+one below (drag mouse to see image maps and tooltips).
+<p>
+    <script language="JavaScript" src="overlib.js"><!-- overLIB (c) Erik Bosrup --></script>
+<div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000;"></div>
+<map name="line">
+
+<area shape="RECT" COORDS="80,106,86,112" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="86,44,85,47,83,47,80,47,80,44,80,42,83,41,85,42,86,44,86,44" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="83,86,86,92,80,92,80,92" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="83,91,86,94,83,97,80,94,80,94" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="RECT" COORDS="125,106,131,112" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="131,48,130,50,128,51,126,50,125,48,126,45,128,45,130,45,131,48,131,48" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="128,91,131,97,125,97,125,97" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+
+<area shape="POLY" COORDS="128,92,131,95,128,98,125,95,125,95" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="RECT" COORDS="171,102,177,108" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="177,58,176,60,174,61,171,60,171,58,171,56,174,55,176,56,177,58,177,58" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="174,83,177,89,171,89,171,89" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="174,101,177,104,174,107,171,104,171,104" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="RECT" COORDS="216,104,222,110" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="222,56,221,58,219,59,217,58,216,56,217,54,219,53,221,54,222,56,222,56" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="219,75,222,81,216,81,216,81" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="219,92,222,95,219,98,216,95,216,95" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="RECT" COORDS="261,103,267,109" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="267,60,267,62,264,63,262,62,261,60,262,58,264,57,267,58,267,60,267,60" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="264,82,267,88,261,88,261,88" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="264,86,267,89,264,92,261,89,261,89" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="RECT" COORDS="307,98,313,104" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="313,69,312,71,310,72,308,71,307,69,308,67,310,66,312,67,313,69,313,69" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="310,91,313,97,307,97,307,97" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="310,77,313,80,310,83,307,80,307,80" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+
+<area shape="RECT" COORDS="352,90,358,96" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="358,76,358,79,355,79,353,79,352,76,353,74,355,73,358,74,358,76,358,76" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="355,89,358,95,352,95,352,95" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html">
+<area shape="POLY" COORDS="355,70,358,73,355,76,352,73,352,73" ONMOUSEOVER="return overlib('dummy.html', WIDTH, '20');" ONMOUSEOUT="return nd();" HREF="dummy.html"></map>
+<img BORDER="0" HEIGHT="300" WIDTH="400" ALT="" USEMAP="#line" src="img/tutorial.png">
+<p>
+<a href="tutorial/step1.html">Step 1: Prepare your application &gt;&gt;</a>
+</body>
+</html>

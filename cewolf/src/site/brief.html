@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title></title>
+  <meta name="author" content="Guido Laures">
+  <link href="cewolf.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>Introduction</h1>
+<p class="Body"> Cewolf can be used inside a Servlet/JSP based web
+application to embed complex graphical charts of all kinds (e.g. line,
+pie, bar chart, plots, etc.) into a web page. Therefore it provides a
+full featured tag library to define all properties of the chart (colors,
+strokes, legend, etc.). Thus the JSP which embedds the chart is not
+polluted with any java code. Everything is described with XML conform
+tags. </p>
+<p> Cewolf is based on <a
+ href="http://www.object-refinery.com/jfreechart/">JFreeChart</a> and
+uses it's rendering engine to render the final chart image into the
+clients response stream. No files are created on server side. Everything
+is based on lightweight session objects and dynamic data analysis.
+Cewolf consists of one servlet which handles the chart rendering and a
+taglibrary which translates the chart definition included in the JSP
+into an HTML img tag which consults the rendering servlet for retrieval
+of the appropriate chart. </p>
+<p> Simce the project has been funded in the middle of 2002 there have
+been <b>more then 150.000 page views and 16.000 downloads</b>
+(Sourceforge activity max: &gt;99,7%). </p>
+<p>
+<table border="1" cellpadding="5">
+  <tbody>
+    <tr>
+      <th class="featureGroup">Fully free and open</th>
+      <th class="featureGroup">100% Java compliant</th>
+    </tr>
+    <tr>
+      <td valign="top">
+      <ul>
+        <li>LGPL license</li>
+        <li>no charges</li>
+        <li>no restrictions</li>
+        <li>Support on <a
+ href="http://sourceforge.net/projects/cewolf">SourceForge Forums</a></li>
+        <li>short development and upgrade circles</li>
+      </ul>
+      </td>
+      <td valign="top">
+      <ul>
+        <li>no usage of native libraries</li>
+        <li>should run in every J2EE compliant server or servlet
+container</li>
+        <li>extensive usage of available open source projects</li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <th class="featureGroup">Full featured Chart Tag Library</th>
+      <th class="featureGroup">Huge number of different Charts</th>
+    </tr>
+    <tr>
+      <td valign="top">
+      <ul>
+        <li>no java coding inside the JSP needed</li>
+        <li>XML description of a chart</li>
+        <li>design time validation of chart tags</li>
+        <li>extensive <a href="taglib.html">tag documentation</a></li>
+      </ul>
+      </td>
+      <td valign="top">
+      <ul>
+        <li>Line [XY]</li>
+        <li>[3D] Pie</li>
+        <li>[3D] Horizonal Bar</li>
+        <li>[3D] Vertical [XY] Bar</li>
+        <li>[3D] Stacked Vertical Bar</li>
+        <li>Area [XY]</li>
+        <li>Scatter Plot</li>
+        <li>Candlestick</li>
+        <li>High Low</li>
+        <li>Gantt</li>
+        <li>Meter</li>
+        <li>Overlaid</li>
+        <li>Combined</li>
+      </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</p>
+<p> </p>
+<h1>Example</h1>
+<p> You can simply define a chart by including a chart tag into your JSP
+like this: </p>
+<pre>&lt;cewolf:chart <br>    id="XYChart"<br>    type="xy"<br>    title="XYChart" <br>    &lt;cewolf:gradient&gt;<br>        &lt;cewolf:point x="0" y="0" color="#FFFFFF"/&gt;<br>        &lt;cewolf:point x="0" y="300" color="#C8C8C8"/&gt;<br>    &lt;/cewolf:gradient&gt;<br>    &lt;cewolf:data&gt;<br>        &lt;cewolf:producer id="xyData"/&gt;<br>    &lt;/cewolf:data&gt;<br>&lt;/cewolf:chart&gt;<br>&lt;cewolf:img chartid="XYChart" renderer="cewolf" width="400" height="300"/&gt;<br></pre>
+<p> This results in a rendered chart like this: </p>
+<img alt="examplechart" src="img/examplexy.png">
+<p> As you can see only the view is defined in the JSP page. The model
+is produced by a so called DataProducer which must be available in the
+pageContext of the JSP. </p>
+<a href="http://sourceforge.net" target="new" height="30"><img
+ src="http://sourceforge.net/sflogo.php?group_id=57282&amp;type=5"
+ height="30" border="0" alt="SourceForge Logo"></a>
+</body>
+</html>

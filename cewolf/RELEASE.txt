@@ -12,7 +12,9 @@ Release Notes for Version 1.0
 	JFC no longer supports the signals chart type. This has been commented out in cewolf for now
 	because there is talk on the forum that it may come back.
 -At release time, site is not fully updated. This will come in the near future as I move the site fully to Maven2.
-	
+
+** I said I would get a new release out before the end of this year...
+it's 12/31/05 at 11:55pm where I'm at. ;-) Happy New year!
 
 Release Notes for Version 0.12.0
 --------------------------------

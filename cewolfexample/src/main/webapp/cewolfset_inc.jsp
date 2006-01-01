@@ -481,15 +481,7 @@ vertical labels with tooltips but without image map links<BR>
 </cewolf:chart>
 <cewolf:img chartid="gantt" renderer="/cewolf" width="300" height="300"/>
 </TD>
-<TD>
-Try the ImgURL tag<br>
-<cewolf:chart id="signals" title="Signal" type="signal" xaxislabel="Time">
-    <cewolf:data>
-        <cewolf:producer id="signalsData" />
-    </cewolf:data>
-</cewolf:chart>
-<img src='<cewolf:imgurl chartid="signals" renderer="/cewolf" width="300" height="300" mime="image/png"/>'>
-</TD>
+
 </TR>
 <TR>
 <TD>

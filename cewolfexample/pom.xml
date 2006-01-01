@@ -5,12 +5,12 @@
   <groupId>de.laures.cewolf</groupId>
   <artifactId>cewolfexample</artifactId>
   <packaging>war</packaging>
-  <version>0.12.0</version>
+  <version>1.0</version>
   <dependencies>
 	<dependency>
 		<groupId>cewolf</groupId>
 		<artifactId>cewolf</artifactId>
-		<version>0.12.0</version>
+		<version>1.0</version>
 </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -21,7 +21,7 @@
     <dependency>
       <groupId>jfree</groupId>
       <artifactId>jfreechart-demo</artifactId>
-      <version>1.0.0-RC1</version>
+      <version>1.0.0</version>
     </dependency>
 </dependencies>
   <build>

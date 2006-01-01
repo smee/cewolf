@@ -1,4 +1,4 @@
-Release Notes for Version 0.13.0
+Release Notes for Version 1.0
 --------------------------------
 -Jpeg image support added.
 -Added new tag parameters to img and legend:

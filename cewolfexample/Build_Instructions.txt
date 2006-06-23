@@ -1,7 +1,17 @@
-Cewolf uses Apache Maven 2 as the build system as of version 0.12.0. Maven 2 can be downloaded from http://maven.apache.org.
+Cewolf uses Apache Maven 2 as the build system as of version 0.12.0.
+Maven 2 can be downloaded from http://maven.apache.org.
 
-To build cewolf using M2 you must first load a couple of jars into your local repository. In the cewolf/repository folder, run "mvn install." This will load jfreechart-demo into your repository. All the other dependant jars are automatically downloaded by M2 from ibiblio.
+To build cewolf using M2 you must first load a couple of jars 
+into your local repository. In the cewolf/repository folder, 
+run: 
+   mvn install:install-file -Dfile=./repository/gnujaxp/gnujaxp.jar -DgroupId=gnujaxp -DartifactId=gnujaxp -Dpackaging=jar -Dversion=1.0.0 -DgeneratePom=true
+   
+This will load gnujaxp into your M2 local repository, and only needs to be done once.
+All the other dependant jars are automatically downloaded by M2 from ibiblio.
 
-To build cewolf, run "mvn install" from the cewolf folder. This will build the jar and javadocs place them in /target. 
+To build cewolf, run "mvn install" from the cewolf folder. 
+This will build the jar and javadocs place them in /target. 
 
-To build the zip file deployed on sourceforge, run "mvn assembly:assembly" from the cewolf folder. The zip will be placed in /target. This jar will contain all the dependant jars and the source.
+To build the zip file deployed on sourceforge, run "mvn assembly:assembly" 
+from the cewolf folder. The zip will be placed in /target. 
+This jar will contain all the dependant jars and the source.

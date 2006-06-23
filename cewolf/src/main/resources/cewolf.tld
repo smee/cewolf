@@ -1229,6 +1229,12 @@
 		<rtexprvalue>true</rtexprvalue>
 		<description>If the tooltips provided by the JFreeChart renderer should be used.</description>		
 	</attribute>	
+	<attribute>
+		<name>tooltipRendererClass</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+		<description>Full class name for a custom tooltip renderer implementation</description>		
+	</attribute>
 	
 </tag>
 </taglib>

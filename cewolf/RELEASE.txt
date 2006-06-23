@@ -1,3 +1,10 @@
+Release Notes for Version ???
+--------------------------------
+- Added ability to use custom ways to render tooltips of Map tag, by implementing ITooltipRenderer
+ interface. This would allow to use other javascript libraries like Dojo.
+- Optimized Map tag to render only those <area> elements which has either a non-null tooltip or non-null url.
+
+
 Release Notes for Version 1.0
 --------------------------------
 -Jpeg image support added.

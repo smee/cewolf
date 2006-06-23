@@ -23,6 +23,7 @@
 package de.laures.cewolf.taglib.tags;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Iterator;
 
@@ -44,20 +45,20 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.data.xy.XYDataset;
 
 import de.laures.cewolf.CewolfException;
-import de.laures.cewolf.Configuration;
 import de.laures.cewolf.links.CategoryItemLinkGenerator;
 import de.laures.cewolf.links.LinkGenerator;
 import de.laures.cewolf.links.PieSectionLinkGenerator;
 import de.laures.cewolf.links.XYItemLinkGenerator;
-import de.laures.cewolf.taglib.util.BrowserDetection;
 import de.laures.cewolf.taglib.util.PageUtils;
 import de.laures.cewolf.tooltips.CategoryToolTipGenerator;
+import de.laures.cewolf.tooltips.ITooltipRenderer;
 import de.laures.cewolf.tooltips.PieToolTipGenerator;
 import de.laures.cewolf.tooltips.ToolTipGenerator;
 import de.laures.cewolf.tooltips.XYToolTipGenerator;
 
 /**
  * Tag &lt;map&gt; which defines the tooltip and link tags.
+ * 
  * @see DataTag
  * @author  Guido Laures
  */
@@ -74,7 +75,29 @@ public class ChartMapTag extends CewolfTag {
 	boolean useJFreeChartLinkGenerator = false;
 	// If the tooltips provided by the JFreeChart renderer should be used.
 	boolean useJFreeChartTooltipGenerator = false;
-
+	
+	/**
+	 * Default tooltip renderer class
+	 */
+	private String tooltipRendererClass = ITooltipRenderer.Smart.class.getName(); 
+	
+	/**
+	 * Get the actual tooltip renderer
+	 * @return The IToolTipRenderer instance
+	 * @throws JspException If any exception occures, this wraps the original exception
+	 */
+	private ITooltipRenderer getTooltipRenderer() throws JspException {
+		try {
+			return (ITooltipRenderer) Class.forName(tooltipRendererClass).newInstance();
+		} catch (InstantiationException e) {
+			throw new JspException(e);
+		} catch (IllegalAccessException e) {
+			throw new JspException(e);
+		} catch (ClassNotFoundException e) {
+			throw new JspException(e);
+		}
+	}
+	
 	public int doStartTag() throws JspException {
 		// Object linkGenerator = getLinkGenerator();
 		Mapped root = (Mapped) PageUtils.findRoot(this, pageContext);
@@ -83,31 +106,58 @@ public class ChartMapTag extends CewolfTag {
 		try {
 			Dataset dataset = PageUtils.getDataset(chartId, pageContext);
 			Writer out = pageContext.getOut();
-			final boolean isIE = BrowserDetection.isIE((HttpServletRequest) pageContext.getRequest());
+			HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
+			
+			// create the tooltip renderer instance
+			ITooltipRenderer tooltipRenderer = getTooltipRenderer();
+			
+			// initialize tooltip renderer, if it has any tooltips enabled
 			if (hasToolTips()) {
-				enableToolTips(out, isIE);
+				tooltipRenderer.init((HttpServletRequest) pageContext.getRequest(), out, pageContext);
 			}
 			out.write("<MAP name=\"" + chartId + "\">\n");
 			ChartRenderingInfo info = (ChartRenderingInfo) root.getRenderingInfo();
 			Iterator entities = info.getEntityCollection().iterator();
+			// an String-buffer is used to decide if there was tooltip or link, this is used
+			// to drop out the area sections which has no functionality, because they are without
+			// tooltip or link
+			StringWriter areabuffer = new StringWriter();
+			
 			while (entities.hasNext()) {
 				ChartEntity ce = (ChartEntity) entities.next();
-				out.write("\n<AREA shape=\"" + ce.getShapeType() + "\" ");
-				out.write("COORDS=\"" + ce.getShapeCoords() + "\" ");
+				areabuffer.getBuffer().setLength(0);
 		        if (ce instanceof XYItemEntity)
 		        {
 		          dataset = ((XYItemEntity)ce).getDataset();
 		        }
 				if (!(ce instanceof LegendItemEntity)) {
+					// render tooltips
 					if (hasToolTips()) {
-						writeOutToolTip(dataset, out, isIE, ce);
+						String toolTip = generateToolTip(dataset, ce);
+						if (null != toolTip) {
+							tooltipRenderer.render(areabuffer, toolTip);
+						}
 					}
+					// render links
 					if (hasLinks()) {
-						writeOutLink(linkGenerator, dataset, out, ce);
+						final String link = generateLink(dataset, ce);
+						
+						if (null != link) {
+							final String href = response.encodeURL(link);
+							areabuffer.write("HREF=\"" + href + "\"");
+						}
 					}
 				}
-				out.write(">");
-			}
+				
+				// only write out those area sections, which has link or tooltip
+				// this is to reduce page size with too many aeas which does not do anything...
+				if (areabuffer.getBuffer().length()>0) {
+					out.write("\n<AREA shape=\"" + ce.getShapeType() + "\" ");
+					out.write("COORDS=\"" + ce.getShapeCoords() + "\" ");
+					out.write(areabuffer.getBuffer().toString());
+					out.write(">");
+				}
+			} // while
 		} catch (IOException ioex) {
 			log.error(ioex);
 			throw new JspException(ioex.getMessage());
@@ -133,38 +183,6 @@ public class ChartMapTag extends CewolfTag {
 	public void reset() {
 		this.toolTipGenerator = null;
 		this.linkGenerator = null;
-	}
-
-	public void writeOutLink(Object linkGen, Dataset dataset, Writer out, ChartEntity ce) throws IOException {
-		final String link = generateLink(dataset, ce);
-		
-		if (null != link) {
-			final String href = ((HttpServletResponse) pageContext.getResponse()).encodeURL(link);
-			out.write("HREF=\"" + href + "\"");
-		}
-	}
-
-	private void writeOutToolTip(Dataset dataset, Writer out, final boolean isIE, ChartEntity ce) throws IOException, JspException {
-		String toolTip = generateToolTip(dataset, ce);
-		if (null != toolTip) {
-			if (!isIE) {
-				out.write("ONMOUSEOVER=\"return overlib('"
-						+ toolTip + "', WIDTH, '20');\" ONMOUSEOUT=\"return nd();\" ");
-			} else {
-				out.write("ALT=\"" + toolTip + "\" ");
-			}
-		}
-	}
-
-	public void enableToolTips(Writer out, final boolean isIE) throws IOException {
-		if (!PageUtils.isToolTipsEnabled(pageContext) && !isIE) {
-			Configuration config = Configuration.getInstance(pageContext.getServletContext());
-			String overLibURL = ChartImgTag.fixAbsolutURL(config.getOverlibURL(), pageContext);
-			out.write("<script language=\"JavaScript\" src=\"");
-			out.write(overLibURL + "\"><!-- overLIB (c) Erik Bosrup --></script>\n");
-			out.write("<div id=\"overDiv\" style=\"position:absolute; visibility:hidden; z-index:1000;\"></div>\n");
-			PageUtils.setToolTipsEnabled(pageContext);
-		}
 	}
 
 	private String generateLink(Dataset dataset, ChartEntity ce) {
@@ -268,5 +286,13 @@ public class ChartMapTag extends CewolfTag {
 	public void setUseJFreeChartTooltipGenerator(boolean useJFreeChartTooltipGenerator) {
 		this.useJFreeChartTooltipGenerator = useJFreeChartTooltipGenerator;
 	}
+
+	/**
+	 * Allows you to change the tool-tip renderer class. 
+	 * @param tooltipRendererClass The full-class name of the renderer to use
+	 */
+	public void setTooltipRendererClass(String tooltipRendererClass) {
+		this.tooltipRendererClass = tooltipRendererClass;
+	}	
 	
 }

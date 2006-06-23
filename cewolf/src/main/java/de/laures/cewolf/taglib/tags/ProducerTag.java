@@ -34,7 +34,12 @@ import de.laures.cewolf.taglib.DataAware;
  */
 public class ProducerTag extends AbstractParameterizedObjectTag {
 
-    private boolean useCache = true;
+    /**
+	 * serialver.
+	 */
+	private static final long serialVersionUID = 6191680125340045036L;
+	
+	private boolean useCache = true;
 
     public int doEndTag() throws JspException {
         DatasetProducer dataProducer = null;
@@ -53,6 +58,10 @@ public class ProducerTag extends AbstractParameterizedObjectTag {
                     + DatasetProducer.class.getName());
         }
         DataAware dw = (DataAware) findAncestorWithClass(this, DataAware.class);
+        if (dw == null) {
+        	throw new JspException("Can not find parent plot or chart for data producer id=" + getId());
+        }
+        
         log.debug("setting data config on " + dw);
         log.debug("useCache = " + useCache);
         addParameter(DatasetProducer.PRODUCER_ATTRIBUTE_NAME, getId());

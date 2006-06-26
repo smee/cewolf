@@ -521,13 +521,14 @@ Meter Chart<br>
 <cewolf:img chartid="meterChart" renderer="/cewolf" width="300" height="300" />
 </TD>
 <TD>
-Stacked Area<br>
+Stacked Area (svg)<br>
 <cewolf:chart id="stackedArea" title="Stacked Area" type="stackedarea">
     <cewolf:data>
         <cewolf:producer id="categoryData" />
     </cewolf:data>
 </cewolf:chart>
-<cewolf:img chartid="stackedArea" renderer="/cewolf" width="300" height="300" />
+<cewolf:img chartid="stackedArea" renderer="/cewolf" width="300" height="300" mime="image/svg+xml" />
+
 </TD>
 </TR>
 

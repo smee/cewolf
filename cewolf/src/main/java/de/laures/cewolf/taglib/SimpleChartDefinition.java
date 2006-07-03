@@ -17,10 +17,9 @@ import de.laures.cewolf.DatasetProduceException;
 import de.laures.cewolf.DatasetProducer;
 
 /**
+ * Simple chart definition contains simple (non-overlaid/combined charts).
  * @author guido
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class SimpleChartDefinition extends AbstractChartDefinition implements DataAware, Serializable {
 
@@ -37,7 +36,5 @@ public class SimpleChartDefinition extends AbstractChartDefinition implements Da
     public void setDataProductionConfig(DatasetProducer dsp, Map params, boolean useCache) {
     	dataAware.setDataProductionConfig(dsp, params, useCache);
     }
-
-    
 
 }

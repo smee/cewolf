@@ -66,14 +66,22 @@ import de.laures.cewolf.DatasetProduceException;
  */
 public abstract class CewolfChartFactory implements ChartConstants, AxisConstants, LayoutConstants {
 
-    // chart type string
-  protected String chartType;
+  // chart type string
+  protected String _chartType;
+  // expected type/superclass for the dataset
+  protected Class _expectedDatasetType;
+  
   // map contains registered factories, (String) chartType->CewolfChartFactory mappings
   private static Map factories = new HashMap();
 
-    /** Creates a new instance of ChartFactory */
-  protected CewolfChartFactory(String chartType) {
-      this.chartType = chartType;
+  /** 
+   * Creates a new instance of ChartFactory 
+   * @chartType The chart type string
+   * @expectedDatasetType The dataset must instance of this type
+   */
+  protected CewolfChartFactory(String chartType, Class expectedDatasetType) {
+      this._chartType = chartType;
+      this._expectedDatasetType = expectedDatasetType;
   }
 
   /**
@@ -95,130 +103,200 @@ public abstract class CewolfChartFactory implements ChartConstants, AxisConstant
    * @param factory The factory to register
    */
   public static void registerFactory(CewolfChartFactory factory) {
-      factories.put(factory.chartType, factory);
+      factories.put(factory._chartType.toLowerCase(), factory);
   }
-
-  private static final int getChartTypeConstant(String type) {
-    final int res = ChartTypes.typeList.indexOf(type.toLowerCase());
-    if (res < 0) {
-      throw new RuntimeException("unsupported chart type " + type);
-    }
-    return res;
+    
+  /**
+   * Get cewolf chart factory for a certain type.
+   * @param chartType The type
+   * @return the factory, or null if not found
+   */
+  public static CewolfChartFactory getCewolfChartFactory(String chartType) {
+      CewolfChartFactory factory = (CewolfChartFactory) factories.get(chartType.toLowerCase());
+      return factory;
   }
-
+  
   private static final int getLayoutConstant(String layout) {
     return LayoutTypes.typeList.indexOf(layout.toLowerCase());
   }
   
+  // register/create known factories
   static {
     // histogram chart type
-    registerFactory(new CewolfChartFactory("histogram") {
+    registerFactory(new CewolfChartFactory("histogram", IntervalXYDataset.class) {
 	    public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
-	        check(data, IntervalXYDataset.class, this.chartType);
 	        return ChartFactory.createHistogram(title, xAxisLabel, yAxisLabel, (IntervalXYDataset) data, PlotOrientation.VERTICAL, true, false, false);
 	     }
     });
+    
+    registerFactory(new CewolfChartFactory("xy",  XYDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createXYLineChart(title, xAxisLabel, yAxisLabel, (XYDataset) data, PlotOrientation.VERTICAL, true, true, true);
+    	}
+    });
+    
+    registerFactory(new CewolfChartFactory("pie", PieDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createPieChart(title, (PieDataset) data, true, true, true);
+    	}
+    });
+    
+    registerFactory(new CewolfChartFactory("areaxy", XYDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createXYAreaChart(title, xAxisLabel, yAxisLabel, (XYDataset) data, PlotOrientation.VERTICAL, true, false, false);
+    	}
+    });
+
+    registerFactory(new CewolfChartFactory("scatter", XYDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createScatterPlot(title, xAxisLabel, yAxisLabel, (XYDataset) data, PlotOrientation.VERTICAL, true, false, false);
+    	}
+    });
+    
+    registerFactory(new CewolfChartFactory("area", CategoryDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createAreaChart(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.VERTICAL, true, false, false);
+    	}
+    });
+    
+    registerFactory(new CewolfChartFactory("horizontalbar", CategoryDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createBarChart(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.HORIZONTAL, true, false, false);
+    	}
+    });
+    
+    registerFactory(new CewolfChartFactory("horizontalbar3d", CategoryDataset.class ) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createBarChart3D(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.HORIZONTAL, true, false, false);
+    	}
+    });
+    registerFactory(new CewolfChartFactory("line", CategoryDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createLineChart(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.VERTICAL, true, false, false);
+    	}
+    });
+    registerFactory(new CewolfChartFactory("stackedhorizontalbar", CategoryDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createStackedBarChart(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.HORIZONTAL, true, false, false);
+    	}
+    });
+    registerFactory(new CewolfChartFactory("stackedverticalbar", CategoryDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createStackedBarChart(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.VERTICAL, true, false, false);
+    	}
+    });
+    registerFactory(new CewolfChartFactory("stackedverticalbar3d", CategoryDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createStackedBarChart3D(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.VERTICAL, true, false, false);
+    	}
+    });
+    registerFactory(new CewolfChartFactory("verticalbar", CategoryDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createBarChart(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.VERTICAL, true, false, false);
+    	}
+    });
+    
+    registerFactory(new CewolfChartFactory("verticalbar3d", CategoryDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createBarChart3D(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.VERTICAL, true, false, false);
+    	}
+    });
+    registerFactory(new CewolfChartFactory("timeseries", XYDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createTimeSeriesChart(title, xAxisLabel, yAxisLabel, (XYDataset) data, true, false, false);
+    	}
+    });
+    registerFactory(new CewolfChartFactory("candlestick", OHLCDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createCandlestickChart(title, xAxisLabel, yAxisLabel, (OHLCDataset) data, true);
+    	}
+    });
+    registerFactory(new CewolfChartFactory("highlow", OHLCDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createHighLowChart(title, xAxisLabel, yAxisLabel, (OHLCDataset) data, true);
+    	}
+    });
+    registerFactory(new CewolfChartFactory("gantt", IntervalCategoryDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createGanttChart(title, xAxisLabel, yAxisLabel, (IntervalCategoryDataset) data, true, false, false);
+    	}
+    });
+    registerFactory(new CewolfChartFactory("wind", WindDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createWindPlot(title, xAxisLabel, yAxisLabel, (WindDataset) data, true, false, false);
+    	}
+    });
+    /*
+    registerFactory(new CewolfChartFactory("signal", SignalsDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+    	     return ChartFactory.createSignalChart(title, xAxisLabel, yAxisLabel, (SignalsDataset) data, true);
+    	}
+    });
+    */
+    registerFactory(new CewolfChartFactory("verticalxybar", IntervalXYDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createXYBarChart(title, xAxisLabel, true,yAxisLabel, (IntervalXYDataset) data, PlotOrientation.VERTICAL, true, false, false);
+    	}
+    });
+    registerFactory(new CewolfChartFactory("pie3d", PieDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createPieChart3D(title, (PieDataset) data, true, false, false);
+    	}
+    });
+    registerFactory(new CewolfChartFactory("meter", ValueDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            MeterPlot plot = new MeterPlot((ValueDataset) data);
+            JFreeChart chart = new JFreeChart(title, plot);
+            return chart;
+    	}
+    });
+    registerFactory(new CewolfChartFactory("stackedarea", CategoryDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createStackedAreaChart(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.VERTICAL, true, false, false);
+    	}
+    });
+    registerFactory(new CewolfChartFactory("bubble", XYZDataset.class) {
+    	public JFreeChart getChartInstance(String title, String xAxisLabel, String yAxisLabel, Dataset data) throws IncompatibleDatasetException {
+            return ChartFactory.createBubbleChart(title, xAxisLabel, yAxisLabel, (XYZDataset) data, PlotOrientation.VERTICAL, true, false, false);
+    	}
+    });
+    
   }
 
+  /**
+   * Create the desired chart instance
+   * @param chartType The chart type string
+   * @param title The title of the chart
+   * @param xAxisLabel
+   * @param yAxisLabel
+   * @param data The dataset of the chart
+   * @return The created instance
+   * @throws ChartValidationException
+   */
   public static JFreeChart getChartInstance(String chartType, String title, String xAxisLabel, String yAxisLabel, Dataset data) throws ChartValidationException {
       // first check the dynamically registered chart types
-      CewolfChartFactory factory = (CewolfChartFactory) factories.get(chartType);
+      CewolfChartFactory factory = getCewolfChartFactory(chartType);
       if (factory != null) {
+    	  // first check the dataset type
+    	  check(data, factory._expectedDatasetType, chartType);
           // custom factory found, use it
           return factory.getChartInstance(title, xAxisLabel, yAxisLabel, data);
       }
 
-    switch (getChartTypeConstant(chartType)) {
-      case XY :
-        check(data, XYDataset.class, chartType);
-        return ChartFactory.createXYLineChart(title, xAxisLabel, yAxisLabel, (XYDataset) data, PlotOrientation.VERTICAL, true, true, true);
-      case PIE :
-        check(data, PieDataset.class, chartType);
-        return ChartFactory.createPieChart(title, (PieDataset) data, true, true, true);
-      case AREA_XY :
-        check(data, XYDataset.class, chartType);
-        return ChartFactory.createXYAreaChart(title, xAxisLabel, yAxisLabel, (XYDataset) data, PlotOrientation.VERTICAL, true, false, false);
-      case SCATTER :
-        check(data, XYDataset.class, chartType);
-        return ChartFactory.createScatterPlot(title, xAxisLabel, yAxisLabel, (XYDataset) data, PlotOrientation.VERTICAL, true, false, false);
-      case AREA :
-        check(data, CategoryDataset.class, chartType);
-        return ChartFactory.createAreaChart(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.VERTICAL, true, false, false);
-      case HORIZONTAL_BAR :
-        check(data, CategoryDataset.class, chartType);
-        return ChartFactory.createBarChart(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.HORIZONTAL, true, false, false);
-      case HORIZONTAL_BAR_3D :
-        check(data, CategoryDataset.class, chartType);
-        return ChartFactory.createBarChart3D(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.HORIZONTAL, true, false, false);
-      case LINE :
-        check(data, CategoryDataset.class, chartType);
-        return ChartFactory.createLineChart(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.VERTICAL, true, false, false);
-      case STACKED_HORIZONTAL_BAR :
-        check(data, CategoryDataset.class, chartType);
-        return ChartFactory.createStackedBarChart(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.HORIZONTAL, true, false, false);
-      case STACKED_VERTICAL_BAR :
-        check(data, CategoryDataset.class, chartType);
-        return ChartFactory.createStackedBarChart(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.VERTICAL, true, false, false);
-      case STACKED_VERTICAL_BAR_3D :
-        check(data, CategoryDataset.class, chartType);
-        return ChartFactory.createStackedBarChart3D(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.VERTICAL, true, false, false);
-      case VERTICAL_BAR :
-        check(data, CategoryDataset.class, chartType);
-        return ChartFactory.createBarChart(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.VERTICAL, true, false, false);
-      case VERTICAL_BAR_3D :
-        check(data, CategoryDataset.class, chartType);
-        return ChartFactory.createBarChart3D(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.VERTICAL, true, false, false);
-      case TIME_SERIES :
-        check(data, XYDataset.class, chartType);
-        return ChartFactory.createTimeSeriesChart(title, xAxisLabel, yAxisLabel, (XYDataset) data, true, false, false);
-      case CANDLE_STICK :
-        check(data, OHLCDataset.class, chartType);
-        return ChartFactory.createCandlestickChart(title, xAxisLabel, yAxisLabel, (OHLCDataset) data, true);
-      case HIGH_LOW :
-        check(data, OHLCDataset.class, chartType);
-        return ChartFactory.createHighLowChart(title, xAxisLabel, yAxisLabel, (OHLCDataset) data, true);
-      case GANTT :
-        check(data, IntervalCategoryDataset.class, chartType);
-        return ChartFactory.createGanttChart(title, xAxisLabel, yAxisLabel, (IntervalCategoryDataset) data, true, false, false);
-      case WIND :
-        check(data, WindDataset.class, chartType);
-        return ChartFactory.createWindPlot(title, xAxisLabel, yAxisLabel, (WindDataset) data, true, false, false);
-      //case SIGNAL :
-      //  check(data, SignalsDataset.class, chartType);
-      //  return ChartFactory.createSignalChart(title, xAxisLabel, yAxisLabel, (SignalsDataset) data, true);
-      case VERRTICAL_XY_BAR :
-        check(data, IntervalXYDataset.class, chartType);
-        return ChartFactory.createXYBarChart(title, xAxisLabel, true,yAxisLabel, (IntervalXYDataset) data, PlotOrientation.VERTICAL, true, false, false);
-      case PIE_3D :
-        check(data, PieDataset.class, chartType);
-        return ChartFactory.createPieChart3D(title, (PieDataset) data, true, false, false);
-      case METER :
-        check(data, ValueDataset.class, chartType);
-        MeterPlot plot = new MeterPlot((ValueDataset) data);
-        JFreeChart chart = new JFreeChart(title, plot);
-        return chart;
-      case STACKED_AREA :
-        check(data, CategoryDataset.class, chartType);
-        return ChartFactory.createStackedAreaChart(title, xAxisLabel, yAxisLabel, (CategoryDataset) data, PlotOrientation.VERTICAL, true, false, false);
-      case BUBBLE :
-        check(data, XYZDataset.class, chartType);
-        return ChartFactory.createBubbleChart(title, xAxisLabel, yAxisLabel, (XYZDataset) data, PlotOrientation.VERTICAL, true, false, false);
-      default :
-        throw new UnsupportedChartTypeException(chartType + " is not supported.");
-    }
+      throw new UnsupportedChartTypeException(chartType + " is not supported.");
   }
 
     public static JFreeChart getOverlaidChartInstance(String chartType, String title, String xAxisLabel, String yAxisLabel, int xAxisType, int yAxisType, List plotDefinitions)
     throws ChartValidationException, DatasetProduceException {
-    final int chartTypeConst = getChartTypeConstant(chartType);
+    //final int chartTypeConst = getChartTypeConstant(chartType);
     final AxisFactory axisFactory = AxisFactory.getInstance();
-    switch (chartTypeConst) {
-      case OVERLAY_XY :
+    
+    if (chartType.equals(ChartConstants.CHARTTYPE_OVERLAID_XY)) {
         ValueAxis domainAxis = (ValueAxis) axisFactory.createAxis(ORIENTATION_HORIZONTAL, xAxisType, xAxisLabel);
         // get main plot
         PlotDefinition mainPlotDef = (PlotDefinition) plotDefinitions.get(0);
         check((Dataset) mainPlotDef.getDataset(), XYDataset.class, chartType);
-        XYPlot plot = (XYPlot) mainPlotDef.getPlot(chartTypeConst);
+        XYPlot plot = (XYPlot) mainPlotDef.getPlot(chartType);
         plot.setDomainAxis(domainAxis);
         plot.setRangeAxis((ValueAxis) axisFactory.createAxis(ORIENTATION_VERTICAL, yAxisType, yAxisLabel));
         //plot.setRenderer(new StandardXYItemRenderer());
@@ -228,17 +306,21 @@ public abstract class CewolfChartFactory implements ChartConstants, AxisConstant
           check((Dataset) subPlotDef.getDataset(), XYDataset.class, chartType);
           plot.setDataset(plotidx, (XYDataset)subPlotDef.getDataset());
 
-          int rendererIndex = PlotTypes.getRendererIndex(subPlotDef.getType());
-          XYItemRenderer rend = (XYItemRenderer) PlotTypes.getRenderer(rendererIndex);
+          //int rendererIndex = PlotTypes.getRendererIndex(subPlotDef.getType());
+          XYItemRenderer rend = (XYItemRenderer) PlotTypes.getRenderer(subPlotDef.getType());
+          //getRenderer(rendererIndex);
           plot.setRenderer(plotidx, rend);
         }
         return new JFreeChart(title, JFreeChart.DEFAULT_TITLE_FONT, plot, true);
-      case OVERLAY_CATEGORY ://added by lrh 2005-07-11
+      }
+      
+      if (chartType.equals(ChartConstants.CHARTTYPE_OVERLAID_CATEGORY)) {
+        //added by lrh 2005-07-11
         CategoryAxis domainAxis2 = (CategoryAxis)axisFactory.createAxis(ORIENTATION_HORIZONTAL, xAxisType, xAxisLabel);
         // get main plot
-        mainPlotDef = (PlotDefinition) plotDefinitions.get(0);
+        PlotDefinition mainPlotDef = (PlotDefinition) plotDefinitions.get(0);
         check((Dataset) mainPlotDef.getDataset(), CategoryDataset.class, chartType);
-        CategoryPlot plot2 = (CategoryPlot) mainPlotDef.getPlot(chartTypeConst);
+        CategoryPlot plot2 = (CategoryPlot) mainPlotDef.getPlot(chartType);
         plot2.setDomainAxis(domainAxis2);
         plot2.setRangeAxis((ValueAxis)axisFactory.createAxis(ORIENTATION_VERTICAL, yAxisType, yAxisLabel));
         //plot.setRenderer(new StandardXYItemRenderer());
@@ -248,22 +330,23 @@ public abstract class CewolfChartFactory implements ChartConstants, AxisConstant
           check((Dataset) subPlotDef.getDataset(), CategoryDataset.class, chartType);
           plot2.setDataset(plotidx, (CategoryDataset)subPlotDef.getDataset());
 
-          int rendererIndex = PlotTypes.getRendererIndex(subPlotDef.getType()); 
-          CategoryItemRenderer rend2 = (CategoryItemRenderer) PlotTypes.getRenderer(rendererIndex);
+          //int rendererIndex = PlotTypes.getRendererIndex(subPlotDef.getType()); 
+          CategoryItemRenderer rend2 = (CategoryItemRenderer) PlotTypes.getRenderer(subPlotDef.getType());
+          //Renderer(rendererIndex);
           plot2.setRenderer(plotidx, rend2);
         }
         return new JFreeChart(title, JFreeChart.DEFAULT_TITLE_FONT, plot2, true);
-      default :
-        throw new UnsupportedChartTypeException(chartType + " is not supported.");
-    }
+      }
+      
+      // otherwise:
+      throw new UnsupportedChartTypeException(chartType + " is not supported.");
   }
 
   // [tb]
   public static JFreeChart getCombinedChartInstance(String chartType, String title, String xAxisLabel, String yAxisLabel, List plotDefinitions, String layout)
     throws ChartValidationException, DatasetProduceException {
-    final int chartTypeConst = getChartTypeConstant(chartType);
-    switch (chartTypeConst) {
-      case COMBINED_XY :
+    //final int chartTypeConst = getChartTypeConstant(chartType);
+	if (chartType.equals(ChartConstants.CHARTTYPE_COMBINED_XY)) {
         final int layoutConst = getLayoutConstant(layout);
         Plot plot = null;
         switch (layoutConst) {
@@ -273,7 +356,7 @@ public abstract class CewolfChartFactory implements ChartConstants, AxisConstant
             for (int i = 0; i < plotDefinitions.size(); i++) {
               PlotDefinition pd = (PlotDefinition) plotDefinitions.get(i);
               check((Dataset) pd.getDataset(), XYDataset.class, chartType);
-              XYPlot temp = (XYPlot) pd.getPlot(chartTypeConst);
+              XYPlot temp = (XYPlot) pd.getPlot(chartType);
               temp.setRangeAxis(new NumberAxis(pd.getYaxislabel()));
               ((CombinedDomainXYPlot) plot).add(temp);
             }
@@ -284,7 +367,7 @@ public abstract class CewolfChartFactory implements ChartConstants, AxisConstant
             for (int i = 0; i < plotDefinitions.size(); i++) {
               PlotDefinition pd = (PlotDefinition) plotDefinitions.get(i);
               check((Dataset) pd.getDataset(), XYDataset.class, chartType);
-              XYPlot temp = (XYPlot) pd.getPlot(chartTypeConst);
+              XYPlot temp = (XYPlot) pd.getPlot(chartType);
               temp.setDomainAxis(new DateAxis(pd.getXaxislabel()));
               ((CombinedRangeXYPlot) plot).add(temp);
             }
@@ -292,9 +375,9 @@ public abstract class CewolfChartFactory implements ChartConstants, AxisConstant
           default :
             throw new AttributeValidationException(layout, " any value");
         }
-      default :
-        throw new UnsupportedChartTypeException(chartType);
-    }
+     }
+     // otherwise unknown chart type:
+     throw new UnsupportedChartTypeException(chartType);
   }
 
   /**

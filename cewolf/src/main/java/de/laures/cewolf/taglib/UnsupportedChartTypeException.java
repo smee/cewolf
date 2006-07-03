@@ -23,15 +23,19 @@
 package de.laures.cewolf.taglib;
 
 import de.laures.cewolf.ChartValidationException;
-;
 
 /**
+ * Exception thrown when unsupported chart/plot type is found.
  * @author glaures
  */
 public class UnsupportedChartTypeException extends ChartValidationException {
 	
+	/**
+	 * Constructor.
+	 * @param type The chart/plot type
+	 */
 	public UnsupportedChartTypeException(String type){
-		super("chart type " + type + " is unsupported.");
+		super("Chart or plot type " + type + " is unsupported.");
 	}
 
 }

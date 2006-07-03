@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.DrawingSupplier;
 import org.jfree.chart.plot.Plot;
@@ -36,8 +37,6 @@ import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.Dataset;
-import org.jfree.data.xy.IntervalXYDataset;
-import org.jfree.data.xy.OHLCDataset;
 import org.jfree.data.xy.XYDataset;
 
 import de.laures.cewolf.ChartValidationException;
@@ -50,71 +49,67 @@ import de.laures.cewolf.DatasetProducer;
  * @author Chris McCann
  * @author Guido Laures
  */
-public class PlotDefinition implements DataAware, Serializable, TaglibConstants, PlotConstants {
+public class PlotDefinition implements DataAware, Serializable, TaglibConstants {
 
 	private transient Log log = LogFactory.getLog(getClass());
 
+	// the type of the plot
 	private String type;
+	// x label
 	private String xAxisLabel; // [tb]
+	// y label
 	private String yAxisLabel; // [tb]
 
 	private DataContainer dataAware = new DataContainer();
 	private transient Plot plot;
 	private transient DrawingSupplier drawingSupplier = null;
 
-	public Plot getPlot(int chartType) throws DatasetProduceException, ChartValidationException {
+	public Plot getPlot(String chartType) throws DatasetProduceException, ChartValidationException {
     log.debug("Plot.getPlot: chartType: " + chartType);
 		if (plot == null) {
-			int rendererIndex = PlotTypes.getRendererIndex(type);
 			
 			Dataset data = (Dataset) getDataset();
 			log.debug("Plot.getPlot: data name: " +data.getClass().getName());
-			AbstractRenderer rend = PlotTypes.getRenderer(rendererIndex);
-			log.debug("Plot.getPlot: rendererIndex: " + rendererIndex);
-			if (chartType == ChartConstants.OVERLAY_XY || chartType == ChartConstants.COMBINED_XY) {
-				switch (rendererIndex) {
-					case XY_AREA :
-					case XY_LINE :
-					case XY_SHAPES_AND_LINES :
-					case SCATTER :
-					case STEP :
-						check(data, XYDataset.class, rendererIndex);
-						plot = new XYPlot((XYDataset) data, null, null, (XYItemRenderer) rend);
-						break;
-					case XY_VERTICAL_BAR :
-						check(data, IntervalXYDataset.class, rendererIndex);
-						plot = new XYPlot((IntervalXYDataset) data, null, null, (XYItemRenderer) rend);
-						break;
-					case CANDLESTICK :
-					case HIGH_LOW :
-						check(data, OHLCDataset.class, rendererIndex);
-						plot = new XYPlot((OHLCDataset) data, null, null, (XYItemRenderer) rend);
-						break;
-					//case SIGNAL :
-					//	check(data, SignalsDataset.class, rendererIndex);
-					//	plot = new XYPlot((SignalsDataset) data, null, null, (XYItemRenderer) rend);
-					default :
-						throw new AttributeValidationException(chartType + ".type", type);
+			
+			// expected plot type for custom charts
+			Class expectedPlotType = null;
+
+			try {
+				if (chartType.equals(ChartConstants.CHARTTYPE_OVERLAID_XY) || chartType.equals(ChartConstants.CHARTTYPE_COMBINED_XY)) {
+					expectedPlotType = XYPlot.class;
+					
+					AbstractRenderer renderer = PlotTypes.getRenderer(type);
+					checkType(renderer, XYItemRenderer.class, "On plot:" + type);
+					check(data, XYDataset.class, type);
+					plot = new XYPlot((XYDataset) data, null, null, (XYItemRenderer) renderer);
+				} else if (chartType.equals(ChartConstants.CHARTTYPE_OVERLAID_CATEGORY)) {
+					expectedPlotType = CategoryPlot.class;
+					
+					AbstractRenderer renderer = PlotTypes.getRenderer(type);
+					checkType(renderer, CategoryItemRenderer.class, "On plot:" + type);
+					check(data, CategoryDataset.class, type);
+					plot = new CategoryPlot((CategoryDataset) data, null, null, (CategoryItemRenderer) renderer);
 				}
-			} else if (chartType == ChartConstants.OVERLAY_CATEGORY) {
-				switch (rendererIndex) {
-					case AREA :
-					case VERTICAL_BAR :
-					case LINE :
-					case SHAPES_AND_LINES :
-						check(data, CategoryDataset.class, rendererIndex);
-						plot =
-							new CategoryPlot(
-								(CategoryDataset) data,
-								null,
-								null,
-								(CategoryItemRenderer) rend);
-						break;
-					default :
-						throw new AttributeValidationException(chartType + ".type", type);
+			} catch (UnsupportedChartTypeException ex) {
+				log.warn("Can not find plot type:" , ex);
+				// try to get the plot from the registered chart factories, so any chart would work
+				// create the plot by creating a chart with the standard factory and get the plot of that...
+				JFreeChart chart2;
+				try {
+					chart2 = CewolfChartFactory.getChartInstance(type, null, xAxisLabel, yAxisLabel, data);
+				} catch (UnsupportedChartTypeException exChart) {
+					// re-throw the original exception, because the chart type is not found
+					throw ex;
+				}
+				plot = chart2.getPlot();
+				
+				// verify the expected plot is the appropriate type
+				if (!expectedPlotType.isInstance(plot)) {
+					throw new RuntimeException("Invalid plot class created, expected type:" + expectedPlotType.getClass().getName() + ", but the class of was created:" + plot.getClass().getName());
 				}
 			}
 		}
+		
 		plot.setDrawingSupplier(drawingSupplier);
 		return plot;
 	}
@@ -173,10 +168,22 @@ public class PlotDefinition implements DataAware, Serializable, TaglibConstants,
 		return this.type;
 	}
 
-	public void check(Dataset data, Class clazz, int plotType) throws IncompatibleDatasetException {
+	public static void check(Dataset data, Class clazz, String plotTypeName) throws IncompatibleDatasetException {
 		if (!clazz.isInstance(data)) {
 			throw new IncompatibleDatasetException(
-				"Plots of type " + PlotTypes.typeNames[plotType] + " need a dataset of type " + clazz.getName());
+				"Plots of type " + plotTypeName + " need a dataset of type " + clazz.getName());
+		}
+	}
+	
+	/**
+	 * Check if an object is a certain type. Throws a Runtime exception if not so.
+	 * @param obj The object checked
+	 * @param clazz The class to check against
+	 * @param message The message displayed
+	 */
+	public static void checkType(Object obj, Class clazz, String message) {
+		if (!clazz.isInstance(obj)) {
+			throw new RuntimeException(message + ", error in type check, expected type:" + clazz.getName() +", but it was:" + obj.getClass().getName());
 		}
 	}
 

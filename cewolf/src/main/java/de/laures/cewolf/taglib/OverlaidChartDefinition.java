@@ -18,10 +18,9 @@ import de.laures.cewolf.ChartValidationException;
 import de.laures.cewolf.DatasetProduceException;
 
 /**
+ * Definiton object for the overlaid charts.
  * @author guido
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class OverlaidChartDefinition extends AbstractChartDefinition implements Serializable {
 
@@ -35,6 +34,10 @@ public class OverlaidChartDefinition extends AbstractChartDefinition implements 
         return ((PlotDefinition)plotDefinitions.get(0)).getDataset();
     }
 
+    /**
+     * Add a new sub-plot will be displayed as part of the overlaid chart.
+     * @param pd The definition
+     */
     public void addPlot(PlotDefinition pd) {
         pd.setDrawingSupplier(drawingSupplier);
         plotDefinitions.add(pd);

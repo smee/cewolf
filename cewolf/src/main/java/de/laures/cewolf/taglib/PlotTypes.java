@@ -22,8 +22,8 @@
 
 package de.laures.cewolf.taglib;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jfree.chart.renderer.AbstractRenderer;
 import org.jfree.chart.renderer.category.AreaRenderer;
@@ -43,74 +43,113 @@ import org.jfree.chart.renderer.xy.XYStepRenderer;
  * It also contains all the renders that correspond with the plot types
  * @author  Chris McCann
  */
-public class PlotTypes {
+public abstract class PlotTypes {
 
-	/** All type strings in an array */
-	public static final String[] typeNames =
-		{
-			"xyarea",
-			"xyline",
-			"xyshapesandlines",
-			"scatter",
-			"xyverticalbar",
-			"step",
-			"candlestick",
-			"highlow",
-			"signal",
-			"verticalbar",
-			"area",
-			"line",
-			"shapesandlines" };
-
-	/**
-	 * The whole typeNames array inside of a list.
-	 * @see #typeNames
-	 */
-	private static final List typeList = Arrays.asList(typeNames);
+	// map contains (String) plot-type->PlotTypes instance mapping 
+	private static Map plotTypes = new HashMap();
+	
+	// register all types
+	static {
+		registerRenderer("xyarea",new PlotTypes() {
+			public AbstractRenderer getRenderer() {
+				return new XYAreaRenderer();
+			}}
+		);
+		registerRenderer("xyline",new PlotTypes() {
+			public AbstractRenderer getRenderer() {
+				return new StandardXYItemRenderer();
+			}}
+		);
+		registerRenderer("xyshapesandlines",new PlotTypes() {
+			public AbstractRenderer getRenderer() {
+				return new StandardXYItemRenderer(StandardXYItemRenderer.SHAPES_AND_LINES);
+			}}
+		);
+		registerRenderer("scatter",new PlotTypes() {
+			public AbstractRenderer getRenderer() {
+				return new StandardXYItemRenderer(StandardXYItemRenderer.SHAPES);
+			}});
+		registerRenderer("xyverticalbar",new PlotTypes() {
+			public AbstractRenderer getRenderer() {
+				return new XYBarRenderer();
+			}});
+		registerRenderer("step",new PlotTypes() {
+			public AbstractRenderer getRenderer() {
+				return new XYStepRenderer();
+			}});
+		registerRenderer("candlestick",new PlotTypes() {
+			public AbstractRenderer getRenderer() {
+				return new CandlestickRenderer();
+			}});
+		registerRenderer("highlow", new PlotTypes() {
+			public AbstractRenderer getRenderer() {
+				return new HighLowRenderer();
+			}});
+		/*
+		registerRenderer("signal", new PlotTypes() {
+			public AbstractRenderer getRenderer() {
+				return new SignalRenderer();
+			}});
+		*/
+		registerRenderer("verticalbar",new PlotTypes() {
+			public AbstractRenderer getRenderer() {
+				return new BarRenderer();
+			}});
+		registerRenderer("area",new PlotTypes() {
+			public AbstractRenderer getRenderer() {
+				return new AreaRenderer();
+			}});
+		registerRenderer("line",new PlotTypes() {
+			public AbstractRenderer getRenderer() {
+				return new LineAndShapeRenderer(true,false);
+			}});
+		registerRenderer("shapesandlines",new PlotTypes() {
+			public AbstractRenderer getRenderer() {
+				return new LineAndShapeRenderer(true,true);
+			}}); 				
+		
+	}
+	
+	protected PlotTypes() {
+	}
 	
 	/**
-	 * Create a renderer for the given type index.
-	 * We create a new renderer instance for each chart, because they may want to customize
-	 * it in a post-processor.
-	 * 
-	 * @param idx The index of the type
-	 * @return A new renderer instance
+	 * Get the renderer for the plot type.
+	 * @return The renderer instance
 	 */
-	public static AbstractRenderer getRenderer(int idx) {
-		switch (idx) {
-			case 0: return new XYAreaRenderer();
-			case 1: return new StandardXYItemRenderer();
-			case 2: return new StandardXYItemRenderer(StandardXYItemRenderer.SHAPES_AND_LINES);
-			case 3: return new StandardXYItemRenderer(StandardXYItemRenderer.SHAPES);
-			case 4: return new XYBarRenderer();
-			case 5: return new XYStepRenderer();
-			case 6: return new CandlestickRenderer();
-			case 7: return new HighLowRenderer();
-			//case 8: return new SignalRenderer();
-			case 9: return new BarRenderer();
-			case 10: return new AreaRenderer();
-			case 11: return new LineAndShapeRenderer(true,false);
-			case 12: return new LineAndShapeRenderer(true,true);
-			default:
-				throw new RuntimeException("Invalid renderer index:" + idx);
-		}		
+	public abstract AbstractRenderer getRenderer();
+
+	/**
+	 * Register a new renderer for a plot type.
+	 * @param typeName The name of the type.
+	 * @param plotType The plot-type implementation class
+	 */
+	public static void registerRenderer(String typeName, PlotTypes plotType) {
+		plotTypes.put(typeName.toLowerCase(), plotType);
+	}
+	
+	/**
+	 * Get a Plot-type factory
+	 * @param typeName The name of the type
+	 * @return The plot type, or null if not found
+	 */
+	public static PlotTypes getPlotType (String typeName) {
+		return (PlotTypes) plotTypes.get(typeName.toLowerCase());
 	}
 
-	private PlotTypes() {
+	/**
+	 * Get the renderer for a plot type.
+	 * @param typeName The name of the type
+	 * @return The renderer
+	 * @throws UnsupportedChartTypeException if the type not found 
+	 */
+	public static AbstractRenderer getRenderer(String typeName) throws UnsupportedChartTypeException {
+		PlotTypes type = getPlotType(typeName);
+		if (type != null) {
+			return type.getRenderer();
+		} else {
+			throw new UnsupportedChartTypeException(typeName);
+		}
 	}
-
-    /**
-     * Get the renderer index for the given plot type.
-     * @param plotType The type string of the plot
-     * @return The index The index of renderer
-     * @throws AttributeValidationException if unknown type
-     */
-    public static int getRendererIndex(String plotType) throws AttributeValidationException  {
-        int rendererIndex = PlotTypes.typeList.indexOf(plotType.toLowerCase());
-        if (rendererIndex < 0) {
-          throw new AttributeValidationException("plot.type", plotType);
-        }
-        return rendererIndex;
-    }
-
+		    
 }

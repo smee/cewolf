@@ -3,6 +3,8 @@ Release Notes for Version ???
 - Added ability to use custom ways to render tooltips of Map tag, by implementing ITooltipRenderer
  interface. This would allow to use other javascript libraries like Dojo.
 - Optimized Map tag to render only those <area> elements which has either a non-null tooltip or non-null url.
+- Optimized LongTermSessionStorage to use a single cleanup thread for all sessions (at least by class loader).
+  Earlier all http sessions may have had their own cleanup threads.
 
 
 Release Notes for Version 1.0

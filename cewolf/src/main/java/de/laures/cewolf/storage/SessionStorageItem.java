@@ -1,8 +1,5 @@
 /*
- * Created on Aug 2, 2004
- *
- * To change the template for this generated file go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * $id$
  */
 package de.laures.cewolf.storage;
 
@@ -11,10 +8,10 @@ import java.util.Date;
 import de.laures.cewolf.ChartImage;
 
 /**
+ * Wrapper for the images stored in SessionStorageGroups.
+ * 
  * @author brianf
  * 
- * To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Generation - Code and Comments
  */
 public class SessionStorageItem
 {
@@ -73,7 +70,6 @@ public class SessionStorageItem
   public SessionStorageItem()
   {
     super();
-    // TODO Auto-generated constructor stub
   }
 
   /**

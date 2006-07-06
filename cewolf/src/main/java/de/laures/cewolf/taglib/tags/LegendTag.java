@@ -60,7 +60,7 @@ public class LegendTag extends HTMLImgTag implements CewolfRootTag, TaglibConsta
         	this.sessionKey = storage.storeChartImage(cid, pageContext);
         } catch(CewolfException cwex){
         	log.error(cwex);
-        	throw new JspException(cwex.getMessage());
+        	throw new JspException(cwex);
         }
         return SKIP_BODY;
     }
@@ -75,7 +75,7 @@ public class LegendTag extends HTMLImgTag implements CewolfRootTag, TaglibConsta
 		} catch (IOException ioex) {
 			reset();
 			log.error(ioex);
-			throw new JspException(ioex.getMessage());
+			throw new JspException(ioex);
 		}
 		return super.doEndTag();
     }

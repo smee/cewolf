@@ -38,10 +38,11 @@ import org.apache.commons.logging.LogFactory;
  * @author  Guido Laures 
  */
 public class ImageHelper {
-
+	
+	private static final Log LOG = LogFactory.getLog(ImageHelper.class);
+	
     private static final Component comp = new Component() { };
     private static final MediaTracker tracker = new MediaTracker(comp);
-    private static final Log log = LogFactory.getLog(ImageHelper.class);
 
     /** Creates a new instance of ImageHelper */
     private ImageHelper() {
@@ -54,7 +55,7 @@ public class ImageHelper {
             try {
                 tracker.waitForID(0, 0);
             } catch (InterruptedException e) {
-                log.debug("INTERRUPTED while loading Image");
+                LOG.debug("INTERRUPTED while loading Image");
             }
             tracker.removeImage(image, 0);
         }
@@ -89,7 +90,7 @@ public class ImageHelper {
         try {
             pg.grabPixels();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+        	LOG.info("Exception during getting alpha for image, skipped." , e);
         }
         ColorModel cm = pg.getColorModel();
         if(cm == null){

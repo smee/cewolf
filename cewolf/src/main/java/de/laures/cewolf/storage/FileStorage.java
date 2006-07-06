@@ -36,7 +36,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import de.laures.cewolf.CewolfException;
+import de.laures.cewolf.CewolfRuntimeException;
 import de.laures.cewolf.ChartImage;
 import de.laures.cewolf.Configuration;
 import de.laures.cewolf.Storage;
@@ -62,10 +66,12 @@ import de.laures.cewolf.taglib.util.KeyGenerator;
  */
 public class FileStorage implements Storage {
 	
+	private static final Log LOG = LogFactory.getLog(FileStorage.class);
+	
 	String basePath = null;
 	List stored = new ArrayList();
 	private boolean deleteOnExit = false;
-
+	
 	/**
 	 * @see de.laures.cewolf.Storage#storeChartImage(ChartImage, PageContext)
 	 */
@@ -86,15 +92,15 @@ public class FileStorage implements Storage {
 			oos.writeObject(new SerializableChartImage(cid));
 			oos.close();
 		} catch(IOException ioex){
-			ioex.printStackTrace();
+			throw new CewolfRuntimeException("Can't store image!", ioex);
 		} catch(CewolfException cwex){
-			cwex.printStackTrace();
+			throw new CewolfRuntimeException("Can't store image!", cwex);
 		} finally {
 			if(oos != null){
 				try {
 					oos.close();
 				} catch(IOException ioex){
-					ioex.printStackTrace();
+					pageContext.getServletContext().log("Exception ignored, when closing file", ioex);
 				}
 			}
 		}
@@ -112,13 +118,14 @@ public class FileStorage implements Storage {
 			res = (ChartImage)ois.readObject();
 			ois.close();
 		} catch(Exception ex){
-			ex.printStackTrace();
+			throw new CewolfRuntimeException("Can't load chart image" , ex);
 		} finally {
 			if(ois != null){
 				try {
 					ois.close();
 				} catch(IOException ioex){
-					ioex.printStackTrace();
+					// ignored close error, just log it
+					LOG.info("Exception during stream close" , ioex);
 				}
 			}
 		}

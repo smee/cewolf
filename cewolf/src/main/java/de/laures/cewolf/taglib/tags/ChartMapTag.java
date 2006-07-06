@@ -160,10 +160,10 @@ public class ChartMapTag extends CewolfTag {
 			} // while
 		} catch (IOException ioex) {
 			log.error(ioex);
-			throw new JspException(ioex.getMessage());
+			throw new JspException(ioex);
 		} catch (CewolfException cwex) {
 			log.error(cwex);
-			throw new JspException(cwex.getMessage());
+			throw new JspException(cwex);
 		}
 		return EVAL_PAGE;
 	}
@@ -175,7 +175,7 @@ public class ChartMapTag extends CewolfTag {
 			out.write("</MAP>");
 		} catch (IOException ioex) {
 			log.error(ioex);
-			throw new JspException(ioex.getMessage());
+			throw new JspException(ioex);
 		}
 		return doAfterEndTag(EVAL_PAGE);
 	}

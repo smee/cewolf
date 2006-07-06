@@ -24,7 +24,6 @@ package de.laures.cewolf;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 
 /**

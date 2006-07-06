@@ -105,7 +105,8 @@ public class PlotDefinition implements DataAware, Serializable, TaglibConstants 
 				
 				// verify the expected plot is the appropriate type
 				if (!expectedPlotType.isInstance(plot)) {
-					throw new RuntimeException("Invalid plot class created, expected type:" + expectedPlotType.getClass().getName() + ", but the class of was created:" + plot.getClass().getName());
+					throw new RuntimeException("Invalid plot class created, expected type:" + expectedPlotType.getClass().getName() 
+								 + ", but the class of was created:" + plot.getClass().getName());
 				}
 			}
 		}

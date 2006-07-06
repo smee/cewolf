@@ -47,7 +47,7 @@ public class ChartImgURLTag extends ChartImgTag {
         	}
         } catch(IOException ioex){
         	log.error(ioex);
-            throw new JspException(ioex.getMessage());
+            throw new JspException(ioex);
         }
     	return doAfterEndTag(EVAL_PAGE);
     }

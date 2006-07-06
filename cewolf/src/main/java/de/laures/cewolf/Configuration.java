@@ -29,6 +29,9 @@ import java.util.Map;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This class represents the configuration of the Cewolf framework.
  * It is designed as singleton and resists in application context.
@@ -36,6 +39,8 @@ import javax.servlet.ServletContext;
  * @since 0.8
  */
 public class Configuration {
+	
+	private static final Log LOG = LogFactory.getLog(Configuration.class);
 
 	public static final String KEY = Configuration.class.getName();
 	private static final String DEFAULT_OVERLIB_URL = "overlib.js";
@@ -92,8 +97,8 @@ public class Configuration {
 			try {
 				initStorage(ctx);
 			} catch(CewolfException cwex){
-				cwex.printStackTrace();
-				throw new RuntimeException(storageClassName + ".init() threw exception.");
+				LOG.info(cwex);
+				throw new CewolfRuntimeException(storageClassName + ".init() threw exception.", cwex);
 			}
 		}
 		ctx.log("using storage class " + storageClassName);
@@ -106,8 +111,9 @@ public class Configuration {
 		try {
 			storage = (Storage)Class.forName(storageClassName).newInstance();
 		} catch(Exception ex){
-			ex.printStackTrace();
-			throw new CewolfException(ex.getMessage());
+			String msg = "Can't find storage class: " + storageClassName;
+			LOG.info(msg, ex);
+			throw new CewolfException(msg, ex);
 		}
 		storage.init(ctx);
 	}

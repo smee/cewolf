@@ -52,6 +52,17 @@ public class RenderingHelper {
 		gr.fillRect(0, 0, width, height);
 		gr.setColor(Color.black);
 		gr.drawString(msg, PADDING_X, height/2 - 7);
+		return encodeToImage(out, image);
+	}
+	
+	/**
+	 * Encodes the java image to an image file.
+	 * @param out The output stream to write to
+	 * @param image The java image to encode
+	 * @return The rendered picture type
+	 * @throws IOException
+	 */
+	private static String encodeToImage(OutputStream out, BufferedImage image) throws IOException {
 		JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
 		JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(image);
 		param.setQuality(1.0f, true);
@@ -71,11 +82,7 @@ public class RenderingHelper {
 		Font stFont = gr.getFont().deriveFont(9f);
 		gr.setFont(stFont);
 		drawStackTrace(gr, PADDING_X, 50, ex);
-		JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-		JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(image);
-		param.setQuality(1.0f, true);
-		encoder.encode(image, param);
-		return "image/jpeg";
+		return encodeToImage(out, image);
 	}
     
     private static void drawStackTrace(Graphics gr, int x, int y, Throwable ex) {

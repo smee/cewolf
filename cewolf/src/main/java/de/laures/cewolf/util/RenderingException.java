@@ -31,8 +31,6 @@ import de.laures.cewolf.CewolfException;
  */
 public class RenderingException extends CewolfException {
 	
-	private Throwable wrapped;
-
 	/**
 	 * Constructor for RenderingException.
 	 */
@@ -48,16 +46,12 @@ public class RenderingException extends CewolfException {
 		super(msg);
 	}
 	
+	/**
+	 * Constructor for the super
+	 * @param ex
+	 */
 	public RenderingException(Throwable ex){
-		super(ex.getMessage());
+		super(ex.getMessage(), ex);
 	}
 	
-	public void printStackTrace(){
-		if(wrapped != null){
-			wrapped.printStackTrace();
-		} else {
-			super.printStackTrace();
-		}		
-	}
-
 }

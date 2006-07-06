@@ -9,14 +9,17 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * A container for any images for an user session. This is needed to ensure
  * that one user can not access other users' images.
  * @author brianf
  * @author zluspai
  */
-public class SessionStorageGroup 
-{
+public class SessionStorageGroup {
+	
   // map contains chartId->SessionStorageItem mappings
   private Map map = new HashMap();
   
@@ -91,6 +94,8 @@ public class SessionStorageGroup
  *
  */
 class StorageCleaner implements Runnable {
+	
+	private static final Log LOG = LogFactory.getLog(StorageCleaner.class);
 	  
 	  // storage groups are stored in weak references, so they go away
 	  // when the session goes away
@@ -168,7 +173,7 @@ class StorageCleaner implements Runnable {
 			}
 		} catch (InterruptedException e) {
 			// Thread interrupted, exit...
-			e.printStackTrace();
+			LOG.debug("Closing thread" ,e);
 		}
 	}
 }

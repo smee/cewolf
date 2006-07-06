@@ -27,11 +27,16 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * HTML img tag.
  * @author  Guido Laures
  */
 public class HTMLImgTag extends AbstractHTMLBaseTag implements Serializable{
+	
+	private static final Log LOG = LogFactory.getLog(HTMLImgTag.class);	
 	
 	private final static String TAG_NAME = "IMG";
     
@@ -101,7 +106,7 @@ public class HTMLImgTag extends AbstractHTMLBaseTag implements Serializable{
             appendAttributeDeclaration(wr, this.src, "SRC");
             appendAttributeDeclaration(wr, this.useMap, "USEMAP");
         } catch(IOException ioex){
-            ioex.printStackTrace();
+        	LOG.info(ioex);
         }
     }
     

@@ -44,7 +44,7 @@ public class ChartPostProcessorTag extends AbstractParameterizedObjectTag {
         } catch (ClassCastException cce) {
             throw new JspException("Bean under ID '" + getId() + "' is of type '"
             + pp.getClass().getName() +
-            "'.\nType expected:" + ChartPostProcessor.class.getName());
+            "'.\nType expected:" + ChartPostProcessor.class.getName(), cce);
         }
         AbstractChartTag rt = (AbstractChartTag)PageUtils.findRoot(this, pageContext);
         rt.addChartPostProcessor((ChartPostProcessor)getObject(), getParameters());

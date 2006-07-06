@@ -55,7 +55,7 @@ public class ProducerTag extends AbstractParameterizedObjectTag {
                     + "' is of type '"
                     + getObject().getClass().getName()
                     + "'.\nType expected:"
-                    + DatasetProducer.class.getName());
+                    + DatasetProducer.class.getName(), cce);
         }
         DataAware dw = (DataAware) findAncestorWithClass(this, DataAware.class);
         if (dw == null) {

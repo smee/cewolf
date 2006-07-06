@@ -159,7 +159,7 @@ public abstract class AbstractChartDefinition implements ChartHolder, Serializab
                 } catch (Throwable t) {
                 	log.error(t);
                     throw new PostProcessingException(t.getClass().getName() + " raised by post processor '" +
-                    		pp + "'.\nPost processing of this post processor " + "has been ignored.");
+                    		pp + "'.\nPost processing of this post processor " + "has been ignored.", t);
                 }
             }
         }

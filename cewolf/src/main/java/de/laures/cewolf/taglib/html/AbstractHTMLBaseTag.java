@@ -30,6 +30,9 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import de.laures.cewolf.taglib.tags.CewolfBodyTag;
 
 /**
@@ -37,7 +40,9 @@ import de.laures.cewolf.taglib.tags.CewolfBodyTag;
  * @author  Guido Laures
  */
 public abstract class AbstractHTMLBaseTag extends CewolfBodyTag implements Serializable{
-    
+	
+	private static final Log LOG = LogFactory.getLog(AbstractHTMLBaseTag.class);
+	   
     protected static final int UNDEFINED_INT = -1;
     protected static final float UNDEFINED_FLOAT = -1.0f;
     protected static final String UNDEFINED_STR = null;
@@ -132,7 +137,7 @@ public abstract class AbstractHTMLBaseTag extends CewolfBodyTag implements Seria
             }
         } catch(IOException ioe){
         	super.pageContext.getServletContext().log("",ioe);
-            throw new JspException(ioe.getMessage());
+            throw new JspException(ioe);
         }
     }
     
@@ -150,7 +155,7 @@ public abstract class AbstractHTMLBaseTag extends CewolfBodyTag implements Seria
             return doAfterEndTag(EVAL_PAGE);
         } catch(IOException ioe){
         	super.pageContext.getServletContext().log("",ioe);
-            throw new JspException(ioe.getMessage());
+            throw new JspException(ioe);
         }
     }
     
@@ -173,7 +178,7 @@ public abstract class AbstractHTMLBaseTag extends CewolfBodyTag implements Seria
             appendAttributeDeclaration(wr, this.lang, "LANG");
             appendAttributeDeclaration(wr, this.dir, "DIR");
         } catch(IOException ioex){
-            ioex.printStackTrace();
+        	LOG.info("Exception", ioex);
         }
     }
     

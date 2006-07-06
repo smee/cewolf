@@ -45,7 +45,7 @@ public class CewolfException extends Exception {
      * @param msg message
      * @param cause cause exception
      */
-    public CewolfException(String msg, Exception cause) {
+    public CewolfException(String msg, Throwable cause) {
         super(msg, cause);
     }
     

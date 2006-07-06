@@ -1,6 +1,4 @@
 /**
- *  Copyright (c) 2005, Cambridge Technology Partners
- *  
  *	$Id$
  */
 package de.laures.cewolf.event;

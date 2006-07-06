@@ -33,6 +33,9 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyContent;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import de.laures.cewolf.CewolfException;
 import de.laures.cewolf.ChartHolder;
 import de.laures.cewolf.ChartImage;
@@ -63,6 +66,8 @@ public class ChartImgTag extends HTMLImgTag implements CewolfRootTag, Mapped, Ta
    */
   private static final long serialVersionUID = 5273040226370130443L;
   
+  private static final Log LOG = LogFactory.getLog(ChartImgTag.class);
+  
   private static final String  DEFAULT_MIME_TYPE = MIME_PNG;
   private static final String  TAG_NAME_SVG_IE   = "EMBED";
   private static final String  TAG_NAME_SVG 	 = "Object"; 
@@ -87,7 +92,7 @@ public class ChartImgTag extends HTMLImgTag implements CewolfRootTag, Mapped, Ta
     }
     catch (CewolfException cwex)
     {
-      throw new JspException(cwex.getMessage());
+      throw new JspException(cwex);
     }
     
     return EVAL_PAGE;
@@ -112,7 +117,7 @@ public class ChartImgTag extends HTMLImgTag implements CewolfRootTag, Mapped, Ta
     catch (IOException ioex)
     {
       log.error(ioex);	
-      throw new JspException(ioex.getMessage());
+      throw new JspException(ioex);
     }
     return SKIP_BODY;
   }
@@ -131,7 +136,7 @@ public class ChartImgTag extends HTMLImgTag implements CewolfRootTag, Mapped, Ta
     {
       reset();
       log.error(ioex);
-      throw new JspException(ioex.getMessage());
+      throw new JspException(ioex);
     }
     return super.doEndTag();
   }
@@ -328,7 +333,7 @@ public class ChartImgTag extends HTMLImgTag implements CewolfRootTag, Mapped, Ta
       }
       catch (IOException ioex)
       {
-        ioex.printStackTrace();
+    	LOG.info("Exception during write of attributes", ioex);
       }
     }
   }

@@ -10,19 +10,20 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfree.data.xy.XYSeries;
 
 import de.laures.cewolf.DatasetProduceException;
 
 /**
+ * Data source for xy series
  * @author glaures
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
  */
 public class DataSourceXYSeries implements Serializable {
+	
+	private static final Log LOG = LogFactory.getLog(DataSourceXYSeries.class);
 
 	private String dataSourceName;
 	private String query;
@@ -59,8 +60,8 @@ public class DataSourceXYSeries implements Serializable {
 				series.add((Number)rs.getObject(xColIndex), (Number)rs.getObject(yColIndex));
 			}
 		} catch (Exception namingEx) {
-			namingEx.printStackTrace();
-			throw new DatasetProduceException(namingEx.getMessage());
+			LOG.warn(namingEx);
+			throw new DatasetProduceException(namingEx.getMessage(), namingEx);
 		}
 		return series;
 	}

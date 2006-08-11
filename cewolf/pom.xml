@@ -122,12 +122,6 @@
 			<version>1.0.4</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>gnujaxp</groupId>
-			<artifactId>gnujaxp</artifactId>
-			<version>1.0.0</version>
-			<scope>compile</scope>
-		</dependency>
 	    <dependency>
 	      <groupId>junit</groupId>
 	      <artifactId>junit</artifactId>

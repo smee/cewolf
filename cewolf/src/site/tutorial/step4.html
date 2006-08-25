@@ -8,7 +8,7 @@
 <body>
 <h1>Tutorial: Step 4</h1>
 <h2>Define the chart in your JSP</h2>
-<pre>&lt;%@page contentType="text/html"%&gt;<br>&lt;%@taglib uri='/WEB-INF/cewolf.tld' prefix='cewolf' %&gt;<br>&lt;HTML&gt;<br>&lt;BODY&gt;<br>&lt;H1&gt;Page View Statistics&lt;/H1&gt;<br>&lt;HR&gt;<br>&lt;jsp:useBean id="pageViews" class="de.laures.cewolf.example.PageViewCountData"/&gt;<br>&lt;cewolf:chart <br>    id="line" <br>    title="Page View Statistics" <br>    type="line" <br>    xaxislabel="Page" <br>    yaxislabel="Views"&gt;<br>    &lt;cewolf:data&gt;<br>        &lt;cewolf:producer id="pageViews"/&gt;<br>    &lt;/cewolf:data&gt;<br>&lt;/cewolf:chart&gt;<br>&lt;p&gt;<br>&lt;cewolf:img chartid="line" renderer="cewolf" width="400" height="300"/&gt;<br>&lt;P&gt;<br>&lt;/BODY&gt;<br>&lt;/HTML&gt;<br></pre>
+<pre>&lt;%@page contentType="text/html"%&gt;<br>&lt;%@taglib uri='/WEB-INF/cewolf.tld' prefix='cewolf' %&gt;<br>&lt;HTML&gt;<br>&lt;BODY&gt;<br>&lt;H1&gt;Page View Statistics&lt;/H1&gt;<br>&lt;HR&gt;<br>&lt;jsp:useBean id="pageViews" class="de.laures.cewolf.example.PageViewCountData"/&gt;<br>&lt;cewolf:chart <br>    id="line" <br>    title="Page View Statistics" <br>    type="line" <br>    xaxislabel="Page" <br>    yaxislabel="Views"&gt;<br>    &lt;cewolf:data&gt;<br>        &lt;cewolf:producer id="pageViews"/&gt;<br>    &lt;/cewolf:data&gt;<br>&lt;/cewolf:chart&gt;<br>&lt;p&gt;<br>&lt;cewolf:img chartid="line" renderer="/cewolf" width="400" height="300"/&gt;<br>&lt;P&gt;<br>&lt;/BODY&gt;<br>&lt;/HTML&gt;<br></pre>
 <p> As you can see there are different tags of the cewolf taglib
 involved. The first &lt;cewolf:chart&gt; tag defines a chart with all
 its parameters. The concrete rendering is handled by the

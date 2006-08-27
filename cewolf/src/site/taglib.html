@@ -5,7 +5,7 @@
 <link rel="stylesheet" type="text/css" href="cewolf.css" title="Style">
 </head>
 <body>
-<h1>Cewolf Tag Library (0.13.0)</h1>
+<h1>Cewolf Tag Library (1.0)</h1>
 <p></p>
 This tag library is designed to describe charts of all kinds.
 <p></p>
@@ -2648,6 +2648,21 @@ This tag defines an image and tooltip map for the parent img tag.
 		</tr>
 
 		<tr>
+			<td valign="top" width="15%"><a><b>useJFreeChartMapGenerator</b><br>
+			</a></td>
+			<td>
+				Optional boolean parameter, defaults to false. 
+				If turned on the JFreechart's provided map generation is used (See: ImageMapUtilities.writeImageMap() method). <br/>
+				<b>Important:</b> &nbsp;
+				If set to true, all the Cewolf tooltip renderer and lin provider is ignored, and 
+				only JFreeChart renderers can be used!. Also all other properties of the map tag
+				are ignored.<br/>
+				required=false<br>
+				rtexprvalue=true<br>
+			</td>
+		</tr>		
+		
+		<tr>
 			<td valign="top" width="15%"><a><b>useJFreeChartLinkGenerator</b><br>
 			</a></td>
 			<td>
@@ -2680,7 +2695,7 @@ This tag defines an image and tooltip map for the parent img tag.
 				Currently cewolf provides 3 implementations:<br/>
 				<b>de.laures.cewolf.tooltips.ITooltipRenderer$Overlib</b> Uses Overlib javascript library to render tooltips.<br/>
 				<b>de.laures.cewolf.tooltips.ITooltipRenderer$IE</b> Uses ALT tags, which do work in Internet explorer, but possibly not in other browsers.<br/>
-				<b>de.laures.cewolf.tooltips.ITooltipRenderer$Smart</b>Default renderer, which uses Overlib or IE renderers depending if your browser is IE or some other browser.<br/>
+				<b>de.laures.cewolf.tooltips.ITooltipRenderer$Smart</b> Default renderer, which uses Overlib or IE renderers depending if your browser is IE or some other browser.<br/>
 				<br/>
 				required=false<br>
 				rtexprvalue=true<br>

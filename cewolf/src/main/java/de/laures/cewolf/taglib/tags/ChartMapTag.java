@@ -23,6 +23,7 @@
 package de.laures.cewolf.taglib.tags;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Iterator;
@@ -39,6 +40,7 @@ import org.jfree.chart.entity.ChartEntity;
 import org.jfree.chart.entity.LegendItemEntity;
 import org.jfree.chart.entity.PieSectionEntity;
 import org.jfree.chart.entity.XYItemEntity;
+import org.jfree.chart.imagemap.ImageMapUtilities;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.Dataset;
 import org.jfree.data.general.PieDataset;
@@ -76,6 +78,9 @@ public class ChartMapTag extends CewolfTag {
 	// If the tooltips provided by the JFreeChart renderer should be used.
 	boolean useJFreeChartTooltipGenerator = false;
 	
+	// if the JFreeChart's renderer is used for rendering tooltips
+	boolean useJFreeChartMapGenerator = false;
+	
 	/**
 	 * Default tooltip renderer class
 	 */
@@ -105,59 +110,16 @@ public class ChartMapTag extends CewolfTag {
 		String chartId = ((CewolfRootTag) root).getChartId();
 		try {
 			Dataset dataset = PageUtils.getDataset(chartId, pageContext);
-			Writer out = pageContext.getOut();
 			HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
+			PrintWriter out = response.getWriter();
 			
-			// create the tooltip renderer instance
-			ITooltipRenderer tooltipRenderer = getTooltipRenderer();
+			ChartRenderingInfo info = (ChartRenderingInfo) root.getRenderingInfo();			
 			
-			// initialize tooltip renderer, if it has any tooltips enabled
-			if (hasToolTips()) {
-				tooltipRenderer.init((HttpServletRequest) pageContext.getRequest(), out, pageContext);
+			if (!useJFreeChartMapGenerator) {
+				renderMap(chartId,dataset, out, response, info);
+			} else {
+				ImageMapUtilities.writeImageMap(out, chartId, info);
 			}
-			out.write("<MAP name=\"" + chartId + "\">\n");
-			ChartRenderingInfo info = (ChartRenderingInfo) root.getRenderingInfo();
-			Iterator entities = info.getEntityCollection().iterator();
-			// an String-buffer is used to decide if there was tooltip or link, this is used
-			// to drop out the area sections which has no functionality, because they are without
-			// tooltip or link
-			StringWriter areabuffer = new StringWriter();
-			
-			while (entities.hasNext()) {
-				ChartEntity ce = (ChartEntity) entities.next();
-				areabuffer.getBuffer().setLength(0);
-		        if (ce instanceof XYItemEntity)
-		        {
-		          dataset = ((XYItemEntity)ce).getDataset();
-		        }
-				if (!(ce instanceof LegendItemEntity)) {
-					// render tooltips
-					if (hasToolTips()) {
-						String toolTip = generateToolTip(dataset, ce);
-						if (null != toolTip) {
-							tooltipRenderer.render(areabuffer, toolTip);
-						}
-					}
-					// render links
-					if (hasLinks()) {
-						final String link = generateLink(dataset, ce);
-						
-						if (null != link) {
-							final String href = response.encodeURL(link);
-							areabuffer.write("HREF=\"" + href + "\"");
-						}
-					}
-				}
-				
-				// only write out those area sections, which has link or tooltip
-				// this is to reduce page size with too many aeas which does not do anything...
-				if (areabuffer.getBuffer().length()>0) {
-					out.write("\n<AREA shape=\"" + ce.getShapeType() + "\" ");
-					out.write("COORDS=\"" + ce.getShapeCoords() + "\" ");
-					out.write(areabuffer.getBuffer().toString());
-					out.write(">");
-				}
-			} // while
 		} catch (IOException ioex) {
 			log.error(ioex);
 			throw new JspException(ioex);
@@ -166,6 +128,68 @@ public class ChartMapTag extends CewolfTag {
 			throw new JspException(cwex);
 		}
 		return EVAL_PAGE;
+	}
+
+	/**
+	 * Render the map in the Cewolf way...
+	 * @param chartId The chart id
+	 * @param dataset The dataset of cewolf
+	 * @param out The output writer
+	 * @param response The response is being used
+	 * @param info The rendering info
+	 * @throws JspException 
+	 * @throws IOException 
+	 */
+	private void renderMap(String chartId, Dataset dataset, Writer out, HttpServletResponse response, ChartRenderingInfo info) throws JspException, IOException {
+		// create the tooltip renderer instance
+		ITooltipRenderer tooltipRenderer = getTooltipRenderer();
+		
+		// initialize tooltip renderer, if it has any tooltips enabled
+		if (hasToolTips()) {
+			tooltipRenderer.init((HttpServletRequest) pageContext.getRequest(), out, pageContext);
+		}
+		out.write("<MAP name=\"" + chartId + "\">\n");
+		Iterator entities = info.getEntityCollection().iterator();
+		// an String-buffer is used to decide if there was tooltip or link, this is used
+		// to drop out the area sections which has no functionality, because they are without
+		// tooltip or link
+		StringWriter areabuffer = new StringWriter();
+					
+		while (entities.hasNext()) {
+			ChartEntity ce = (ChartEntity) entities.next();
+			areabuffer.getBuffer().setLength(0);
+		    if (ce instanceof XYItemEntity)
+		    {
+		      dataset = ((XYItemEntity)ce).getDataset();
+		    }
+			if (!(ce instanceof LegendItemEntity)) {
+				// render tooltips
+				if (hasToolTips()) {
+					String toolTip = generateToolTip(dataset, ce);
+					if (null != toolTip) {
+						tooltipRenderer.render(areabuffer, toolTip);
+					}
+				}
+				// render links
+				if (hasLinks()) {
+					final String link = generateLink(dataset, ce);
+					
+					if (null != link) {
+						final String href = response.encodeURL(link);
+						areabuffer.write("HREF=\"" + href + "\"");
+					}
+				}
+			}
+			
+			// only write out those area sections, which has link or tooltip
+			// this is to reduce page size with too many aeas which does not do anything...
+			if (areabuffer.getBuffer().length()>0) {
+				out.write("\n<AREA shape=\"" + ce.getShapeType() + "\" ");
+				out.write("COORDS=\"" + ce.getShapeCoords() + "\" ");
+				out.write(areabuffer.getBuffer().toString());
+				out.write(">");
+			}
+		} // while
 	}
 
 	public int doEndTag() throws JspException {
@@ -285,6 +309,14 @@ public class ChartMapTag extends CewolfTag {
 	 */
 	public void setUseJFreeChartTooltipGenerator(boolean useJFreeChartTooltipGenerator) {
 		this.useJFreeChartTooltipGenerator = useJFreeChartTooltipGenerator;
+	}
+	
+	/**
+	 * Setter if the JFreechart's map generator is used.
+	 * @param useJFreeChartMapGenerator The jfreechart map generator
+	 */
+	public void setUseJFreeChartMapGenerator(boolean useJFreeChartMapGenerator) {
+		this.useJFreeChartMapGenerator = useJFreeChartMapGenerator;
 	}
 
 	/**

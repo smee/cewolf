@@ -5,6 +5,8 @@ Release Notes for Version ???
 - Optimized Map tag to render only those <area> elements which has either a non-null tooltip or non-null url.
 - Optimized LongTermSessionStorage to use a single cleanup thread for all sessions (at least by class loader).
   Earlier all http sessions may have had their own cleanup threads.
+- Added option to Map tag <cewolf:map useJFreeChartMapGenerator="true" />
+
 
 
 Release Notes for Version 1.0

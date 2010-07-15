@@ -36,6 +36,9 @@ public class SessionStorageGroup implements Runnable
     return map.get(a);
   }
 
+  public synchronized boolean isEmpty() {
+    return map.isEmpty();
+  }
   public synchronized Object put( Object a, Object b )
   {
     Object c = map.put(a, b);
@@ -49,7 +52,7 @@ public class SessionStorageGroup implements Runnable
   }
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.lang.Runnable#run()
    */
   public void run()
@@ -86,7 +89,7 @@ public class SessionStorageGroup implements Runnable
         e.printStackTrace();
       }
     }
-   // System.out.println("Exiting Thread");   
+   // System.out.println("Exiting Thread");
   }
   public static void main( String[] args )
   {
@@ -95,7 +98,7 @@ public class SessionStorageGroup implements Runnable
     {
 //      System.out.println("Adding Objects");
     testThread(start);
-    
+
     try
     {
       Thread.sleep(10000);
@@ -114,7 +117,7 @@ public class SessionStorageGroup implements Runnable
     Calendar cal = new GregorianCalendar();
     cal.setTime(new Date());
     //   some huge garbage string
-  
+
     for (int i = start; i < start+10000; i++)
     {
       cal.add(Calendar.MILLISECOND, 1);

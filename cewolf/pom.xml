@@ -5,7 +5,7 @@
 	<groupId>cewolf</groupId>
 	<artifactId>cewolf</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0</version>
+	<version>1.2-SNAPSHOT</version>
 	<name>Cewolf</name>
 	<url>http://cewolf.sourceforge.net</url>
 
@@ -15,6 +15,18 @@
     Utilising the Java2D APIs, it currently supports bar charts, pie charts,
     line charts, XY-plots and time series plots.
   </description>
+  
+  <developers>
+    <developer>
+      <name>Guido Laures</name>
+    </developer>
+    <developer>
+      <name> Brian Fox</name>
+    </developer>
+    <developer>
+      <name>Ulf Dittmer</name>
+    </developer>
+  </developers>
 
 	<scm>
 		<url>http://cvs.sourceforge.net/viewcvs.py/cewolf/</url>
@@ -25,6 +37,14 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.4</source>
+					<target>1.4</target>
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.0-beta-1</version>
@@ -113,19 +133,21 @@
 		<dependency>
 			<groupId>jfree</groupId>
 			<artifactId>jfreechart</artifactId>
-			<version>1.0.1</version>
+			<version>1.0.11</version>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>gnujaxp</artifactId>
+					<groupId>gnujaxp</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>jfree</groupId>
-			<artifactId>jcommon</artifactId>
-			<version>1.0.4</version>
-			<scope>compile</scope>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.2</version>
+			<type>jar</type>
+			<scope>test</scope>
 		</dependency>
-	    <dependency>
-	      <groupId>junit</groupId>
-	      <artifactId>junit</artifactId>
-	      <version>3.8.1</version>
-	    </dependency>
 	</dependencies>
 </project>

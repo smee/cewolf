@@ -30,17 +30,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.PixelGrabber;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /** 
  * Some simple image rendering helper methods.
  * @author  Guido Laures 
  */
 public class ImageHelper {
-	
-	private static final Log LOG = LogFactory.getLog(ImageHelper.class);
-	
+
     private static final Component comp = new Component() { };
     private static final MediaTracker tracker = new MediaTracker(comp);
 
@@ -55,7 +50,7 @@ public class ImageHelper {
             try {
                 tracker.waitForID(0, 0);
             } catch (InterruptedException e) {
-                LOG.debug("INTERRUPTED while loading Image");
+                System.err.println("ImageHelper.loadImage: INTERRUPTED while loading Image");
             }
             tracker.removeImage(image, 0);
         }
@@ -90,7 +85,7 @@ public class ImageHelper {
         try {
             pg.grabPixels();
         } catch (InterruptedException e) {
-        	LOG.info("Exception during getting alpha for image, skipped." , e);
+            e.printStackTrace();
         }
         ColorModel cm = pg.getColorModel();
         if(cm == null){

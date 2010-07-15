@@ -33,7 +33,7 @@ import java.util.List;
 public class AxisTypes {
 
     /** All type strings in an array */
-    public static final String[] typeNames =    {
+    private static final String[] typeNames =    {
         "date",
         "number",
         "category",

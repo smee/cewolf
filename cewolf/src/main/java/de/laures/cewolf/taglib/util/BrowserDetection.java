@@ -27,24 +27,23 @@ import javax.servlet.http.HttpServletRequest;
  * @author glaures
  */
 public class BrowserDetection {
-	
-	private final static String USER_AGENT_KEY = "user-agent";
+
+	private final static String USER_AGENT_KEY = "User-Agent";
 	private final static String MSIE = "msie";
-	
+
 	private final static int IE = 0;
 	private final static int OTHER = 1;
-	
-	public static final int getBrowser(HttpServletRequest request){
+
+	public static final int getBrowser (HttpServletRequest request) {
 		String agent = request.getHeader(USER_AGENT_KEY);
-		if(agent == null || agent.toLowerCase().indexOf(MSIE) < 0){
+		if (agent == null || agent.toLowerCase().indexOf(MSIE) < 0) {
 			return OTHER;
 		} else {
 			return IE;
 		}
 	}
-	
-	public static final boolean isIE(HttpServletRequest request){
+
+	public static final boolean isIE (HttpServletRequest request){
 		return getBrowser(request) == IE;
 	}
-
 }

@@ -22,25 +22,17 @@
 
 package de.laures.cewolf.taglib.tags;
 
+import org.jfree.chart.ChartRenderingInfo;
+
 import de.laures.cewolf.CewolfException;
 
 /**
- * Image maps can be attacjed to objects 
- * implementing this interface.
+ * Image maps can be attached to objects implementing this interface.
  * @author  glaures
  */
 public interface Mapped {
     
-	/**
-	 * Method getImageKey.
-	 * @return int
-	 */
-    public Object getRenderingInfo() throws CewolfException;
+    public ChartRenderingInfo getRenderingInfo() throws CewolfException;
     
-	/**
-	 * Method setUsemap.
-	 * @param map
-	 */
     public void enableMapping();
-    
 }

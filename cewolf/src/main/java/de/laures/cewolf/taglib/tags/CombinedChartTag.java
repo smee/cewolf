@@ -15,6 +15,8 @@ import de.laures.cewolf.taglib.PlotDefinition;
  */
 public class CombinedChartTag extends AbstractChartTag implements PlotContainer {
 
+	static final long serialVersionUID = 6452599006714569892L;
+
     protected AbstractChartDefinition createChartDefinition() {
         return new CombinedChartDefinition();
     }

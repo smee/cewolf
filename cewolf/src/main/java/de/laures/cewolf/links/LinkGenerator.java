@@ -23,11 +23,10 @@
 package de.laures.cewolf.links;
 
 /**
- * This is the base interface of all link generating components which can
- * be used to produce image maps.
+ * This is the base interface of all link generating components which can be used to produce image maps.
  * @author  Guido Laures
  * @since 0.8
  */
-public interface LinkGenerator {
+public interface LinkGenerator extends java.io.Serializable {
 
 }

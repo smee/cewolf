@@ -31,12 +31,12 @@ public interface XYItemLinkGenerator extends LinkGenerator {
 
     /**
      * Generate a link for a XYDataset, series and item.
-     * @param dataset the dataset. This will normally be of a subtype of XYDataset. It is
+     * @param data the dataset. This will normally be of a subtype of XYDataset. It is
      * genralized to avoid dependencies to the concrete chart implementation
      * @param series the series to produce a link for
      * @param item the item to produce the link for
      * @return the URL of the link belonging to the series/item
      */
-    String generateLink(Object data, int series, int item);
+    String generateLink (Object data, int series, int item);
 
 }

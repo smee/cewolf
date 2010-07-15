@@ -27,8 +27,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.jfree.chart.ChartRenderingInfo;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.Dataset;
 
 import de.laures.cewolf.CewolfException;
 import de.laures.cewolf.ChartHolder;
@@ -46,22 +47,22 @@ import de.laures.cewolf.util.Renderer;
  * @see de.laures.cewolf.ChartImage
  */
 public class ChartImageDefinition implements ChartImage, ChartHolder, Serializable {
-	
-    private static final Log log = LogFactory.getLog(ChartImageDefinition.class);
+
+	static final long serialVersionUID = 8919126983568810996L;
 
 	private final ChartHolder chartHolder;
 	private final int height;
 	private final int width;
 	private final int type;
 	private final String mimeType;
-	transient private final Date timeoutTime;
-	
+	private final Date timeoutTime;
+
 	private RenderedImage renderedImage;
 
 	/**
 	 * Constructor for ChartImage
 	 */
-	public ChartImageDefinition(ChartHolder ch, int width, int height, int type, String mimeType, int timeout) {
+	public ChartImageDefinition (ChartHolder ch, int width, int height, int type, String mimeType, int timeout) {
 		if(width <= 0 || height <= 0){
 			throw new IllegalArgumentException("ChartImage with height or width <= 0 is illegal");
 		}
@@ -70,11 +71,11 @@ public class ChartImageDefinition implements ChartImage, ChartHolder, Serializab
 		this.height = height;
 		this.type = type;
 		this.mimeType = mimeType;
-    Calendar cal = new GregorianCalendar();
-    cal.add(Calendar.SECOND,timeout);
-    this.timeoutTime = cal.getTime();
+		Calendar cal = new GregorianCalendar();
+		cal.add(Calendar.SECOND,timeout);
+		this.timeoutTime = cal.getTime();
 	}
-		
+
 	/**
 	 * Returns the height.
 	 * @return int
@@ -95,11 +96,11 @@ public class ChartImageDefinition implements ChartImage, ChartHolder, Serializab
 		return type;
 	}
 
-	public Object getChart() throws DatasetProduceException, ChartValidationException, PostProcessingException {
+	public JFreeChart getChart() throws DatasetProduceException, ChartValidationException, PostProcessingException {
 		return chartHolder.getChart();
 	}
 
-	public Object getDataset() throws DatasetProduceException {
+	public Dataset getDataset() throws DatasetProduceException {
 		return chartHolder.getDataset();
 	}
 
@@ -110,28 +111,17 @@ public class ChartImageDefinition implements ChartImage, ChartHolder, Serializab
 	public String getMimeType() {
 		return mimeType;
 	}
-	
-	/**
-	 * @see java.lang.Object#finalize()
-	 */
-	protected void finalize() throws Throwable {
-		super.finalize();
-		log.debug(this + " finalized.");
-	}
-	
-	/**
-	 * @see de.laures.cewolf.ChartImage#getRenderingInfo()
-	 */
-	public Object getRenderingInfo() throws CewolfException {
+
+	public ChartRenderingInfo getRenderingInfo() throws CewolfException {
 		ensureRendered();
 		return renderedImage.renderingInfo;
 	}
-	
+
 	public byte[] getBytes() throws CewolfException{
 		ensureRendered();
 		return renderedImage.data;
 	}
-	
+
 	private void ensureRendered() throws CewolfException{
 		if(renderedImage == null){
 			renderedImage = Renderer.render(this, chartHolder.getChart());

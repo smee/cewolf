@@ -36,7 +36,9 @@ import de.laures.cewolf.taglib.tags.CewolfRootTag;
  * @author  glaures
  */
 public class PageUtils {
-        
+    
+    private final static String TOOLTIPS_ENABLED_ATTR = PageUtils.class.getName() + ".ttenabled";
+    
     /** Creates a new instance of ChartDefinitionFactory */
     private PageUtils() {}
     
@@ -54,7 +56,7 @@ public class PageUtils {
     }
     
     public static final Dataset getDataset(String chartId, PageContext ctx) throws DatasetProduceException {
-        return (Dataset) getChartHolder(chartId, ctx).getDataset();
+        return getChartHolder(chartId, ctx).getDataset();
     }
 
     public static final CewolfRootTag findRoot(Tag t, PageContext ctx){
@@ -65,5 +67,14 @@ public class PageUtils {
         return (CewolfRootTag)res;
     }
     
-   
+    public static final void setToolTipsEnabled(PageContext ctx){
+        if(!isToolTipsEnabled(ctx)){
+            ctx.setAttribute(TOOLTIPS_ENABLED_ATTR, "true", PageContext.PAGE_SCOPE);
+        }
+    }
+    
+    public static final boolean isToolTipsEnabled(PageContext ctx){
+        return ctx.getAttribute(TOOLTIPS_ENABLED_ATTR, PageContext.PAGE_SCOPE) != null;
+    }
+    
 }

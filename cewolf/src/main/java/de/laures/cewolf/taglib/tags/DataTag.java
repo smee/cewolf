@@ -34,6 +34,8 @@ import javax.servlet.jsp.tagext.TagSupport;
  */
 public class DataTag extends TagSupport {
 
+	static final long serialVersionUID = 778382190926358648L;
+
     public int doStartTag() throws JspException {
         return EVAL_BODY_INCLUDE;
     }

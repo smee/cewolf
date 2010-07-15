@@ -33,6 +33,7 @@ public class DatasetProduceException extends CewolfException {
     public DatasetProduceException() {
     }
 
+
     /**
      * Constructs an instance of <code>DatasetProduceException</code> with the specified detail message.
      * @param msg the detail message.
@@ -40,14 +41,4 @@ public class DatasetProduceException extends CewolfException {
     public DatasetProduceException(String msg) {
         super(msg);
     }
-
-    /**
-     * Constructor from superclass
-     * @param msg
-     * @param cause
-     */
-	public DatasetProduceException(String msg, Exception cause) {
-		super(msg, cause);
-	}
-    
 }

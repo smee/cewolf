@@ -26,42 +26,28 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.MarshalledObject;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import de.laures.cewolf.CewolfRuntimeException;
-
 /**
  * @author  Guido Laures
  */
 public abstract class KeyGenerator {
     
-    private static final Log log = LogFactory.getLog(KeyGenerator.class);
-
-    /**
-     * Special exception thrown when key not found
-     * @author zluspai
-     */
-    private static class NoKeyException extends CewolfRuntimeException {
-		public NoKeyException(String msg) {
-			super(msg);
-		}
-    	
-		public NoKeyException(String msg, Exception cause) {
-			super(msg, cause);
-		}
+    private static class NoKeyException extends RuntimeException {
+        public NoKeyException (String msg){
+            super(msg);
+        }
     }
 
-    public static int generateKey(Serializable obj) {
+    public static int generateKey (Serializable obj) {
         if (obj == null) {
-            throw new NoKeyException("assertion failed: can not generate key for null,");
+            NoKeyException ex = new NoKeyException("assertion failed: can not generate key for null,");
+            throw ex;
         }
         try {
             MarshalledObject mo = new MarshalledObject(obj);
             return mo.hashCode();
         } catch (IOException ioex) {
-            log.error("IOException during key generation KeyGenerator.generateKey()", ioex);
-            throw new NoKeyException(obj + " is not serializable.", ioex);
+            System.err.println("KeyGenerator.generate: IOException during key generation KeyGenerator.generateKey(): "+ioex.getMessage());
+            throw new NoKeyException(obj + " is not serializable.");
         }
     }
 }

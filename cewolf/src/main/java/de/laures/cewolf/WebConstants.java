@@ -69,8 +69,7 @@ public interface WebConstants {
      * MIME name of a JPEG image.
      */
   	String MIME_JPEG = "image/jpeg";
-  	
-  	
+ 
     /**
      * MIME name of a SVG image
      */

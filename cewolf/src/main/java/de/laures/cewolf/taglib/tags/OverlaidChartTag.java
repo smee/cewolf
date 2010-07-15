@@ -15,12 +15,11 @@ import de.laures.cewolf.taglib.PlotDefinition;
 
 /**
  * @author guido
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class OverlaidChartTag extends AbstractChartTag implements PlotContainer {
-	
+
+	static final long serialVersionUID = 3879037601548824461L;
+
     protected AbstractChartDefinition createChartDefinition() {
         return new OverlaidChartDefinition();
     }

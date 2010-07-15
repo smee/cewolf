@@ -30,7 +30,7 @@ import de.laures.cewolf.CewolfException;
  *
  */
 public class RenderingException extends CewolfException {
-	
+
 	/**
 	 * Constructor for RenderingException.
 	 */
@@ -45,13 +45,8 @@ public class RenderingException extends CewolfException {
 	public RenderingException(String msg) {
 		super(msg);
 	}
-	
-	/**
-	 * Constructor for the super
-	 * @param ex
-	 */
+
 	public RenderingException(Throwable ex){
-		super(ex.getMessage(), ex);
+		super(ex.getMessage());
 	}
-	
 }

@@ -1,179 +1,169 @@
 /*
- * $Id$
+ * Created on Aug 3, 2004
  */
 package de.laures.cewolf.storage;
 
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.WeakHashMap;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
- * A container for any images for an user session. This is needed to ensure
- * that one user can not access other users' images.
  * @author brianf
- * @author zluspai
  */
-public class SessionStorageGroup {
-	
-  // map contains chartId->SessionStorageItem mappings
+public class SessionStorageGroup implements Runnable
+{
   private Map map = new HashMap();
-  
-  /**
-   * Constructor registers this storage group for the 
-   *
-   */
-  public SessionStorageGroup() {
-	  // register this storage group in the cleanup thread
-	  StorageCleaner.getInstance().addStorageGroup(this);
-  }
+  Thread      runner;
 
-  /**
-   * Get the storage for a chart
-   * @param chartId The id of a chart
-   * @return The storage
-   */
-  public synchronized SessionStorageItem get(Object chartId)
+  private void start()
   {
-    return (SessionStorageItem) map.get(chartId);
+    if ( runner == null || !runner.isAlive() )
+    {
+      runner = new Thread(this);
+      runner.setDaemon(false);
+      runner.setName("SessionCleanup");
+      runner.setPriority(Thread.MIN_PRIORITY);
+      runner.start();
+    }
   }
 
-  /**
-   * Add a chart to the storage
-   * @param chartId The id
-   * @param item The storage item
-   */
-  public synchronized void put( String chartId, SessionStorageItem item)
+  public synchronized Object get( Object a )
   {
-    map.put(chartId, item);
+    return map.get(a);
   }
-  
-  /**
-   * Remove one chart item.
-   * @param chartId
+
+  public synchronized Object put( Object a, Object b )
+  {
+    Object c = map.put(a, b);
+    start();
+    return c;
+  }
+
+  public synchronized Object remove( Object a )
+  {
+    return map.remove(a);
+  }
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Runnable#run()
    */
-  public synchronized void remove(String chartId) {
-	  map.remove(chartId);
+  public void run()
+  {
+    while ( !map.isEmpty() )
+    {
+      Date date = new Date();
+      synchronized (this)
+      {
+        Collection keys = map.keySet();
+
+        Iterator iter = keys.iterator();
+
+        while ( iter.hasNext() )
+        {
+          // System.out.println("Get Next");
+          String cid = (String) iter.next();
+          SessionStorageItem ssi = (SessionStorageItem) get(cid);
+          if ( ssi.isExpired(date) )
+          {
+           // System.out.println("Removing " + ssi);
+            iter.remove();
+          }
+        }
+      }
+      try
+      {
+        //System.gc();
+        Thread.sleep(1000);
+      }
+      catch (InterruptedException e)
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+   // System.out.println("Exiting Thread");   
+  }
+  public static void main( String[] args )
+  {
+    int start = 0;
+   while(true)
+    {
+//      System.out.println("Adding Objects");
+    testThread(start);
+    
+    try
+    {
+      Thread.sleep(10000);
+    }
+    catch (InterruptedException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    }
   }
 
-	/**
-	 * Clean up (remove) all expired charts from this storage group.
-	 */
-	protected synchronized void cleanup() {
-		Date now = new Date();
-		
-		Iterator iter = map.keySet().iterator();
-		while (iter.hasNext()) {
-			// System.out.println("Get Next");
-			String cid = (String) iter.next();
-			SessionStorageItem ssi = (SessionStorageItem) get(cid);
-			if (ssi.isExpired(now)) {
-				// System.out.println("Removing " + ssi);
-				iter.remove();
-			}
-		}
-	}
-
-	/**
-	 * If the storage group is empty
-	 * @return If empty
-	 */
-	public boolean isEmpty() {
-		return map.isEmpty();
-	}
+  public static void testThread(int start)
+  {
+    SessionStorageGroup ssg = new SessionStorageGroup();
+    Calendar cal = new GregorianCalendar();
+    cal.setTime(new Date());
+    //   some huge garbage string
   
+    for (int i = start; i < start+10000; i++)
+    {
+      cal.add(Calendar.MILLISECOND, 1);
+      SessionStorageItem ssi = new SessionStorageItem(null, Integer.toString(i), cal.getTime());
+      ssg.put(Integer.toString(i), ssi);
+    }
+
+
+  }
+  /**
+   * Test that memory is freed up when low on it...
+   */
+  public static void testSoftreferenceMemoryFreeup()
+  {
+    Date neverexpire = new Date(10000, 1, 1);
+    SessionStorageGroup ssg = new SessionStorageGroup();
+
+    //   some huge garbage string
+    StringBuffer longString = new StringBuffer();
+    for (int i = 0; i < 10000; i++)
+    {
+      longString.append(Math.random());
+    }
+
+    int i = 0;
+    long minmem = Long.MAX_VALUE;
+    while ( true )
+    {
+      //   let's use the id string to waste memory
+      String key = Long.toString(System.currentTimeMillis());
+      String id = key + longString;
+      SessionStorageItem ssi = new SessionStorageItem(null, id, neverexpire);
+      ssg.put(key, ssi);
+
+      i++;
+      long freemem = Runtime.getRuntime().freeMemory();
+      long usedmem = Runtime.getRuntime().totalMemory();
+      long maxmem = Runtime.getRuntime().maxMemory();
+      if ( freemem < minmem )
+      {
+        minmem = freemem;
+      }
+      if ( i % 100 == 0 )
+      {
+        System.out.println("#" + i + ", minimum memory:" + minmem + ", freemem:" + freemem
+            + ", usedmem:" + usedmem + ", maxmem:" + maxmem);
+      }
+    }
+
+  }
 }
 
-/**
- * Single (singleton) thread (well,...almost) to clean up many storage groups
- * @author zluspai
- *
- */
-class StorageCleaner implements Runnable {
-	
-	private static final Log LOG = LogFactory.getLog(StorageCleaner.class);
-	  
-	  // storage groups are stored in weak references, so they go away
-	  // when the session goes away
-	  private WeakHashMap storageGroups = new WeakHashMap();
-	  
-	  // the runner thread
-	  private Thread      runner;
-	  
-	  private static StorageCleaner INSTANCE = new StorageCleaner();
-
-	  // singleton
-	  private StorageCleaner() {
-	  }
-	  
-	  /**
-	   * Get sole instance
-	   * @return The singleton.
-	   */
-	  public static StorageCleaner getInstance() {
-		  return INSTANCE;
-	  }
-	  
-	  /**
-	   * Register a storage group to be automatically cleaned up.
-	   * @param group The group
-	   */
-	  public void addStorageGroup(SessionStorageGroup group) {
-		  this.storageGroups.put(group, null);
-		  // start the thread if needed
-		  start();
-	  }
-	  
-	  /**
-	   * Start the runner thread for this cleanup class, if not running yet.
-	   *
-	   */
-	  private void start()
-	  {
-		// start a new thread if our thread is not running
-	    if (!isRunning())
-	    {
-	      runner = new Thread(this);
-	      runner.setDaemon(true);
-	      runner.setName("Cewolf-SessionCleanup");
-	      runner.setPriority(Thread.MIN_PRIORITY);
-	      runner.start();
-	    }
-	  }
-	  
-	 /**
-	  * If the cleanup thread is currently running.
-	  * @return True if running
-	  */
-	 boolean isRunning() {
-		 return ( runner != null && runner.isAlive() );
-	 }
-
-	/**
-	 * Clean up the known storage groups
-	 */
-	public void run() {		
-        try {
-			// note my thread will stop if there are no more groups to clean up
-			while (! storageGroups.keySet().isEmpty()) {
-				// clean up all session groups
-				for (Iterator issg = storageGroups.keySet().iterator(); issg.hasNext();) {
-					SessionStorageGroup ssg = (SessionStorageGroup) issg.next();
-					// delegate the task to the storage group to clean up itself
-					ssg.cleanup();
-				}
-		        // wait a bit
-				synchronized (this) {
-					wait(1000);
-				}
-			}
-		} catch (InterruptedException e) {
-			// Thread interrupted, exit...
-			LOG.debug("Closing thread" ,e);
-		}
-	}
-}

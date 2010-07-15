@@ -32,6 +32,8 @@ import java.awt.Color;
  */
 public class GradientTag extends CewolfTag implements Pointed {
 
+	static final long serialVersionUID = -7649508741012724699L;
+
     private SerializableGradientPaint gPaint = new SerializableGradientPaint();
     private int pointCount = 0;
 

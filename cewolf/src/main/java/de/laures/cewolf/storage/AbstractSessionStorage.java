@@ -29,9 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import de.laures.cewolf.CewolfException;
 import de.laures.cewolf.ChartImage;
 import de.laures.cewolf.Storage;
@@ -42,11 +39,11 @@ import de.laures.cewolf.taglib.util.KeyGenerator;
  */
 public abstract class AbstractSessionStorage implements Storage
 {
-
-  private static final Log log = LogFactory.getLog(AbstractSessionStorage.class);
+	// to keep track of object getting added and removed from the storage
+	protected volatile static int stored=0, removed=0;
 
   /**
-   * @see de.laures.cewolf.Storage#storeChartImage(ChartImage, ServletContext)
+   * @see de.laures.cewolf.Storage#storeChartImage(ChartImage, PageContext)
    */
   public String storeChartImage( ChartImage cid, PageContext pageContext ) throws CewolfException
   {
@@ -54,15 +51,13 @@ public abstract class AbstractSessionStorage implements Storage
     {
       return getKey(cid);
     }
-    log.debug("storing chart " + cid);
     final HttpSession session = pageContext.getSession();
     //String key = getKey(cid);
     return storeChartImage(cid, session);
   }
 
-
   /**
-   * @see de.laures.cewolf.Storage#getChartImage(String)
+   * @see de.laures.cewolf.Storage#getChartImage(String, javax.servlet.http.HttpServletRequest)
    */
   public ChartImage getChartImage( String id, HttpServletRequest request )
   {
@@ -87,31 +82,29 @@ public abstract class AbstractSessionStorage implements Storage
     {
       session.setAttribute(sessionKey, getCacheObject(cid));
     }
+	synchronized (AbstractSessionStorage.class) {
+		stored++;
+		//System.out.println("stored="+stored+", removed="+removed);
+	}
     return sessionKey;
   }
   
-	/**
-	 */
-	public String removeChartImage(String imgKey, HttpServletRequest request)
-			throws CewolfException {
+	public String removeChartImage(String imgKey, HttpServletRequest request) throws CewolfException {
 		final HttpSession session = request.getSession();
 		if (session == null)
 		{
 			return imgKey;
 		}
-		return removeChartImage(imgKey, session);		
+		return removeChartImage(imgKey, session);
 	}
 
-	/**
-	 * @param cid
-	 * @param session
-	 * @return
-	 * @throws CewolfException
-	 */
-	protected String removeChartImage(String cid, HttpSession session)
-			throws CewolfException {
+	protected String removeChartImage(String cid, HttpSession session) throws CewolfException {
 		synchronized (session) {
 			session.removeAttribute(cid);
+		}
+		synchronized (AbstractSessionStorage.class) {
+			removed++;
+			//System.out.println("stored="+stored+", removed="+removed);
 		}
 		return cid;
 	}
@@ -124,7 +117,5 @@ public abstract class AbstractSessionStorage implements Storage
   public void init( ServletContext servletContext ) throws CewolfException
   {
   }
-  
-
 
 }

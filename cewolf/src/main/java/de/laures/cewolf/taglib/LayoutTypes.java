@@ -34,7 +34,7 @@ import java.util.List;
 public class LayoutTypes {
 
     /** All layout strings in an array */
-    public static final String[] typeNames =    {
+    private static final String[] typeNames =    {
         "vertical",
         "horizontal",
     };

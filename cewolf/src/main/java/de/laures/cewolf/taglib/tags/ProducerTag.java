@@ -34,12 +34,9 @@ import de.laures.cewolf.taglib.DataAware;
  */
 public class ProducerTag extends AbstractParameterizedObjectTag {
 
-    /**
-	 * serialver.
-	 */
-	private static final long serialVersionUID = 6191680125340045036L;
-	
-	private boolean useCache = true;
+	static final long serialVersionUID = 1193241004439087455L;
+
+    private boolean useCache = true;
 
     public int doEndTag() throws JspException {
         DatasetProducer dataProducer = null;
@@ -55,15 +52,9 @@ public class ProducerTag extends AbstractParameterizedObjectTag {
                     + "' is of type '"
                     + getObject().getClass().getName()
                     + "'.\nType expected:"
-                    + DatasetProducer.class.getName(), cce);
+                    + DatasetProducer.class.getName());
         }
         DataAware dw = (DataAware) findAncestorWithClass(this, DataAware.class);
-        if (dw == null) {
-        	throw new JspException("Can not find parent plot or chart for data producer id=" + getId());
-        }
-        
-        log.debug("setting data config on " + dw);
-        log.debug("useCache = " + useCache);
         addParameter(DatasetProducer.PRODUCER_ATTRIBUTE_NAME, getId());
         dw.setDataProductionConfig(dataProducer, getParameters(), useCache);
         return doAfterEndTag(EVAL_BODY_INCLUDE);

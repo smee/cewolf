@@ -31,6 +31,8 @@ package de.laures.cewolf.taglib.tags;
  */
 public class PointTag extends ColorTag {
 
+	static final long serialVersionUID = 904955710676856563L;
+
     private int x;
     private int y;
 

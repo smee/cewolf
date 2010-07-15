@@ -43,9 +43,11 @@ import de.laures.cewolf.taglib.util.PageUtils;
  * separately somewhere in the page.
  * @author  Guido Laures
  */
-public class LegendTag extends HTMLImgTag implements CewolfRootTag, TaglibConstants, WebConstants {
+public class LegendTag extends HTMLImgTag implements CewolfRootTag {
 
-    private static final String DEFAULT_MIME_TYPE = MIME_PNG;
+	static final long serialVersionUID = 3011526353897699906L;
+
+    private static final String DEFAULT_MIME_TYPE = WebConstants.MIME_PNG;
     private static final int DEFAULT_TIMEOUT = 300;
     private int timeout = DEFAULT_TIMEOUT;
     private transient String sessionKey;
@@ -54,13 +56,13 @@ public class LegendTag extends HTMLImgTag implements CewolfRootTag, TaglibConsta
 
     public int doStartTag() throws JspException {
         ChartHolder cd = PageUtils.getChartHolder(getChartId(), pageContext);
-        ChartImage cid = new ChartImageDefinition(cd, width, height, ChartImage.IMG_TYPE_LEGEND, mimeType,timeout);
+        ChartImage cid = new ChartImageDefinition(cd, width, height, ChartImage.IMG_TYPE_LEGEND, mimeType, timeout);
         Storage storage = Configuration.getInstance(pageContext.getServletContext()).getStorage();
         try {
         	this.sessionKey = storage.storeChartImage(cid, pageContext);
         } catch(CewolfException cwex){
-        	log.error(cwex);
-        	throw new JspException(cwex);
+        	System.err.println("LegendTag.doStartTag: "+cwex.getMessage());
+        	throw new JspException(cwex.getMessage());
         }
         return SKIP_BODY;
     }
@@ -74,8 +76,8 @@ public class LegendTag extends HTMLImgTag implements CewolfRootTag, TaglibConsta
 			pageContext.getOut().write(buffer.toString());
 		} catch (IOException ioex) {
 			reset();
-			log.error(ioex);
-			throw new JspException(ioex);
+        	System.err.println("LegendTag.doEndTag: "+ioex.getMessage());
+			throw new JspException(ioex.getMessage());
 		}
 		return super.doEndTag();
     }
@@ -85,7 +87,7 @@ public class LegendTag extends HTMLImgTag implements CewolfRootTag, TaglibConsta
 	* encoded into the image URL even if cookies are enabled on the client side.
 	*/
 	protected String getImgURL() {
-		return ChartImgTag.buildImgURL(renderer, pageContext, sessionKey, width, height, mimeType, forceSessionId,removeAfterRender);
+		return ChartImgTag.buildImgURL(renderer, pageContext, sessionKey, width, height, mimeType, forceSessionId, removeAfterRender);
 	}
 
     protected void reset() {

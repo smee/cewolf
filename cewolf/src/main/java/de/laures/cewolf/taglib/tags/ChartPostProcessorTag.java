@@ -22,9 +22,11 @@
 
 package de.laures.cewolf.taglib.tags;
 
+import java.io.Serializable;
 import javax.servlet.jsp.JspException;
 
 import de.laures.cewolf.ChartPostProcessor;
+import de.laures.cewolf.NonSerializableChartPostProcessor;
 import de.laures.cewolf.taglib.util.PageUtils;
 
 /** 
@@ -34,21 +36,28 @@ import de.laures.cewolf.taglib.util.PageUtils;
  */
 public class ChartPostProcessorTag extends AbstractParameterizedObjectTag {
 
+	static final long serialVersionUID = 2608233610238632442L;
+
     public int doEndTag() throws JspException {
         ChartPostProcessor pp = null;
         try {
-            pp = (ChartPostProcessor)getObject();
+            pp = (ChartPostProcessor) getObject();
             if (pp == null) {
-                throw new JspException("Could not find ChartEnhanncer under ID '" + getId() + "'");
+                throw new JspException("Could not find ChartPostProcessor under ID '" + getId() + "'");
             }
         } catch (ClassCastException cce) {
             throw new JspException("Bean under ID '" + getId() + "' is of type '"
-            + pp.getClass().getName() +
-            "'.\nType expected:" + ChartPostProcessor.class.getName(), cce);
+            + getObject().getClass().getName() + "'.\nType expected:" + ChartPostProcessor.class.getName());
         }
-        AbstractChartTag rt = (AbstractChartTag)PageUtils.findRoot(this, pageContext);
-        rt.addChartPostProcessor((ChartPostProcessor)getObject(), getParameters());
+        AbstractChartTag rt = (AbstractChartTag) PageUtils.findRoot(this, pageContext);
+        ChartPostProcessor cpp = (ChartPostProcessor) getObject();
+		if (cpp instanceof Serializable) {
+			rt.addChartPostProcessor(cpp, getParameters());
+		} else if (cpp instanceof NonSerializableChartPostProcessor) {
+			rt.addChartPostProcessor(((NonSerializableChartPostProcessor) cpp).getSerializablePostProcessor(), getParameters());
+		} else {
+			System.err.println("ChartPostProcessor "+cpp.getClass().getName()+" implements neither Serializable nor NonSerializableChartPostProcessor. It will be ignored.");
+		}
         return doAfterEndTag(EVAL_PAGE);
     }
-
 }

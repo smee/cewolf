@@ -22,19 +22,18 @@
 
 package de.laures.cewolf;
 
-import java.io.IOException;
+import java.io.Serializable;
 import java.util.Date;
-
 
 /**
  * A special ChartHolder which also holds the image presentation of the chart.
  * @author  Guido Laures
  */
-public interface ChartImage {
-	
+public interface ChartImage extends Serializable {
+
 	public static final int IMG_TYPE_CHART = 0;
 	public static final int IMG_TYPE_LEGEND = 1;
-    
+
 	/**
 	 * Returns the width of the chart image in pixel.
 	 * @return the width of the chart image in pixel
@@ -46,7 +45,7 @@ public interface ChartImage {
 	 * @return the height of the chart image in pixel
 	 */
     public int getHeight();
-    
+
 	/**
 	 * Returns the type of the chart image.
 	 * @return the type of the chart image
@@ -54,22 +53,20 @@ public interface ChartImage {
 	 * @see #IMG_TYPE_LEGEND
 	 */
     public int getType();
-    
+
     /**
      * Writes out a cached image to an outputstream. This method only marks the object
      * as accessed and therfore frees it for cache cleanup.
-     * @param key the cache key
-     * @param out the stream to write to
-     * @throws IOException if an I/O error occured during write
+     * @throws CewolfException 
      */
     public byte[] getBytes() throws CewolfException;
-        
+
     /**
      * Returns the MIME type of this image.
      * @return the MIME type of the image
      */
     public String getMimeType();
-        
+
 	/**
 	 * Returns the size of the image in bytes.
 	 * @return size of the image

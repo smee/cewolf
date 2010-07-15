@@ -32,6 +32,8 @@ import javax.servlet.jsp.JspException;
  */
 public class TextureTag extends CewolfBodyTag {
 
+	static final long serialVersionUID = -3062291419098213756L;
+
     private String image;
     private int width;
     private int height;

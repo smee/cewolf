@@ -27,52 +27,49 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * HTML img tag.
  * @author  Guido Laures
  */
-public class HTMLImgTag extends AbstractHTMLBaseTag implements Serializable{
-	
-	private static final Log LOG = LogFactory.getLog(HTMLImgTag.class);	
-	
+public class HTMLImgTag extends AbstractHTMLBaseTag {
+
+	static final long serialVersionUID = -9148390672043565559L;
+
 	private final static String TAG_NAME = "IMG";
-    
+
     /** Holds value of property width. */
     protected int width = UNDEFINED_INT;
-    
+
     /** Holds value of property height. */
     protected int height = UNDEFINED_INT;
-    
+
     /** Holds value of property src. */
     protected String src = UNDEFINED_STR;
-    
+
     /** Holds value of property alt. */
     protected String alt = "";
-    
+
     /** Holds value of property longDesc. */
     protected String longDesc = UNDEFINED_STR;
-    
+
     /** Holds value of property useMap. */
     protected String useMap = UNDEFINED_STR;
-    
+
     /** Holds value of property ismap. */
     protected String ismap = UNDEFINED_STR;
-    
+
     /** Holds value of property align. */
     protected String align = UNDEFINED_STR;
-    
+
     /** Holds value of property border. */
     protected int border = 0;
-    
+
     /** Holds value of property hSpace. */
     protected int hSpace = UNDEFINED_INT;
-    
+
     /** Holds value of property vSpace. */
     protected int vSpace = UNDEFINED_INT;
-    
+
     /**
      * Add or not JSESSIONID
      */
@@ -90,7 +87,7 @@ public class HTMLImgTag extends AbstractHTMLBaseTag implements Serializable{
         writer.write("/>");
     }
      **/
-    
+
     public void writeAttributes(Writer wr){
         try {
             super.writeAttributes(wr);
@@ -106,10 +103,10 @@ public class HTMLImgTag extends AbstractHTMLBaseTag implements Serializable{
             appendAttributeDeclaration(wr, this.src, "SRC");
             appendAttributeDeclaration(wr, this.useMap, "USEMAP");
         } catch(IOException ioex){
-        	LOG.info(ioex);
+            ioex.printStackTrace();
         }
     }
-    
+
     protected void reset(){
         // width = UNDEFINED_INT;
         // height = UNDEFINED_INT;
@@ -126,35 +123,35 @@ public class HTMLImgTag extends AbstractHTMLBaseTag implements Serializable{
         removeAfterRender = false;
         super.reset();
     }
-    
+
     /** Setter for property width.
      * @param width New value of property width.
      */
     public void setWidth(int width) {
         this.width = width;
     }
-    
+
     /** Setter for property height.
      * @param height New value of property height.
      */
     public void setHeight(int height) {
         this.height = height;
     }
-    
+
     /** Setter for property src.
      * @param src New value of property src.
      */
     public void setSrc(String src) {
         this.src = src;
     }
-    
+
     /** Setter for property alt.
      * @param alt New value of property alt.
      */
     public void setAlt(String alt) {
         this.alt = alt;
     }
-    
+
     /** Setter for property longDesc.
      * @param longDesc New value of property longDesc.
      */
@@ -168,54 +165,54 @@ public class HTMLImgTag extends AbstractHTMLBaseTag implements Serializable{
     public void setUsemap(String useMap) {
         this.useMap = useMap;
     }
-    
+
     /** Setter for property ismap.
      * @param ismap New value of property ismap.
      */
     public void setIsmap(String ismap) {
         this.ismap = ismap;
     }
-    
+
     /** Setter for property align.
      * @param align New value of property align.
      */
     public void setAlign(String align) {
         this.align = align;
     }
-    
+
     /** Setter for property border.
      * @param border New value of property border.
      */
     public void setBorder(int border) {
         this.border = border;
     }
-    
+
     /** Setter for property hSpace.
      * @param hSpace New value of property hSpace.
      */
     public void setHspace(int hSpace) {
         this.hSpace = hSpace;
     }
-    
+
     /** Setter for property vSpace.
      * @param vSpace New value of property vSpace.
      */
     public void setVspace(int vSpace) {
         this.vSpace = vSpace;
     }
-    
+
     protected String getTagName() {
         return TAG_NAME;
     }
-    
+
     protected boolean hasBody() {
         return false;
     }
-    
-    protected boolean wellFormed() {
-        return false;
+
+    // by default, tags are wellformed
+    protected boolean isWellFormed() {
+        return true;
     }
-    
 
     /**
      * @return Returns the forceSessionId.

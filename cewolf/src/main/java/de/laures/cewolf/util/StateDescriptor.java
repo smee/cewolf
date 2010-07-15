@@ -26,11 +26,11 @@ import java.util.List;
 
 /**
  * States of objects implementing this interface can be monitored in some way.
- * @todo change this into an aspect or use MBeans for this
+ * TODO: change this into an aspect or use MBeans for this
  * @author glaures
  */
 public interface StateDescriptor {
-	
+
 	public String getID();
 	public List getStateParameters();
 	public Object getState(Object stateParam);

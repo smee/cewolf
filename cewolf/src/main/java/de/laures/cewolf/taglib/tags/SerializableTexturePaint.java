@@ -30,6 +30,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
+import java.io.IOException;
 import java.io.Serializable;
 
 import de.laures.cewolf.util.ImageHelper;
@@ -40,6 +41,8 @@ import de.laures.cewolf.util.ImageHelper;
  * @author  Guido Laures 
  */
 public class SerializableTexturePaint implements Paint, Serializable {
+
+	static final long serialVersionUID = 3377875007493302352L;
 
     private String image;
     private int width;
@@ -69,8 +72,10 @@ public class SerializableTexturePaint implements Paint, Serializable {
         paint = new TexturePaint(bim, rect);
     }
 
-    public java.awt.PaintContext createContext(ColorModel colorModel, Rectangle rectangle, Rectangle2D rectangle2D,
-    AffineTransform affineTransform, RenderingHints renderingHints) {
+    public java.awt.PaintContext createContext (ColorModel colorModel, Rectangle rectangle,
+			Rectangle2D rectangle2D, AffineTransform affineTransform, RenderingHints renderingHints) {
+		if (renderingHints == null)
+			renderingHints = new RenderingHints(null);
         return getPaint().createContext(colorModel, rectangle, rectangle2D, affineTransform, renderingHints);
     }
 

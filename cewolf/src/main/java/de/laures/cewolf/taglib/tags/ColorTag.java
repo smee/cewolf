@@ -24,11 +24,14 @@
 package de.laures.cewolf.taglib.tags;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.Map;
 
-import de.laures.cewolf.ChartPostProcessor;
-import de.laures.cewolf.taglib.util.ColorHelper;
+import org.jfree.chart.JFreeChart;
 
+import de.laures.cewolf.ChartPostProcessor;
+import de.laures.cewolf.NonSerializableChartPostProcessor;
+import de.laures.cewolf.taglib.util.ColorHelper;
 
 /** 
  * Tag &lt;color&gt; which sets the color of its parent tag.
@@ -36,28 +39,52 @@ import de.laures.cewolf.taglib.util.ColorHelper;
  * @see Colored
  * @author  Guido Laures 
  */
-public class ColorTag extends CewolfBodyTag implements ChartPostProcessor {
+public class ColorTag extends CewolfBodyTag
+		implements ChartPostProcessor, NonSerializableChartPostProcessor {
 
-    private Color color = Color.white;
+	static final long serialVersionUID = -4882939573657296673L;
+
+	private SerializableColorTag serTag = new SerializableColorTag();
 
     public int doEndTag() {
-        ((Painted)getParent()).setPaint(color);
+        ((Painted)getParent()).setPaint(serTag.getColor());
         return doAfterEndTag(EVAL_PAGE);
     }
     
-    protected void reset(){
-    }
+    protected void reset(){ }
 
     public void setColor(String s) {
-        this.color = ColorHelper.getColor(s);
+		serTag.setColor(s);
     }
 
     protected Color getColor() {
-        return color;
-    }
-    
-    public void processChart(Object chart, Map args){
-        ((org.jfree.chart.JFreeChart)chart).setBackgroundPaint(color);
+		return serTag.getColor();
     }
 
+	public void processChart (Object chart, Map args) {
+		serTag.processChart((JFreeChart) chart, args);
+	}
+
+	public ChartPostProcessor getSerializablePostProcessor() {
+		return serTag;
+	}
+
+	private class SerializableColorTag implements ChartPostProcessor, Serializable {
+
+		static final long serialVersionUID = -7400971583172945660L;
+
+		private Color color = Color.white;
+
+		public void setColor (String s) {
+			this.color = ColorHelper.getColor(s);
+		}
+
+		protected Color getColor() {
+			return color;
+		}
+
+		public void processChart (Object chart, Map args) {
+			((JFreeChart) chart).setBackgroundPaint(color);
+		}
+	}
 }

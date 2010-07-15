@@ -27,16 +27,15 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * @author glaures
  */
 public class DatasetProductionTimeStore extends Hashtable {
 
+	static final long serialVersionUID = -9086317504718166157L;
+
     private static final DatasetProductionTimeStore instance = new DatasetProductionTimeStore();
-    private static final Log log = LogFactory.getLog(DatasetProductionTimeStore.class);
+
     public static final DatasetProductionTimeStore getInstance() {
         return instance;
     }
@@ -44,34 +43,31 @@ public class DatasetProductionTimeStore extends Hashtable {
     private DatasetProductionTimeStore() {
     }
 
-    public boolean containsEntry(String producerId, Map params) {
+    public boolean containsEntry (String producerId, Map params) {
         return containsKey(new DatasetProductionTimesKey(producerId, params));
     }
 
-    public void addEntry(String producerId, Map params, Date produceTime) {
-      log.debug("add entry: " + producerId);
+    public void addEntry (String producerId, Map params, Date produceTime) {
         put(new DatasetProductionTimesKey(producerId, params), produceTime);
     }
 
-    public void removeEntry(String producerId, Map params) {
-      log.debug("remove entry: " + producerId);
-      
+    public void removeEntry (String producerId, Map params) {
         remove(new DatasetProductionTimesKey(producerId, params));
     }
 
-    public Date getProductionTime(String producerId, Map params) {
+    public Date getProductionTime (String producerId, Map params) {
         return (Date) get(new DatasetProductionTimesKey(producerId, params));
     }
 
-    public String paramsToString(Map params){
-    	Iterator it = params.keySet().iterator();
+    public String paramsToString (Map params){
+    	Iterator it = params.entrySet().iterator();
     	StringBuffer buf = new StringBuffer("[");
-    	while(it.hasNext()){
-    		String key = (String)it.next();
-    		buf.append(key + ":" + params.get(key));
+    	while (it.hasNext()) {
+    		Map.Entry entry = (Map.Entry) it.next();
+    		buf.append(entry.getKey() + ":" + entry.getValue());
     	}
     	buf.append("]");
     	return buf.toString();
     }
-    		
+
 }

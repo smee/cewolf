@@ -37,7 +37,9 @@ import de.laures.cewolf.taglib.TaglibConstants;
  * Tag &lt;sub-plot&gt; which defines a plot to overlay 
  * @author Chris McCann
  */
-public class PlotTag extends CewolfTag implements TaglibConstants, DataAware {
+public class PlotTag extends CewolfTag implements DataAware {
+
+	static final long serialVersionUID = 2559578308532086011L;
 
     private PlotDefinition plotDefinition = new PlotDefinition();
 
@@ -86,5 +88,19 @@ public class PlotTag extends CewolfTag implements TaglibConstants, DataAware {
         plotDefinition.setYaxislabel(yAxisLabel);
     }
 
+    /**
+     * Setter for property xAxisinteger. 
+     * @param xAxisInteger New value of property xAxisInteger.
+     */
+    public void setXaxisinteger (boolean xAxisInteger) {
+        plotDefinition.setXaxisinteger(xAxisInteger);
+    }
 
+    /**
+     * Setter for property yAxisInteger. 
+     * @param xAxisInteger New value of property xAxisInteger.
+     */
+    public void setYaxisinteger (boolean xAxisInteger) {
+        plotDefinition.setXaxisinteger(xAxisInteger);
+    }
 }

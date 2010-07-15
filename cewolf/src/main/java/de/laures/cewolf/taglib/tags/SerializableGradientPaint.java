@@ -30,6 +30,7 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
+import java.io.IOException;
 import java.io.Serializable;
 
 /** 
@@ -38,6 +39,8 @@ import java.io.Serializable;
  * @author  Guido Laures 
  */
 public class SerializableGradientPaint implements Paint, Serializable {
+
+	static final long serialVersionUID = 607531550687715667L;
 
     private int x1;
     private int y1;
@@ -84,8 +87,10 @@ public class SerializableGradientPaint implements Paint, Serializable {
         this.c2 = c;
     }
 
-    public java.awt.PaintContext createContext(ColorModel colorModel, Rectangle rectangle, Rectangle2D rectangle2D,
-    AffineTransform affineTransform, RenderingHints renderingHints) {
+    public java.awt.PaintContext createContext(ColorModel colorModel, Rectangle rectangle,
+			Rectangle2D rectangle2D, AffineTransform affineTransform, RenderingHints renderingHints) {
+		if (renderingHints == null)
+			renderingHints = new RenderingHints(null);
         return getPaint().createContext(colorModel, rectangle, rectangle2D, affineTransform, renderingHints);
     }
 

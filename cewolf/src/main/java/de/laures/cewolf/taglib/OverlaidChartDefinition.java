@@ -1,8 +1,5 @@
 /*
  * Created on 13.04.2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package de.laures.cewolf.taglib;
 
@@ -13,39 +10,35 @@ import java.util.List;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.DefaultDrawingSupplier;
 import org.jfree.chart.plot.DrawingSupplier;
+import org.jfree.data.general.Dataset;
 
 import de.laures.cewolf.ChartValidationException;
 import de.laures.cewolf.DatasetProduceException;
 
 /**
- * Definiton object for the overlaid charts.
  * @author guido
- *
  */
-public class OverlaidChartDefinition extends AbstractChartDefinition implements Serializable {
+public class OverlaidChartDefinition extends AbstractChartDefinition {
+
+	static final long serialVersionUID = 2620349751116074174L;
 
 	private int xAxisType = 0;
 	private int yAxisType = 0;
-	
-    private List plotDefinitions = new ArrayList();
-    private transient DrawingSupplier drawingSupplier = new DefaultDrawingSupplier();
 
-    public Object getDataset() throws DatasetProduceException {
+    private List plotDefinitions = new ArrayList();
+    private transient DrawingSupplier drawingSupplier;
+
+    public Dataset getDataset() throws DatasetProduceException {
         return ((PlotDefinition)plotDefinitions.get(0)).getDataset();
     }
 
-    /**
-     * Add a new sub-plot will be displayed as part of the overlaid chart.
-     * @param pd The definition
-     */
     public void addPlot(PlotDefinition pd) {
-        pd.setDrawingSupplier(drawingSupplier);
+        pd.setDrawingSupplier(getDrawingSupplier());
         plotDefinitions.add(pd);
     }
 
     protected JFreeChart produceChart() throws DatasetProduceException, ChartValidationException {
-        log.debug("xAxisType = " + xAxisType);
-        return CewolfChartFactory.getOverlaidChartInstance(type, title, xAxisLabel, yAxisLabel, xAxisType, yAxisType, plotDefinitions);
+        return CewolfChartFactory.getOverlaidChartInstance(type, title, xAxisLabel, yAxisLabel, xAxisType, yAxisType, plotDefinitions, showLegend);
     }
 
 	/**
@@ -64,4 +57,10 @@ public class OverlaidChartDefinition extends AbstractChartDefinition implements 
 		this.yAxisType = yAxisType;
 	}
 
+	private DrawingSupplier getDrawingSupplier() {
+		if (drawingSupplier == null) {
+			drawingSupplier = new DefaultDrawingSupplier();
+		}
+		return drawingSupplier;
+	}
 }

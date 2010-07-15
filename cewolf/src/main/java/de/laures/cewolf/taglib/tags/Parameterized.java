@@ -23,8 +23,7 @@
 package de.laures.cewolf.taglib.tags;
 
 /** 
- * Tags implementing this interface can be paramterized by a nested &lt;param&gt;
- * tag.
+ * Tags implementing this interface can be parameterized by a nested &lt;param&gt; tag.
  * @see ParamTag
  * @author  Guido Laures 
  */

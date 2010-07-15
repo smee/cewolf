@@ -22,6 +22,7 @@
 
 package de.laures.cewolf;
 
+import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,18 +30,15 @@ import java.util.Map;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * This class represents the configuration of the Cewolf framework.
- * It is designed as singleton and resists in application context.
+ * It is designed as a singleton and resides in the application context.
  * @author glaures
  * @since 0.8
  */
-public class Configuration {
-	
-	private static final Log LOG = LogFactory.getLog(Configuration.class);
+public class Configuration implements Serializable {
+
+	static final long serialVersionUID = -3271334302902082721L;
 
 	public static final String KEY = Configuration.class.getName();
 	private static final String DEFAULT_OVERLIB_URL = "overlib.js";
@@ -53,8 +51,10 @@ public class Configuration {
 	private Storage storage = null;
 	private Map parameters = new HashMap();
 
+	private Configuration() { }
+
 	/** package protected constructor triggered by servlet */
-	protected Configuration(ServletContext ctx) {
+	protected Configuration (ServletContext ctx) {
         ctx.log("configuring cewolf app..");
         ctx.setAttribute(KEY, this);
 
@@ -74,6 +74,7 @@ public class Configuration {
                     } else if ("storage".equalsIgnoreCase(param)) {
                         storageClassName = value;
                     } else {
+						// not quite true: FileStorage.deleteOnExit is used just fine
                         ctx.log(param + " parameter is ignored.");
                     }
                     parameters.put(param,value);
@@ -97,8 +98,8 @@ public class Configuration {
 			try {
 				initStorage(ctx);
 			} catch(CewolfException cwex){
-				LOG.info(cwex);
-				throw new CewolfRuntimeException(storageClassName + ".init() threw exception.", cwex);
+				cwex.printStackTrace();
+				throw new RuntimeException(storageClassName + ".init() threw exception.");
 			}
 		}
 		ctx.log("using storage class " + storageClassName);
@@ -106,38 +107,37 @@ public class Configuration {
 		ctx.log("debugging is turned " + (debugged ? "on" : "off"));
 		ctx.log("...done.");
 	}
-	
-	private void initStorage(ServletContext ctx) throws CewolfException {
+
+	private void initStorage (ServletContext ctx) throws CewolfException {
 		try {
 			storage = (Storage)Class.forName(storageClassName).newInstance();
 		} catch(Exception ex){
-			String msg = "Can't find storage class: " + storageClassName;
-			LOG.info(msg, ex);
-			throw new CewolfException(msg, ex);
+			ex.printStackTrace();
+			throw new CewolfException(ex.getMessage());
 		}
 		storage.init(ctx);
-	}
-
-	private Configuration() {
 	}
 
 	/**
 	 * Factory method. If no Configuration had been initialized before, a new
 	 * one is created, stored in ctx and returned to the caller.
-	 * @param ctx the servlet context from where to retrieve the Configuration
-	 * object.
+	 * @param ctx the servlet context from where to retrieve the Configuration object.
 	 * @return the config object
 	 */
-	public static Configuration getInstance(ServletContext ctx) {
+	public static Configuration getInstance (ServletContext ctx) {
 		Configuration config = null;
-        config = (Configuration) ctx.getAttribute(KEY);
-        
-        if (config == null)
-        {
-            ctx.log("No Configuration for this context.  Initializing.");
-            config = new Configuration(ctx);
-            ctx.setAttribute(KEY, config);
-        }
+
+		try {
+			config = (Configuration) ctx.getAttribute(KEY);
+		} catch (ClassCastException ex) {
+		    ctx.log("Configuration on context is wrong class");
+		}
+
+		if (config == null) {
+			ctx.log("No Configuration for this context. Initializing.");
+			config = new Configuration(ctx);
+			ctx.setAttribute(KEY, config);
+		}
 
 		return config;
 	}
@@ -153,8 +153,7 @@ public class Configuration {
 
 	/**
 	 * Returns the location of the overlib.js relative to webapp's root.
-	 * Configured by init param <code>overliburl</code> in web.xml. Defaults to
-	 * <code>overlib.js</code>
+	 * Configured by init param <code>overliburl</code> in web.xml. Defaults to <code>overlib.js</code>
 	 * @return String
 	 */
 	public String getOverlibURL() {
@@ -164,7 +163,7 @@ public class Configuration {
 	public Storage getStorage() {
 		return storage;
 	}
-	
+
 	/**
 	 * Get the initialization parameters from Cewolf servlet.
 	 * @return The parameter map (String->String) values

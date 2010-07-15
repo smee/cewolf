@@ -27,11 +27,10 @@ import de.laures.cewolf.ChartImage;
 
 /**
  * @author guido
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ClusterableSessionStorage extends AbstractSessionStorage {
+
+	static final long serialVersionUID = 7219777503244589374L;
 
 	/* (non-Javadoc)
 	 * @see de.laures.cewolf.storage.AbstractSessionStorage#getCacheObject(de.laures.cewolf.ChartImage)

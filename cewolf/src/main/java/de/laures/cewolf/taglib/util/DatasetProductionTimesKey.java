@@ -25,35 +25,31 @@ package de.laures.cewolf.taglib.util;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * @author glaures
  */
 class DatasetProductionTimesKey implements Serializable {
-	
-    private static final Log log = LogFactory.getLog(DatasetProductionTimesKey.class);
 
-	private final transient int key;
-	
+	static final long serialVersionUID = -6015635895045896059L;
+
+	private final int key;
+
 	public DatasetProductionTimesKey(String producerId, Map params){
 		key = KeyGenerator.generateKey((Serializable) params);
-		log.debug("data key is " + key + " producerId=" + producerId);
 	}
-	
+
 	public int getKey(){
 		return key;
 	}
-	
+
 	public String toString() {
 		return String.valueOf(key);
 	}
-	
+
 	public int hashCode() {
 		return key;
 	}
-	
+
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
@@ -63,4 +59,5 @@ class DatasetProductionTimesKey implements Serializable {
 		}
 		return false;
 	}
+
 }

@@ -1,20 +1,20 @@
 /*
- * $id$
+ * Created on Aug 2, 2004
  */
 package de.laures.cewolf.storage;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import de.laures.cewolf.ChartImage;
 
 /**
- * Wrapper for the images stored in SessionStorageGroups.
- * 
  * @author brianf
- * 
  */
-public class SessionStorageItem
+public class SessionStorageItem implements java.io.Serializable 
 {
+	static final long serialVersionUID = -481087874120532816L;
+
   String     cid     = null;
   ChartImage chart   = null;
   Date       timeout = null;
@@ -70,6 +70,7 @@ public class SessionStorageItem
   public SessionStorageItem()
   {
     super();
+    // TODO Auto-generated constructor stub
   }
 
   /**

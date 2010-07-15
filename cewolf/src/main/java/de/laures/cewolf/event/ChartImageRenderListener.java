@@ -1,5 +1,7 @@
 /**
- *	$Id$
+ *  Copyright (c) 2005, Cambridge Technology Partners
+ *  
+ *	$Id: ChartImageRenderListener.java,v 1.1 2005/10/09 22:05:16 brianfox Exp $
  */
 package de.laures.cewolf.event;
 
@@ -20,12 +22,12 @@ import de.laures.cewolf.util.RenderedImage;
  * @author zluspai
  */
 public interface ChartImageRenderListener {
-	
+
 	/**
 	 * Callback right after a new image gets rendered.
 	 * 
 	 * @param renderedImage The fresh image just got rendered
 	 */
 	public void onImageRendered (RenderedImage renderedImage);
-	
+
 }

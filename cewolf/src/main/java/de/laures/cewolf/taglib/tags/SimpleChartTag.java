@@ -1,8 +1,5 @@
 /*
  * Created on 13.04.2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package de.laures.cewolf.taglib.tags;
 
@@ -15,18 +12,17 @@ import de.laures.cewolf.taglib.SimpleChartDefinition;
 
 /**
  * @author guido
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class SimpleChartTag extends AbstractChartTag implements DataAware{
+public class SimpleChartTag extends AbstractChartTag implements DataAware {
     
+	static final long serialVersionUID = -3313178284141986292L;
+
     protected AbstractChartDefinition createChartDefinition() {
         return new SimpleChartDefinition();
     }
 
-     public void setDataProductionConfig(DatasetProducer dsp, Map params, boolean useCache) {
-        ((SimpleChartDefinition)chartDefinition).setDataProductionConfig(dsp, params, useCache);
+     public void setDataProductionConfig (DatasetProducer dsp, Map params, boolean useCache) {
+        ((SimpleChartDefinition) chartDefinition).setDataProductionConfig(dsp, params, useCache);
     }
 
 }

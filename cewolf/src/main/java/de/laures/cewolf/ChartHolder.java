@@ -22,35 +22,33 @@
 
 package de.laures.cewolf;
 
+import java.io.Serializable;
+
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.Dataset;
+
 /**
- * An object of this type represents a full descritption of a chart.
+ * An object of this type represents a full description of a chart.
  * Therefore it is able to produce the chart and dataset object
  * resulting out of this definition.
  * @author  Guido Laures
  */
-public interface ChartHolder {
+public interface ChartHolder extends Serializable {
 
 	/**
-	 * Returns a chart. The type of this object is dependant on the underlying
-	 * chart implementation. As of this version of Cewolf it is of type
-	 * org.jfree.chart.JFreeChart.
+	 * Returns a chart.
 	 * @return the chart object for this definition
-	 * @throws DatasetProduceException if there could be no data produced for
-	 * the cahrt
-	 * @throws ConfigurationException if there is something wrong in the
-	 * Cewolf configuration
-	 * @throws PostProcessingException if a post processor failed to 
-	 * process the chart
+	 * @throws DatasetProduceException if there could be no data produced for the cahrt
+	 * @throws ConfigurationException if there is something wrong in the Cewolf configuration
+	 * @throws PostProcessingException if a post processor failed to process the chart
 	 */
-    public Object getChart() throws DatasetProduceException, PostProcessingException, ChartValidationException;
+    public JFreeChart getChart() throws DatasetProduceException, PostProcessingException, ChartValidationException;
     
 	/**
-	 * Returns the dataset produced when using this definition.The type of this object is dependant on the underlying
-	 * chart implementation. As of this version of Cewolf it is of type
-	 * org.jfree.data.Dataset.
+	 * Returns the dataset produced when using this definition.
 	 * @return Object the dataset for this definition
 	 * @throws DatasetProduceException if the dataset could not be produced
 	 */
-    public Object getDataset() throws DatasetProduceException;
+    public Dataset getDataset() throws DatasetProduceException;
     
 }

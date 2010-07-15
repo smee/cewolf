@@ -27,36 +27,33 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Produces a {@link org.jfree.data.Dataset} which will be rendered 
- * as a chart 	afterwards.
- * @see org.jfree.data.Dataset
+ * Produces a {@link org.jfree.data.general.Dataset} which will be rendered as a chart afterwards.
+ * @see org.jfree.data.general.Dataset
  * @author  Guido Laures
  * @since 0.1
  */
 public interface DatasetProducer extends Serializable {
     
     /**
-     * By default the the name of the JSP attribute 
-     * holding the producer instance is passed to the 
-     * produceDataset method as a prameter.
+     * By default the name of the JSP attribute holding the producer instance
+	 * is passed to the produceDataset method as a prameter.
      */
     public static final String PRODUCER_ATTRIBUTE_NAME = "de.laures.cewolf.DatasetProducer.id";
-	
+
     /**
-     * Produces a {@link org.jfree.data.Dataset} object.
+     * Produces a {@link org.jfree.data.general.Dataset} object.
      * @param params additional params for the dataset production. All elements
      * of this HashMap are of type <code>java.io.Serializable</code>. This is
-     * necessary to ensure the the serialization of the dataset producer into
+     * necessary to ensure the serialization of the dataset producer into
      * the http session. To provide a producer with additional production
      * parameters the &lt;param&gt; tag is used (see tag library documentation).
-     * It is recommended to synchronize implementations of this method to avoid
-     * concurrency problems.
-     * @return an object of type <code>org.jfree.data.Dataset</code>.
+     * It is recommended to synchronize implementations of this method to avoid concurrency problems.
+     * @return an object of type <code>org.jfree.data.general.Dataset</code>.
      * @throws DatasetProduceException if an error occured during production
      * @since 0.2
      */
     Object produceDataset(Map params) throws DatasetProduceException;
-	
+
 	/**
 	 * This method is called by the Cewolf framework to check if a formerly
 	 * produced data can be reused. If the data which had already been used
@@ -69,16 +66,15 @@ public interface DatasetProducer extends Serializable {
 	 * @param params the production parameters of the already produced data
 	 * @param since the point in time when the already produced data had been produced
 	 * @return <code>true</code> if the data which had been produced with the 
-	 * passed in parameters has expired since its creation, <code>false</code> 
-	 * otherwise
+	 * passed in parameters has expired since its creation, <code>false</code> otherwise
 	 * @since 0.9
 	 */
 	boolean hasExpired(Map params, Date since);
-	
+
 	/**
 	 * Tis method returns a unique ID for a DatasetProducer from this class.
 	 * Producers with the same ID are supposed to produce the same data when
-	 * called with the same paramters.
+	 * called with the same parameters.
 	 * @return the unique ID for instances of this poducer class
 	 * @since 0.9
 	 */

@@ -25,10 +25,7 @@ package de.laures.cewolf.taglib.util;
 import java.awt.Color;
 
 
-/**
- * Helper class to calculate colors
- *  @author  Guido Laures 
- */
+/** @author  Guido Laures */
 public class ColorHelper {
 
     private ColorHelper() {

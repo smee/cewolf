@@ -3,26 +3,16 @@ package de.laures.cewolf.taglib.tags;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * @author glaures
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
  */
 public abstract class CewolfTag extends TagSupport {
 
-    protected Log log = LogFactory.getLog(this.getClass());
-    
 	protected final int doAfterEndTag(int returnVal) {
 		reset();
 		return returnVal;
 	}
-	
+
 	protected abstract void reset();
 
 	/**

@@ -33,6 +33,8 @@ import java.io.Serializable;
  */
 public class ParamTag extends CewolfBodyTag {
 
+	static final long serialVersionUID = 3146335006040952717L;
+
     private String name;
     private Object value;
 
@@ -45,12 +47,15 @@ public class ParamTag extends CewolfBodyTag {
     protected void reset() {
     }
 
-    public void setName(String name) {
+    public void setName (String name) {
         this.name = name;
     }
 
-    public void setValue(Serializable val) {
+    public void setValue (Serializable val) {
         this.value = val;
     }
 
+    public void setValue (String val) {
+        this.value = val;
+    }
 }

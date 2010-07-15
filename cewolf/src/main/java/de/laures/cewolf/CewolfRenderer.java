@@ -48,99 +48,92 @@ import de.laures.cewolf.util.RenderingHelper;
  * @see de.laures.cewolf.taglib.tags.ChartImgTag
  * @see de.laures.cewolf.taglib.tags.LegendTag
  * @author Guido Laures
- * @since 0.1
  */
-public class CewolfRenderer extends HttpServlet implements WebConstants
+
+public class CewolfRenderer extends HttpServlet
 {
+	static final long serialVersionUID = 6604197744166761599L;
 
-  public static final String  INIT_CONFIG  = "CewolfRenderer_Init_Config";
-  private static final String STATE        = "state";
-  private boolean             debugged     = false;
-  private int                 requestCount = 0;
-  private Byte 					lock = Byte.valueOf("0");
-  private Configuration       config       = null;
+	public static final String  INIT_CONFIG  = "CewolfRenderer_Init_Config";
+	private static final String STATE        = "state";
+	private boolean             debugged     = false;
+	private int                 requestCount = 0;
+	private Configuration       config       = null;
 
-  public void init( ServletConfig servletCfg ) throws ServletException
+  public void init (ServletConfig servletCfg) throws ServletException
   {
     super.init(servletCfg);
-    
+
     //Store init config params for processing by the Configuration
     servletCfg.getServletContext().setAttribute(INIT_CONFIG, servletCfg);
     config = Configuration.getInstance(servletCfg.getServletContext());
-    
+
     if (config != null)
       this.debugged = config.isDebugged();
     else
       this.debugged = false;
   }
-
-  /**
-   * Processes HTTP <code>GET</code> request. Renders the chart or the lengend
-   * into the client's response stream.
-   * 
-   * @param request
-   *          servlet request
-   * @param response
-   *          servlet response
-   * @throws ServletException
-   *           when the production of data could not be handled by the
-   *           configured DatasetProcuder
-   */
   
-  public void printParameters(HttpServletRequest request)
+  public void printParameters (HttpServletRequest request)
   {
     Enumeration enumeration = request.getParameterNames();
     while (enumeration.hasMoreElements())
     {
       String cur = (String)enumeration.nextElement();
       Object obj = request.getParameter(cur);
-      
-      log("Request Parameter -> " + cur + " Value -> " + obj.toString());
+
+	  if (debugged)
+		  log("Request Parameter -> " + cur + " Value -> " + obj.toString());
     }
   }
-  
-  protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
+
+  /**
+   * Processes HTTP <code>GET</code> request. Renders the chart or the lengend into the client's response stream.
+   * 
+   * @param request servlet request
+   * @throws ServletException when the production of data could not be handled by the configured DatasetProcuder
+   */
+  protected void doGet (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
   {
-    if ( debugged )
-    {
+    if (debugged)
       logRequest(request);
-    }
+
     addHeaders(response);
-    if ( request.getParameter(STATE) != null || !request.getParameterNames().hasMoreElements() )
+    if (request.getParameter(STATE) != null || !request.getParameterNames().hasMoreElements())
     {
       requestState(response);
       return;
     }
-    synchronized (lock) {
+    synchronized (CewolfRenderer.class) {
     	requestCount++;
 	}
     
     int width = 400;
     int height = 400;
     boolean removeAfterRendering = false;
-    if ( request.getParameter(REMOVE_AFTER_RENDERING) != null )
+    if (request.getParameter(WebConstants.REMOVE_AFTER_RENDERING) != null)
     {
     	removeAfterRendering = true;
     }
-    if ( request.getParameter(WIDTH_PARAM) != null )
+    if (request.getParameter(WebConstants.WIDTH_PARAM) != null)
     {
-      width = Integer.parseInt(request.getParameter(WIDTH_PARAM));
+      width = Integer.parseInt(request.getParameter(WebConstants.WIDTH_PARAM));
     }
-    if ( request.getParameter(HEIGHT_PARAM) != null )
+    if (request.getParameter(WebConstants.HEIGHT_PARAM) != null)
     {
-      height = Integer.parseInt(request.getParameter(HEIGHT_PARAM));
+      height = Integer.parseInt(request.getParameter(WebConstants.HEIGHT_PARAM));
     }
 
     // determine the cache key
-    String imgKey = request.getParameter(IMG_PARAM);
-    if ( imgKey == null )
+    String imgKey = request.getParameter(WebConstants.IMG_PARAM);
+    if (imgKey == null)
     {
-      logAndRenderException(new ServletException("no '" + IMG_PARAM + "' parameter provided for Cewolf servlet."), response, width, height);
+      logAndRenderException(new ServletException("no '" + WebConstants.IMG_PARAM + "' parameter provided for Cewolf servlet."), response, width, height);
       return;
     }
     Storage storage = config.getStorage();
     ChartImage chartImage = storage.getChartImage(imgKey, request);
-    if ( chartImage == null )
+    if (chartImage == null)
     {
       renderImageExpiry(response, width, height);
       return;
@@ -157,10 +150,8 @@ public class CewolfRenderer extends HttpServlet implements WebConstants
       response.setStatus(HttpServletResponse.SC_OK);
       response.getOutputStream().write(chartImage.getBytes());
       long last = System.currentTimeMillis() - start;
-      if ( debugged )
-      {
+      if (debugged)
         log("creation time for chart " + imgKey + ": " + last + "ms.");
-      }
     }
     catch (Throwable t)
     {
@@ -168,8 +159,7 @@ public class CewolfRenderer extends HttpServlet implements WebConstants
     }
     finally
     {
-    	if (removeAfterRendering)
-    	{
+    	if (removeAfterRendering) {
     		try {
 				storage.removeChartImage(imgKey , request);
 			} catch (CewolfException e) {
@@ -179,29 +169,17 @@ public class CewolfRenderer extends HttpServlet implements WebConstants
     }
   }
 
-  /**
-   * Method addHeaders.
-   * 
-   * @param response
-   */
-  private void addHeaders( HttpServletResponse response )
+  private void addHeaders (HttpServletResponse response)
   {
     response.setDateHeader("Expires", System.currentTimeMillis());
   }
 
-  /**
-   * Method requestState.
-   * 
-   * @param request
-   * @param response
-   */
-  private void requestState( HttpServletResponse response ) throws IOException
+  private void requestState (HttpServletResponse response) throws IOException
   {
     Writer writer = response.getWriter();
     writer.write("<HTML><BODY>");
     /*
-     * StateDescriptor sd = (StateDescriptor)
-     * ChartImageCacheFactory.getChartImageBase( getServletContext());
+     * StateDescriptor sd = (StateDescriptor) ChartImageCacheFactory.getChartImageBase(getServletContext());
      * writer.write(HTMLStateTable.getStateTable(sd));
      */
     writer.write("<b>Cewolf servlet up and running.</b><br>");
@@ -210,7 +188,7 @@ public class CewolfRenderer extends HttpServlet implements WebConstants
     writer.close();
   }
 
-  private void logAndRenderException( Throwable ex, HttpServletResponse response, int width, int height ) throws IOException
+  private void logAndRenderException (Throwable ex, HttpServletResponse response, int width, int height) throws IOException
   {
     log(ex.getMessage(), ex);
     response.setContentType("image/jpg");
@@ -219,14 +197,7 @@ public class CewolfRenderer extends HttpServlet implements WebConstants
     out.close();
   }
 
-  /**
-   * Method renderImageExpiry.
-   * 
-   * @param response
-   * @param width
-   * @param height
-   */
-  private void renderImageExpiry( HttpServletResponse response, int width, int height ) throws IOException
+  private void renderImageExpiry (HttpServletResponse response, int width, int height) throws IOException
   {
     response.setContentType("image/jpg");
     OutputStream out = response.getOutputStream();
@@ -234,23 +205,23 @@ public class CewolfRenderer extends HttpServlet implements WebConstants
     out.close();
   }
 
-  private void logRequest( HttpServletRequest request ) throws IOException
+  private void logRequest (HttpServletRequest request) throws IOException
   {
     log("Cewolf request:");
     log("Actual Request values:");
     printParameters(request);
     Enumeration headerNames = request.getHeaderNames();
-    while ( headerNames.hasMoreElements() )
+    while (headerNames.hasMoreElements())
     {
       String name = (String) headerNames.nextElement();
       Enumeration values = request.getHeaders(name);
       StringBuffer value = new StringBuffer();
-      while ( values.hasMoreElements() )
+      while (values.hasMoreElements())
       {
         value.append((String) values.nextElement() + ",");
       }
       // cut last comma
-      if ( value.length() > 0 )
+      if (value.length() > 0)
         value.setLength(value.length() - 1);
       log(name + ": " + value);
     }

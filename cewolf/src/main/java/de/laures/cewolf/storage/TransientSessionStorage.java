@@ -31,7 +31,9 @@ import de.laures.cewolf.ChartImage;
  * @author glaures
  */
 public class TransientSessionStorage extends AbstractSessionStorage {
-	
+
+	static final long serialVersionUID = -8149493766612024441L;
+
 	/* (non-Javadoc)
 	 * @see de.laures.cewolf.storage.AbstractSessionStorage#getCacheObject(de.laures.cewolf.ChartImage)
 	 */

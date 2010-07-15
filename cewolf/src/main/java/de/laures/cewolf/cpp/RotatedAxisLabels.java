@@ -1,70 +1,85 @@
 package de.laures.cewolf.cpp;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.CategoryAxis;
-import org.jfree.chart.axis.CategoryLabelPositions;
-import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.axis.*;
+import org.jfree.chart.plot.*;
 import org.jfree.data.category.CategoryDataset;
 
 import de.laures.cewolf.ChartPostProcessor;
 
 /**
-* A cewolf post-processor for rotating and/or removing the labels on the X-Axis
-* parameters:
-* rotate_at: make the labels vertical
-* skip_at: print only some of the labels (so they don't overlap)
-* remove_at: don't print any labels
-*
-* Usage:
-* <chart:chartpostprocessor id="labelRotation">
-* <chart:param name="rotate_at" value='<%= new Integer(10) %>'/>
-* <chart:param name="skip_at" value='<%= new Integer(50) %>'/>
-* <chart:param name="remove_at" value='<%= new Integer(100) %>'/>
-* </chart:chartpostprocessor>
-*
+* A postprocessor for rotating and/or removing the labels on the X-Axis. It supports the following parameters:
+* <BR><b>rotate_at</b> make the labels vertical if this many categories are present; default 1
+* <BR><b>remove_at</b> don't print any labels if this many categories are present; default 100
+* <P>
+* Usage:<P>
+* &lt;chart:chartpostprocessor id="labelRotation"&gt;<BR>
+* &nbsp;&nbsp;&lt;chart:param name="rotate_at" value="10"/&gt;<BR>
+* &nbsp;&nbsp;&lt;chart:param name="remove_at" value="100"/&gt;<BR>
+* &lt;/chart:chartpostprocessor&gt;
 *
 * @author Rich Unger
 */
 
-public class RotatedAxisLabels implements ChartPostProcessor {
-	
-public void processChart(Object chart, Map params) {
-		CategoryPlot plot = (CategoryPlot) ((JFreeChart) chart).getPlot();
+public class RotatedAxisLabels implements ChartPostProcessor, Serializable {
 
-		CategoryAxis axis = plot.getDomainAxis();
+	static final long serialVersionUID = 5242029033037971789L;
 
-		Number rotateThreshold = (Number) params.get("rotate_at");
-		Number skipThreshold = (Number) params.get("skip_at");
-		Number removeThreshold = (Number) params.get("remove_at");
+	public void processChart (Object chart, Map params) {
+		int rotateThreshold=1, removeThreshold=100;
 
-		CategoryDataset dataset = plot.getDataset();
-		int iCategoryCount = dataset.getRowCount();
-
-		if (rotateThreshold != null) 
-    {
-      if (iCategoryCount >= rotateThreshold.intValue()) 
-      {
-        axis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
-      }
-      else 
-      {
-        axis.setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
-      }
-
-    }
-    
-		if (skipThreshold != null) 
-    {
-      //this method does nothing in jfreechart .9.18
-			//axis.setSkipCategoryLabelsToFit(iCategoryCount >= skipThreshold.intValue());
+		String rotateParam = (String) params.get("rotate_at");
+		if (rotateParam != null && rotateParam.trim().length() > 0) {
+			try {
+				rotateThreshold = Integer.parseInt(rotateParam);
+			} catch (NumberFormatException nfex) { }
 		}
-		
-    if (removeThreshold != null) 
-    {
-			axis.setTickLabelsVisible(iCategoryCount < removeThreshold.intValue());
+
+		String removeParam = (String) params.get("remove_at");
+		if (removeParam != null && removeParam.trim().length() > 0) {
+			try {
+				removeThreshold = Integer.parseInt(removeParam);
+			} catch (NumberFormatException nfex) { }
+		}
+
+		Plot plot = ((JFreeChart) chart).getPlot();
+		Axis axis = null;
+		int numValues = 0;
+
+		if (plot instanceof CategoryPlot) {
+			axis = ((CategoryPlot) plot).getDomainAxis();
+			numValues = ((CategoryPlot) plot).getDataset().getRowCount();
+		} else if (plot instanceof XYPlot) {
+			axis = ((XYPlot) plot).getDomainAxis();
+			numValues = ((XYPlot) plot).getDataset().getItemCount(0);
+		} else if (plot instanceof FastScatterPlot) {
+			axis = ((FastScatterPlot) plot).getDomainAxis();
+			numValues = ((FastScatterPlot) plot).getData()[0].length;
+		}
+
+		if (axis instanceof CategoryAxis) {
+			CategoryAxis catAxis = (CategoryAxis) axis;
+
+			if (rotateThreshold > 0) {
+				if (numValues >= rotateThreshold) {
+					catAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
+				} else {
+					catAxis.setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
+				}
+			}
+		} else if (axis instanceof ValueAxis) {
+			ValueAxis valueAxis = (ValueAxis) axis;
+
+			if (rotateThreshold > 0) {
+				valueAxis.setVerticalTickLabels(numValues >= rotateThreshold);
+			}
+		}
+
+		if ((axis != null) && (removeThreshold > 0)) {
+			axis.setTickLabelsVisible(numValues < removeThreshold);
 		}
 	}
-	
 }

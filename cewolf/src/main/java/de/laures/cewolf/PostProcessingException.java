@@ -33,6 +33,7 @@ public class PostProcessingException extends CewolfException {
     public PostProcessingException() {
     }
 
+
     /**
      * Constructs an instance of <code>DatasetProduceException</code> with the specified detail message.
      * @param msg the detail message.
@@ -40,14 +41,4 @@ public class PostProcessingException extends CewolfException {
     public PostProcessingException(String msg) {
         super(msg);
     }
-
-    /**
-     * Constructor with causing exception
-     * @param msg
-     * @param cause
-     */
-	public PostProcessingException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
-    
 }

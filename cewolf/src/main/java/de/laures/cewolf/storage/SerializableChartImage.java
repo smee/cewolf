@@ -33,14 +33,16 @@ import de.laures.cewolf.ChartImage;
  *
  */
 public class SerializableChartImage implements ChartImage, Serializable {
-	
+
+	static final long serialVersionUID = -6746254726157616461L;
+
 	private final int width;
 	private final int height;
 	private final int type;
 	private final Date timeoutTime;
 	private final String mimeType;
 	private final byte[] data;
-	
+
 	public SerializableChartImage(ChartImage img) throws CewolfException{
 		this.width = img.getWidth();
 		this.height = img.getHeight();

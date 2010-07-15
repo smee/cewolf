@@ -22,9 +22,10 @@
 
 package de.laures.cewolf.taglib.tags;
 
+import java.awt.Shape;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Iterator;
 
@@ -32,77 +33,62 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.entity.CategoryItemEntity;
 import org.jfree.chart.entity.ChartEntity;
 import org.jfree.chart.entity.LegendItemEntity;
 import org.jfree.chart.entity.PieSectionEntity;
 import org.jfree.chart.entity.XYItemEntity;
-import org.jfree.chart.imagemap.ImageMapUtilities;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.Dataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.data.xy.XYDataset;
 
 import de.laures.cewolf.CewolfException;
+import de.laures.cewolf.Configuration;
 import de.laures.cewolf.links.CategoryItemLinkGenerator;
 import de.laures.cewolf.links.LinkGenerator;
 import de.laures.cewolf.links.PieSectionLinkGenerator;
 import de.laures.cewolf.links.XYItemLinkGenerator;
+import de.laures.cewolf.taglib.util.BrowserDetection;
 import de.laures.cewolf.taglib.util.PageUtils;
 import de.laures.cewolf.tooltips.CategoryToolTipGenerator;
-import de.laures.cewolf.tooltips.ITooltipRenderer;
 import de.laures.cewolf.tooltips.PieToolTipGenerator;
 import de.laures.cewolf.tooltips.ToolTipGenerator;
 import de.laures.cewolf.tooltips.XYToolTipGenerator;
 
 /**
  * Tag &lt;map&gt; which defines the tooltip and link tags.
- * 
  * @see DataTag
  * @author  Guido Laures
  */
 public class ChartMapTag extends CewolfTag {
 
 	private static final long serialVersionUID = -3742340487378471159L;
-	
-	private static final Log LOG = LogFactory.getLog(ChartMapTag.class);
-		
+
+	// constants for the HTML attributes and JavaScript methods
+	private static final String MAP_TAGNAME = "map";
+	private static final String AREA_TAGNAME = "area";
+	private static final String COORD_ATTRIBUTE = "coords";
+	private static final String SHAPE_ATTRIBUTE = "shape";
+	private static final String NAME_ATTRIBUTE = "name";
+	private static final String ID_ATTRIBUTE = "id";
+	private static final String TARGET_ATTRIBUTE = "target";
+	private static final String HREF_ATTRIBUTE = "href";
+	private static final String MOUSEOVER_METHOD = "onmouseover";
+	private static final String MOUSEOUT_METHOD = "onmouseout";
+	private static final String ALT_ATTRIBUTE = "alt";
+	private static final String TITLE_ATTRIBUTE = "title";
+
 	ToolTipGenerator toolTipGenerator = null;
 	LinkGenerator linkGenerator = null;
-	
+	String target = null;
+
 	// If the links provided by the JFreeChart renderer should be used.
 	boolean useJFreeChartLinkGenerator = false;
 	// If the tooltips provided by the JFreeChart renderer should be used.
 	boolean useJFreeChartTooltipGenerator = false;
-	
-	// if the JFreeChart's renderer is used for rendering tooltips
-	boolean useJFreeChartMapGenerator = false;
-	
-	/**
-	 * Default tooltip renderer class
-	 */
-	private String tooltipRendererClass = ITooltipRenderer.Smart.class.getName(); 
-	
-	/**
-	 * Get the actual tooltip renderer
-	 * @return The IToolTipRenderer instance
-	 * @throws JspException If any exception occures, this wraps the original exception
-	 */
-	private ITooltipRenderer getTooltipRenderer() throws JspException {
-		try {
-			return (ITooltipRenderer) Class.forName(tooltipRendererClass).newInstance();
-		} catch (InstantiationException e) {
-			throw new JspException(e);
-		} catch (IllegalAccessException e) {
-			throw new JspException(e);
-		} catch (ClassNotFoundException e) {
-			throw new JspException(e);
-		}
-	}
-	
+
 	public int doStartTag() throws JspException {
 		// Object linkGenerator = getLinkGenerator();
 		Mapped root = (Mapped) PageUtils.findRoot(this, pageContext);
@@ -110,96 +96,67 @@ public class ChartMapTag extends CewolfTag {
 		String chartId = ((CewolfRootTag) root).getChartId();
 		try {
 			Dataset dataset = PageUtils.getDataset(chartId, pageContext);
-			HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
-			PrintWriter out = response.getWriter();
-			
-			ChartRenderingInfo info = (ChartRenderingInfo) root.getRenderingInfo();			
-			
-			if (!useJFreeChartMapGenerator) {
-				renderMap(chartId,dataset, out, response, info);
-			} else {
-				ImageMapUtilities.writeImageMap(out, chartId, info);
+			Writer out = pageContext.getOut();
+			final boolean isIE = BrowserDetection.isIE((HttpServletRequest) pageContext.getRequest());
+			if (hasToolTips()) {
+				enableToolTips(out, isIE);
+			}
+			String mapTagContent = "<" + MAP_TAGNAME; 
+			mapTagContent += " " + NAME_ATTRIBUTE + "=\"" + chartId + "\"";
+			mapTagContent += " " + ID_ATTRIBUTE + "=\"" + chartId + "\"";
+			mapTagContent += " >";
+			out.write(mapTagContent);
+			ChartRenderingInfo info = (ChartRenderingInfo) root.getRenderingInfo();
+			Iterator entities = info.getEntityCollection().iterator();
+			boolean altAttrbInserted, hasContent;
+			StringBuffer sb = new StringBuffer(200);
+			while (entities.hasNext()) {
+				altAttrbInserted = false;
+				hasContent = false;
+				ChartEntity ce = (ChartEntity) entities.next();
+				sb.append("\n<" + AREA_TAGNAME + " " + SHAPE_ATTRIBUTE + "=\"" + ce.getShapeType() + "\" ");
+				sb.append(COORD_ATTRIBUTE + "=\"" + ce.getShapeCoords() + "\" ");
+		        if (ce instanceof XYItemEntity) {
+					dataset = ((XYItemEntity) ce).getDataset();
+				}
+				if (! (ce instanceof LegendItemEntity)) {
+					if (hasToolTips()) {
+						if (writeOutToolTip(dataset, sb, isIE, ce))
+							hasContent = true;
+						altAttrbInserted = true;
+					} 
+					if (hasLinks()) {
+						if (writeOutLink(linkGenerator, dataset, sb, ce))
+							hasContent = true;
+					}
+				}
+				if (!altAttrbInserted) {
+					sb.append(" " + ALT_ATTRIBUTE + "=\"\"");
+				}
+				sb.append(" />");
+				if (hasContent) {
+					out.write(sb.toString());
+				}
+				sb.setLength(0);
 			}
 		} catch (IOException ioex) {
-			log.error(ioex);
-			throw new JspException(ioex);
+			System.err.println("ChartMapTag.doStartTag: "+ioex.getMessage());
+			throw new JspException(ioex.getMessage());
 		} catch (CewolfException cwex) {
-			log.error(cwex);
-			throw new JspException(cwex);
+			System.err.println("ChartMapTag.doStartTag: "+cwex.getMessage());
+			throw new JspException(cwex.getMessage());
 		}
 		return EVAL_PAGE;
-	}
-
-	/**
-	 * Render the map in the Cewolf way...
-	 * @param chartId The chart id
-	 * @param dataset The dataset of cewolf
-	 * @param out The output writer
-	 * @param response The response is being used
-	 * @param info The rendering info
-	 * @throws JspException 
-	 * @throws IOException 
-	 */
-	private void renderMap(String chartId, Dataset dataset, Writer out, HttpServletResponse response, ChartRenderingInfo info) throws JspException, IOException {
-		// create the tooltip renderer instance
-		ITooltipRenderer tooltipRenderer = getTooltipRenderer();
-		
-		// initialize tooltip renderer, if it has any tooltips enabled
-		if (hasToolTips()) {
-			tooltipRenderer.init((HttpServletRequest) pageContext.getRequest(), out, pageContext);
-		}
-		out.write("<MAP name=\"" + chartId + "\">\n");
-		Iterator entities = info.getEntityCollection().iterator();
-		// an String-buffer is used to decide if there was tooltip or link, this is used
-		// to drop out the area sections which has no functionality, because they are without
-		// tooltip or link
-		StringWriter areabuffer = new StringWriter();
-					
-		while (entities.hasNext()) {
-			ChartEntity ce = (ChartEntity) entities.next();
-			areabuffer.getBuffer().setLength(0);
-		    if (ce instanceof XYItemEntity)
-		    {
-		      dataset = ((XYItemEntity)ce).getDataset();
-		    }
-			if (!(ce instanceof LegendItemEntity)) {
-				// render tooltips
-				if (hasToolTips()) {
-					String toolTip = generateToolTip(dataset, ce);
-					if (null != toolTip) {
-						tooltipRenderer.render(areabuffer, toolTip);
-					}
-				}
-				// render links
-				if (hasLinks()) {
-					final String link = generateLink(dataset, ce);
-					
-					if (null != link) {
-						final String href = response.encodeURL(link);
-						areabuffer.write("HREF=\"" + href + "\"");
-					}
-				}
-			}
-			
-			// only write out those area sections, which has link or tooltip
-			// this is to reduce page size with too many aeas which does not do anything...
-			if (areabuffer.getBuffer().length()>0) {
-				out.write("\n<AREA shape=\"" + ce.getShapeType() + "\" ");
-				out.write("COORDS=\"" + ce.getShapeCoords() + "\" ");
-				out.write(areabuffer.getBuffer().toString());
-				out.write(">");
-			}
-		} // while
 	}
 
 	public int doEndTag() throws JspException {
 		// print out image map end
 		Writer out = pageContext.getOut();
 		try {
-			out.write("</MAP>");
+			out.write("\n</" + MAP_TAGNAME + ">");
 		} catch (IOException ioex) {
-			log.error(ioex);
-			throw new JspException(ioex);
+			System.err.println("ChartMapTag.doEndTag: "+ioex.getMessage());
+			throw new JspException(ioex.getMessage());
 		}
 		return doAfterEndTag(EVAL_PAGE);
 	}
@@ -209,7 +166,55 @@ public class ChartMapTag extends CewolfTag {
 		this.linkGenerator = null;
 	}
 
-	private String generateLink(Dataset dataset, ChartEntity ce) {
+	private boolean writeOutLink (Object linkGen, Dataset dataset, StringBuffer sb, ChartEntity ce) throws IOException {
+		final String link = generateLink(dataset, ce);
+
+		if (null != link) {
+			final String href = ((HttpServletResponse) pageContext.getResponse()).encodeURL(link);
+			sb.append(HREF_ATTRIBUTE + "=\"" + href + "\"");
+			if (target != null) {
+				sb.append(" " + TARGET_ATTRIBUTE + "=\"" + target + "\"");
+			}
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean writeOutToolTip (Dataset dataset, StringBuffer sb, final boolean isIE, ChartEntity ce) throws IOException, JspException {
+		String toolTip = generateToolTip(dataset, ce);
+		boolean altAttributeInserted = false;
+		boolean hasContent = false;
+		if (null != toolTip) {
+			hasContent = true;
+			if (!isIE) {
+				sb.append(" " +  MOUSEOVER_METHOD + "=\"return overlib('"
+						+ toolTip + "', width, '20');\" " + MOUSEOUT_METHOD + "=\"return nd();\" ");
+			} else {
+				sb.append(ALT_ATTRIBUTE + "=\"" + toolTip + "\" ");
+				// Added "title" attribute for IE8 and newer
+				sb.append(TITLE_ATTRIBUTE + "=\"" + toolTip + "\" ");
+				altAttributeInserted = true;
+			}
+		} 
+		if (!altAttributeInserted) {
+			sb.append(" " + ALT_ATTRIBUTE + "=\"\" ");
+		}
+		return hasContent;
+	}
+
+	public void enableToolTips (Writer out, final boolean isIE) throws IOException {
+		if (!PageUtils.isToolTipsEnabled(pageContext) && !isIE) {
+			Configuration config = Configuration.getInstance(pageContext.getServletContext());
+			String overLibURL = ChartImgTag.fixAbsolutURL(config.getOverlibURL(), pageContext);
+			out.write("<script type=\"text/javascript\" language=\"JavaScript\" src=\"");
+			out.write(overLibURL + "\"></script>\n");
+			out.write("<div id=\"overDiv\" style=\"position:absolute; visibility:hidden; z-index:1000;\"></div>\n");
+			PageUtils.setToolTipsEnabled(pageContext);
+		}
+	}
+
+	private String generateLink (Dataset dataset, ChartEntity ce) {
 		String link = null;
 		if (useJFreeChartLinkGenerator) {
 			link = ce.getURLText();
@@ -220,22 +225,24 @@ public class ChartMapTag extends CewolfTag {
     				link = ((CategoryItemLinkGenerator) linkGenerator).generateLink(dataset, catEnt.getSeries(), catEnt.getCategory());
     			}
     		}
+
     		if (linkGenerator instanceof XYItemLinkGenerator) {
-  		    if (ce instanceof XYItemEntity) {
+				if (ce instanceof XYItemEntity) {
     				XYItemEntity xyEnt = (XYItemEntity) ce;
     				link = ((XYItemLinkGenerator) linkGenerator).generateLink(dataset, xyEnt.getSeriesIndex(), xyEnt.getItem());
-  		    } else {
-  		        // Note; there is a simple ChartEntity also passed since Jfreechart 1.0rc1, that is ignored
-  		        LOG.debug("Link entity skipped, not XYItemEntity.class:" + ce);
-  		    }
+				} else {
+					// Note; there is a simple ChartEntity also passed since Jfreechart 1.0rc1, that is ignored
+					// System.out.println("ChartMapTag.generateLink: Link entity skipped, not XYItemEntity.class:" + ce);
+				}
     		}
+
     		if (linkGenerator instanceof PieSectionLinkGenerator) {
-  		    if (ce instanceof PieSectionEntity) {
-    				PieSectionEntity pieEnt = (PieSectionEntity) ce;
-    				link = ((PieSectionLinkGenerator) linkGenerator).generateLink(dataset, pieEnt.getSectionKey());
-  		    }
+				if (ce instanceof PieSectionEntity) {
+					PieSectionEntity pieEnt = (PieSectionEntity) ce;
+					link = ((PieSectionLinkGenerator) linkGenerator).generateLink(dataset, pieEnt.getSectionKey());
+				}
     		}
-  	}
+		}
 		return link;
 	}
 
@@ -295,7 +302,7 @@ public class ChartMapTag extends CewolfTag {
 	public void setLinkgeneratorid(String id) {
 		this.linkGenerator = (LinkGenerator) pageContext.findAttribute(id);
 	}
-	
+
 	/**
 	 * Setter of the useJFreeChartLinkGenerator field.
 	 * @param useJFreeChartLinkGenerator the useJFreeChartLinkGenerator to set.
@@ -310,21 +317,8 @@ public class ChartMapTag extends CewolfTag {
 	public void setUseJFreeChartTooltipGenerator(boolean useJFreeChartTooltipGenerator) {
 		this.useJFreeChartTooltipGenerator = useJFreeChartTooltipGenerator;
 	}
-	
-	/**
-	 * Setter if the JFreechart's map generator is used.
-	 * @param useJFreeChartMapGenerator The jfreechart map generator
-	 */
-	public void setUseJFreeChartMapGenerator(boolean useJFreeChartMapGenerator) {
-		this.useJFreeChartMapGenerator = useJFreeChartMapGenerator;
-	}
 
-	/**
-	 * Allows you to change the tool-tip renderer class. 
-	 * @param tooltipRendererClass The full-class name of the renderer to use
-	 */
-	public void setTooltipRendererClass(String tooltipRendererClass) {
-		this.tooltipRendererClass = tooltipRendererClass;
-	}	
-	
+	public void setTarget (String target) {
+		this.target = target;
+	}
 }

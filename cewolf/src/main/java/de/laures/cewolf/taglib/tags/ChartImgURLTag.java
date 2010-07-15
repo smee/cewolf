@@ -23,8 +23,13 @@
 
 package de.laures.cewolf.taglib.tags;
 
+import de.laures.cewolf.CewolfException;
+import de.laures.cewolf.Configuration;
+import de.laures.cewolf.Storage;
+
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
 /**
@@ -33,22 +38,32 @@ import javax.servlet.jsp.JspException;
  * @see de.laures.cewolf.taglib.tags.ChartImgTag
  */
 public class ChartImgURLTag extends ChartImgTag {
-	
+
+	static final long serialVersionUID = -8566975311205247052L;
+
 	public static final String VAR_NAME = "var";
-	
+
 	String var = null;
     
     public int doEndTag() throws JspException {
         try {
-        	if(var == null){
+        	if (var == null) {
 	            pageContext.getOut().write(getImgURL());
         	} else {
         		pageContext.setAttribute(var, getImgURL());
         	}
         } catch(IOException ioex){
-        	log.error(ioex);
-            throw new JspException(ioex);
+        	System.err.println("ChartImgTag.doEndTag: "+ioex.getMessage());
+            throw new JspException(ioex.getMessage());
         }
+
+		try {
+			Storage storage = Configuration.getInstance(pageContext.getServletContext()).getStorage();
+			storage.removeChartImage(sessionKey, (HttpServletRequest) pageContext.getRequest());
+		} catch (CewolfException cwex) {
+			throw new JspException(cwex.getMessage());
+		}
+
     	return doAfterEndTag(EVAL_PAGE);
     }
     

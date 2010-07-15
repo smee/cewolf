@@ -36,11 +36,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import de.laures.cewolf.CewolfException;
-import de.laures.cewolf.CewolfRuntimeException;
 import de.laures.cewolf.ChartImage;
 import de.laures.cewolf.Configuration;
 import de.laures.cewolf.Storage;
@@ -65,13 +61,13 @@ import de.laures.cewolf.taglib.util.KeyGenerator;
  * @author guido
  */
 public class FileStorage implements Storage {
-	
-	private static final Log LOG = LogFactory.getLog(FileStorage.class);
-	
+
+	static final long serialVersionUID = -6342203760851077577L;
+
 	String basePath = null;
 	List stored = new ArrayList();
 	private boolean deleteOnExit = false;
-	
+
 	/**
 	 * @see de.laures.cewolf.Storage#storeChartImage(ChartImage, PageContext)
 	 */
@@ -86,46 +82,45 @@ public class FileStorage implements Storage {
 			pageContext.getServletContext().log("Storing image to file " + fileName);
 			File f = new File(fileName);
 			if (deleteOnExit) {
-				f.deleteOnExit();			
+				f.deleteOnExit();
 			}
 			oos = new ObjectOutputStream(new FileOutputStream(f));
 			oos.writeObject(new SerializableChartImage(cid));
 			oos.close();
 		} catch(IOException ioex){
-			throw new CewolfRuntimeException("Can't store image!", ioex);
+			ioex.printStackTrace();
 		} catch(CewolfException cwex){
-			throw new CewolfRuntimeException("Can't store image!", cwex);
+			cwex.printStackTrace();
 		} finally {
 			if(oos != null){
 				try {
 					oos.close();
 				} catch(IOException ioex){
-					pageContext.getServletContext().log("Exception ignored, when closing file", ioex);
+					ioex.printStackTrace();
 				}
 			}
 		}
-		return id;		
+		return id;
 	}
 
 	/**
 	 * @see de.laures.cewolf.Storage#getChartImage(String, HttpServletRequest)
 	 */
-	public ChartImage getChartImage(String id, HttpServletRequest request) {
+	public ChartImage getChartImage (String id, HttpServletRequest request) {
 		ChartImage res = null;
 		ObjectInputStream ois = null;
 		try {
 			ois = new ObjectInputStream(new FileInputStream(getFileName(id)));
-			res = (ChartImage)ois.readObject();
+			res = (ChartImage) ois.readObject();
 			ois.close();
-		} catch(Exception ex){
-			throw new CewolfRuntimeException("Can't load chart image" , ex);
+		} catch (Exception ex){
+			ex.printStackTrace();
 		} finally {
-			if(ois != null){
+			if (ois != null){
 				try {
 					ois.close();
-				} catch(IOException ioex){
-					// ignored close error, just log it
-					LOG.info("Exception during stream close" , ioex);
+				} catch (IOException ioex){
+					ioex.printStackTrace();
 				}
 			}
 		}
@@ -133,14 +128,14 @@ public class FileStorage implements Storage {
 	}
 
 	/**
-	 * @see de.laures.cewolf.Storage#contains(ChartImage, PageContext)
+	 * see de.laures.cewolf.Storage#contains(ChartImage, PageContext)
 	 */
 	public boolean contains(ChartImage chartImage, PageContext pageContext) {
 		return new File(getFileName(chartImage)).exists();
 	}
 
 	/**
-	 * @see de.laures.cewolf.Storage#getKey(ChartImage)
+	 * see de.laures.cewolf.Storage#getKey(ChartImage)
 	 */
 	public String getKey(ChartImage chartImage) {
 		return String.valueOf(KeyGenerator.generateKey((Serializable)chartImage));
@@ -155,7 +150,7 @@ public class FileStorage implements Storage {
 		deleteOnExit = "true".equalsIgnoreCase("" + config.getParameters().get("FileStorage.deleteOnExit"));
 		servletContext.log("FileStorage initialized, deleteOnExit=" + deleteOnExit);
 	}
-	
+
 	private String getFileName(ChartImage chartImage){
 		return getFileName(getKey(chartImage));
 	}
@@ -165,7 +160,7 @@ public class FileStorage implements Storage {
 	}
 
 	/**
-	 * @see de.laures.cewolf.Storage#removeChartImage(java.lang.String, javax.servlet.jsp.PageContext)
+	 * @see de.laures.cewolf.Storage#removeChartImage(java.lang.String, javax.servlet.http.HttpServletRequest)
 	 */
 	public String removeChartImage(String imgKey, HttpServletRequest pageContext) throws CewolfException {
 		File file = new File(getFileName(imgKey));

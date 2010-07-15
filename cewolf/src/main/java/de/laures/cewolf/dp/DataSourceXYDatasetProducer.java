@@ -9,13 +9,10 @@ import de.laures.cewolf.DatasetProducer;
 
 /**
  * @author glaures
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
  */
 public class DataSourceXYDatasetProducer implements DatasetProducer, Serializable {
+
+	static final long serialVersionUID = 4624928252168845205L;
 
 	public static final String PARAM_SERIES_LIST = "series";
 

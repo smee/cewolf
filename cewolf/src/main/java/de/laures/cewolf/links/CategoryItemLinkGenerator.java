@@ -25,7 +25,7 @@ package de.laures.cewolf.links;
  * A link generator for category items. This interface is used by the 
  * tag library to produce image maps. Implement this if the dataset that
  * ths DatasetProducer produces is a CategoryDataset.
- * @see org.jfree.data.CategoryDataset
+ * @see org.jfree.data.category.CategoryDataset
  * @author  Guido Laures
  * @since 0.8
  */
@@ -36,7 +36,7 @@ public interface CategoryItemLinkGenerator extends LinkGenerator {
      * @param dataset the dataset
      * @param series the series number
      * @param category the category
-     * @see org.jfree.data.CategoryDataset
+     * @see org.jfree.data.category.CategoryDataset
      */
     String generateLink(Object dataset, int series, Object category);
 

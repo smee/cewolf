@@ -27,6 +27,6 @@ package de.laures.cewolf.tooltips;
  * Interface for all tooltip generators.
  * @author glaures
  */
-public interface ToolTipGenerator {
+public interface ToolTipGenerator extends java.io.Serializable {
 
 }

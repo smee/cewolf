@@ -31,10 +31,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.*;
 import org.jfree.chart.title.LegendTitle;
+import org.jfree.data.general.Dataset;
 import org.jfree.ui.RectangleEdge;
 
 import de.laures.cewolf.ChartHolder;
@@ -51,30 +53,32 @@ import de.laures.cewolf.util.RenderedImage;
  * @author glaures
  * @see de.laures.cewolf.ChartHolder
  */
-public abstract class AbstractChartDefinition implements ChartHolder, Serializable, TaglibConstants, ChartImageRenderListener {
-    
-    protected static Log log = LogFactory.getLog(AbstractChartDefinition.class);
+public abstract class AbstractChartDefinition
+		implements ChartHolder, Serializable, ChartImageRenderListener {
 
     protected String title;
-	protected String xAxisLabel;
-	protected String yAxisLabel;
+	protected String xAxisLabel, yAxisLabel;
 	protected String type;
+    protected boolean xAxisInteger = false, yAxisInteger = false;
+    protected boolean xTickMarksVisible = true, yTickMarksVisible = true;
+    protected boolean xTickLabelsVisible = true, yTickLabelsVisible = true;
+    protected boolean borderVisible = false;
+    protected boolean plotBorderVisible = true;
 
     private boolean antialias = true;
     private String background;
     private float backgroundImageAlpha = 1.0f;
-    private Paint paint;
+    private Paint backgroundPaint, plotBackgroundPaint, borderPaint, plotBorderPaint;
 
-    private int legendAnchor = ANCHOR_SOUTH;
-    private boolean showLegend = true;
+    private int legendAnchor = TaglibConstants.ANCHOR_SOUTH;
+    protected boolean showLegend = true;
 
-    private transient List postProcessors = new ArrayList();
+    private List postProcessors = new ArrayList();
     private List postProcessorsParams = new ArrayList();
 
-    private transient JFreeChart chart;
-	
+    private JFreeChart chart;
+
 	protected abstract JFreeChart produceChart() throws DatasetProduceException, ChartValidationException;
-	
   
     //gets first legend in the list
     public LegendTitle getLegend()
@@ -94,7 +98,7 @@ public abstract class AbstractChartDefinition implements ChartHolder, Serializab
       }
       return legend;
     }
-    
+
     //removes first legend in the list
     public void removeLegend()
     {
@@ -110,58 +114,151 @@ public abstract class AbstractChartDefinition implements ChartHolder, Serializab
         }
       }
     }
-  
+
     /**
      * This method triggers the dataset and chart production. It is only
-     * from outside if there is no cached image available in the the
-     * image cache.
+     * from outside if there is no cached image available in the the image cache.
      */
-    public Object getChart() throws DatasetProduceException, ChartValidationException, PostProcessingException {
+    public JFreeChart getChart() throws DatasetProduceException, ChartValidationException, PostProcessingException {
         if (chart == null) {
             chart = produceChart();
             chart.setAntiAlias(antialias);
+
             if (background != null) {
                 Image image = ImageHelper.loadImage(background);
                 chart.setBackgroundImage(image);
                 chart.setBackgroundImageAlpha(backgroundImageAlpha);
             }
-            if (paint != null) {
-                chart.setBackgroundPaint(paint);
-            }
-            if (showLegend) 
-            {
 
+            if (backgroundPaint != null) {
+                chart.setBackgroundPaint(backgroundPaint);
+            }
+
+            if (plotBackgroundPaint != null) {
+                chart.getPlot().setBackgroundPaint(plotBackgroundPaint);
+            }
+
+            if (borderPaint != null) {
+                chart.setBorderPaint(borderPaint);
+            }
+
+            if (plotBorderPaint != null) {
+                chart.getPlot().setOutlinePaint(plotBorderPaint);
+            }
+
+			chart.setBorderVisible(borderVisible);;
+			chart.getPlot().setOutlineVisible(plotBorderVisible);;
+
+            if (showLegend) {
                 LegendTitle legend = this.getLegend();
                 switch (legendAnchor) 
                 {
-                    case ANCHOR_NORTH :
+                    case TaglibConstants.ANCHOR_NORTH :
                         legend.setPosition(RectangleEdge.TOP);
                         break;
-                    case ANCHOR_WEST :
-                      legend.setPosition(RectangleEdge.RIGHT);
+                    case TaglibConstants.ANCHOR_WEST :
+						legend.setPosition(RectangleEdge.LEFT);
                         break;
-                    case ANCHOR_EAST :
-                      legend.setPosition(RectangleEdge.LEFT);
+                    case TaglibConstants.ANCHOR_EAST :
+						legend.setPosition(RectangleEdge.RIGHT);
                         break;
                     default :
-                      legend.setPosition(RectangleEdge.BOTTOM);
+						legend.setPosition(RectangleEdge.BOTTOM);
                 }
-            } 
-            else 
-            {
+            } else {
               this.removeLegend();
             }
+
+			Plot plot = chart.getPlot();
+			if (plot instanceof CategoryPlot) {
+				CategoryPlot cplot = (CategoryPlot) plot;
+
+				for (int i=0; i<cplot.getRangeAxisCount(); i++) {
+					ValueAxis axis = cplot.getRangeAxis(i);
+					if (axis instanceof NumberAxis) {
+						if (yAxisInteger)
+							((NumberAxis) axis).setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+					}
+					if (axis != null) {
+						axis.setTickMarksVisible(yTickMarksVisible);
+						axis.setTickLabelsVisible(yTickLabelsVisible);
+					}
+				}
+
+				for (int i=0; i<cplot.getDomainAxisCount(); i++) {
+					cplot.getDomainAxis(i).setTickMarksVisible(xTickMarksVisible);
+					cplot.getDomainAxis(i).setTickLabelsVisible(xTickLabelsVisible);
+				}
+			} else if (plot instanceof FastScatterPlot) {
+				FastScatterPlot fsplot = (FastScatterPlot) plot;
+
+				ValueAxis axis = fsplot.getDomainAxis();
+				if (axis instanceof NumberAxis) {
+					if (xAxisInteger)
+						((NumberAxis) axis).setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+				}
+				if (axis != null) {
+					axis.setTickMarksVisible(xTickMarksVisible);
+					axis.setTickLabelsVisible(xTickLabelsVisible);
+				}
+
+				axis = fsplot.getRangeAxis();
+				if (axis instanceof NumberAxis) {
+					if (yAxisInteger)
+						((NumberAxis) axis).setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+				}
+				if (axis != null) {
+					axis.setTickMarksVisible(yTickMarksVisible);
+				}
+			} else if (plot instanceof ThermometerPlot) {
+				ValueAxis axis = ((ThermometerPlot) plot).getRangeAxis();
+				if (axis instanceof NumberAxis) {
+					if (yAxisInteger)
+						((NumberAxis) axis).setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+				}
+				if (axis != null) {
+					axis.setTickMarksVisible(yTickMarksVisible);
+					axis.setTickLabelsVisible(yTickLabelsVisible);
+				}
+			} else if (plot instanceof XYPlot) {
+				XYPlot xyplot = (XYPlot) plot;
+
+				for (int i=0; i<xyplot.getRangeAxisCount(); i++) {
+					ValueAxis axis = xyplot.getRangeAxis(i);
+					if (axis instanceof NumberAxis) {
+						if (yAxisInteger)
+							((NumberAxis) axis).setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+					}
+					if (axis != null) {
+						axis.setTickMarksVisible(yTickMarksVisible);
+						axis.setTickLabelsVisible(yTickLabelsVisible);
+					}
+				}
+
+				for (int i=0; i<xyplot.getDomainAxisCount(); i++) {
+					ValueAxis axis = xyplot.getDomainAxis(i);
+					if (axis instanceof NumberAxis) {
+						if (xAxisInteger)
+							((NumberAxis) axis).setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+					}
+					if (axis != null) {
+						axis.setTickMarksVisible(xTickMarksVisible);
+						axis.setTickLabelsVisible(xTickLabelsVisible);
+					}
+				}
+			}
+
             // postProcessing
-            for (int i = 0; i < postProcessors.size(); i++) {
-                ChartPostProcessor pp = (ChartPostProcessor)postProcessors.get(i);
-                try {
-                    pp.processChart(chart, (Map)postProcessorsParams.get(i));
-                } catch (Throwable t) {
-                	log.error(t);
-                    throw new PostProcessingException(t.getClass().getName() + " raised by post processor '" +
-                    		pp + "'.\nPost processing of this post processor " + "has been ignored.", t);
-                }
-            }
+			for (int i = 0; i < postProcessors.size(); i++) {
+				ChartPostProcessor cpp = (ChartPostProcessor) postProcessors.get(i);
+				try {
+					cpp.processChart(chart, (Map) postProcessorsParams.get(i));
+				} catch (Throwable t) {
+					t.printStackTrace();
+					throw new PostProcessingException(t.getClass().getName() + " raised by post processor '" +
+							cpp + "'.\nPost processing of this post processor " + "has been ignored.");
+				}
+			}
         }
         return chart;
     }
@@ -170,7 +267,7 @@ public abstract class AbstractChartDefinition implements ChartHolder, Serializab
      * Sets the antialias.
      * @param antialias The antialias to set
      */
-    public void setAntialias(boolean antialias) {
+    public void setAntialias (boolean antialias) {
         this.antialias = antialias;
     }
 
@@ -178,7 +275,7 @@ public abstract class AbstractChartDefinition implements ChartHolder, Serializab
      * Sets the background.
      * @param background The background to set
      */
-    public void setBackground(String background) {
+    public void setBackground (String background) {
         this.background = background;
     }
 
@@ -186,7 +283,7 @@ public abstract class AbstractChartDefinition implements ChartHolder, Serializab
      * Sets the backgroundImageAlpha.
      * @param backgroundImageAlpha The backgroundImageAlpha to set
      */
-    public void setBackgroundImageAlpha(float backgroundImageAlpha) {
+    public void setBackgroundImageAlpha (float backgroundImageAlpha) {
         this.backgroundImageAlpha = backgroundImageAlpha;
     }
 
@@ -194,23 +291,31 @@ public abstract class AbstractChartDefinition implements ChartHolder, Serializab
      * Sets the legendAnchor.
      * @param legendAnchor The legendAnchor to set
      */
-    public void setLegendAnchor(int legendAnchor) {
+    public void setLegendAnchor (int legendAnchor) {
         this.legendAnchor = legendAnchor;
     }
 
     /**
-     * Sets the paint.
-     * @param paint The paint to set
+     * Sets the background paint.
+     * @param paint The background paint to set
      */
-    public void setPaint(Paint paint) {
-        this.paint = paint;
+    public void setBackgroundPaint (Paint paint) {
+        this.backgroundPaint = paint;
+    }
+
+    /**
+     * Sets the plot's background paint.
+     * @param paint The plot's background paint to set
+     */
+    public void setPlotBackgroundPaint (Paint paint) {
+        this.plotBackgroundPaint = paint;
     }
 
     /**
      * Sets the showLegend.
      * @param showLegend The showLegend to set
      */
-    public void setShowLegend(boolean showLegend) {
+    public void setShowLegend (boolean showLegend) {
         this.showLegend = showLegend;
     }
 
@@ -218,7 +323,7 @@ public abstract class AbstractChartDefinition implements ChartHolder, Serializab
      * Sets the title.
      * @param title The title to set
      */
-    public void setTitle(String title) {
+    public void setTitle (String title) {
         this.title = title;
     }
 
@@ -226,7 +331,7 @@ public abstract class AbstractChartDefinition implements ChartHolder, Serializab
      * Sets the type.
      * @param type The type to set
      */
-    public void setType(String type) {
+    public void setType (String type) {
         this.type = type;
     }
 
@@ -234,7 +339,7 @@ public abstract class AbstractChartDefinition implements ChartHolder, Serializab
      * Sets the xAxisLabel.
      * @param xAxisLabel The xAxisLabel to set
      */
-    public void setXAxisLabel(String xAxisLabel) {
+    public void setXAxisLabel (String xAxisLabel) {
         this.xAxisLabel = xAxisLabel;
     }
 
@@ -242,33 +347,101 @@ public abstract class AbstractChartDefinition implements ChartHolder, Serializab
      * Sets the yAxisLabel.
      * @param yAxisLabel The yAxisLabel to set
      */
-    public void setYAxisLabel(String yAxisLabel) {
+    public void setYAxisLabel (String yAxisLabel) {
         this.yAxisLabel = yAxisLabel;
     }
 
-    public void addPostProcessor(ChartPostProcessor pp) {
-        postProcessors.add(pp);
+    /**
+     * Whether the domain (X) axis should show integer values only.
+     */
+    public void setXaxisinteger (boolean xAxisInteger) {
+        this.xAxisInteger = xAxisInteger;
     }
 
-    public void addPostProcessorParams(Map params) {
+    /**
+     * Whether the range (Y) axis should show integer values only.
+     */
+    public void setYaxisinteger (boolean yAxisInteger) {
+        this.yAxisInteger = yAxisInteger;
+    }
+
+    /**
+     * Whether the domain (X) axis should show any tick marks.
+     */
+    public void setXtickmarksvisible (boolean xTickMarksVisible) {
+        this.xTickMarksVisible = xTickMarksVisible;
+    }
+
+    /**
+     * Whether the range (Y) axis should show any tick marks.
+     */
+    public void setYtickmarksvisible (boolean yTickMarksVisible) {
+        this.yTickMarksVisible = yTickMarksVisible;
+    }
+
+    /**
+     * Whether the domain (X) axis should show any tick labels.
+     */
+    public void setXticklabelsvisible (boolean xTickLabelsVisible) {
+        this.xTickLabelsVisible = xTickLabelsVisible;
+    }
+
+    /**
+     * Whether the range (Y) axis should show any tick labels.
+     */
+    public void setYticklabelsvisible (boolean yTickLabelsVisible) {
+        this.yTickLabelsVisible = yTickLabelsVisible;
+    }
+
+    /**
+     * Whether the chart is drawn with a border.
+     */
+    public void setBorderVisible (boolean borderVisible) {
+        this.borderVisible = borderVisible;
+    }
+
+    /**
+     * Whether the plot is drawn with a border.
+     */
+    public void setPlotBorderVisible (boolean plotBorderVisible) {
+        this.plotBorderVisible = plotBorderVisible;
+    }
+
+    /**
+     * Sets the chart border paint.
+     */
+    public void setBorderPaint (Paint paint) {
+        this.borderPaint = paint;
+    }
+
+    /**
+     * Sets the plot border paint.
+     */
+    public void setPlotBorderPaint (Paint paint) {
+        this.plotBorderPaint = paint;
+    }
+
+    public void addPostProcessor (ChartPostProcessor cpp) {
+        postProcessors.add(cpp);
+    }
+
+    public void addPostProcessorParams (Map params) {
         postProcessorsParams.add(params);
     }
-    
+
 	/**
 	 * Callback right after a new image gets rendered.
-	 * Implemented, so if postprocessors implement the ImageRenderListener interface
-	 * then they will be called back also
+	 * Implemented so if postprocessors implement the ImageRenderListener interface then they will be called back also
 	 * 
 	 * @param renderedImage The fresh image just got rendered
 	 */
 	public void onImageRendered (RenderedImage renderedImage) {
 		// if the postprocessor implements ImageRenderListener interface call it!
         for (int i = 0; i < postProcessors.size(); i++) {
-            ChartPostProcessor pp = (ChartPostProcessor)postProcessors.get(i);
-            if (pp instanceof ChartImageRenderListener) {
-            	((ChartImageRenderListener) pp).onImageRendered(renderedImage);
+            ChartPostProcessor cpp = (ChartPostProcessor)postProcessors.get(i);
+            if (cpp instanceof ChartImageRenderListener) {
+            	((ChartImageRenderListener) cpp).onImageRendered(renderedImage);
             }
-        }		
+        }
 	}
-
 }

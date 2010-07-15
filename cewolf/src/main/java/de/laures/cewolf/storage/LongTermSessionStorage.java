@@ -42,7 +42,8 @@ import de.laures.cewolf.taglib.util.KeyGenerator;
  */
 public class LongTermSessionStorage implements Storage
 {
- 
+	static final long serialVersionUID = 6810872505939693581L;
+
   public final String getKey( ChartImage cid )
   {
     return String.valueOf(KeyGenerator.generateKey((Serializable) cid));
@@ -51,8 +52,7 @@ public class LongTermSessionStorage implements Storage
   /*
    * (non-Javadoc)
    * 
-   * @see de.laures.cewolf.Storage#storeChartImage(de.laures.cewolf.ChartImage,
-   *      javax.servlet.jsp.PageContext)
+   * @see de.laures.cewolf.Storage#storeChartImage(de.laures.cewolf.ChartImage, javax.servlet.jsp.PageContext)
    */
   public String storeChartImage( ChartImage chartImage, PageContext pageContext ) throws CewolfException
   {
@@ -73,8 +73,7 @@ public class LongTermSessionStorage implements Storage
   /*
    * (non-Javadoc)
    * 
-   * @see de.laures.cewolf.Storage#getChartImage(java.lang.String,
-   *      javax.servlet.http.HttpServletRequest)
+   * @see de.laures.cewolf.Storage#getChartImage(java.lang.String, javax.servlet.http.HttpServletRequest)
    */
   public ChartImage getChartImage( String id, HttpServletRequest request )
   {
@@ -101,7 +100,7 @@ public class LongTermSessionStorage implements Storage
   }
 
   /**
-   * @see de.laures.cewolf.Storage#removeChartImage(java.lang.String, javax.servlet.jsp.PageContext)
+   * @see de.laures.cewolf.Storage#removeChartImage(java.lang.String, javax.servlet.http.HttpServletRequest)
    */
   public String removeChartImage(String cid, HttpServletRequest request) throws CewolfException {
 	  HttpSession session = request.getSession();

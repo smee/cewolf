@@ -29,9 +29,9 @@
   </developers>
 
 	<scm>
-		<url>http://cvs.sourceforge.net/viewcvs.py/cewolf/</url>
+		<url>http://github.com/smee/cewolf/</url>
 		<connection>
-			scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/cewolf/cewolf
+			scm:git:git@github.com:smee/cewolf.git
 		</connection>
 	</scm>
 
@@ -72,6 +72,17 @@
 					</execution>
 				</executions>
 			</plugin>
+            <plugin>
+              <artifactId>maven-source-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>attach-source</id>
+                  <goals>
+                    <goal>jar</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>      
 		</plugins>
 	</build>
 	<dependencies>
